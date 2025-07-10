@@ -1,0 +1,24 @@
+{
+	"kernelName": "V5F",
+	"isMaster": false,
+	"debugOptions": {
+		"dualCoreDebug": true,
+		"slaveGDBPort": 3334,
+		"masterGDBPort": 3333
+	},
+	"mate": "../V3F",
+	"mergedOptions": {
+		"enabled": true,
+		"mergedList": {
+			"name": "Merge.Bin",
+			"filledWith": "0xFF",
+			"files": [
+				{
+					"filePath": "..\\V3F\\obj\\1Lines_half-duplex_V3F.hex"
+				}
+			]
+		},
+		"downloadMerged": true,
+		"loadMergedBeforeDebug": true
+	}
+}

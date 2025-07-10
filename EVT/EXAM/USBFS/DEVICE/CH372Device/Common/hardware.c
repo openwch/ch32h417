@@ -1,0 +1,62 @@
+/********************************** (C) COPYRIGHT  *******************************
+* File Name          : hardware.c
+* Author             : WCH
+* Version            : V1.0.0
+* Date               : 2025/03/01
+* Description        : This file provides all the hardware firmware functions.
+*********************************************************************************
+* Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
+* Attention: This software (modified or not) and binary are used for 
+* microcontroller manufactured by Nanjing Qinheng Microelectronics.
+*******************************************************************************/
+#include "hardware.h"
+#include "ch32h417_usbfs_device.h"
+
+/*********************************************************************
+ * @fn      Hardware
+ *
+ * @brief   Resets the CRC Data register (DR).
+ *
+ * @return  none
+ */
+void Hardware(void)
+{
+	uint8_t ret;
+    printf( "CH372Device Running On usbfs-FS Controller\n" );
+
+	USBFS_RCC_Init( );
+	USBFS_Device_Init( ENABLE );
+    while(1)
+    {
+        /* Determine if enumeration is complete, perform data transfer if completed */
+        if(USBFS_DevEnumStatus)
+        {
+            /* Data Transfer */
+            if(RingBuffer_Comm.RemainPack)
+            {
+                ret = USBFS_Endp_DataUp(DEF_UEP2, &Data_Buffer[(RingBuffer_Comm.DealPtr) * DEF_USBD_FS_PACK_SIZE], RingBuffer_Comm.PackLen[RingBuffer_Comm.DealPtr], DEF_UEP_CPY_LOAD);
+                if( ret == 0 )
+                {
+                    NVIC_DisableIRQ(USBFS_IRQn);
+                    RingBuffer_Comm.RemainPack--;
+                    RingBuffer_Comm.DealPtr++;
+                    if(RingBuffer_Comm.DealPtr == DEF_Ring_Buffer_Max_Blks)
+                    {
+                        RingBuffer_Comm.DealPtr = 0;
+                    }
+                    NVIC_EnableIRQ(USBFS_IRQn);
+                }
+            }
+
+            /* Monitor whether the remaining space is available for further downloads */
+            if(RingBuffer_Comm.RemainPack < (DEF_Ring_Buffer_Max_Blks - DEF_RING_BUFFER_RESTART))
+            {
+                if(RingBuffer_Comm.StopFlag)
+                {
+                    RingBuffer_Comm.StopFlag = 0;
+                    USBFSD->UEP1_RX_CTRL = (USBFSD->UEP1_RX_CTRL & ~USBFS_UEP_R_RES_MASK) | USBFS_UEP_R_RES_ACK;
+                }
+            }
+        }
+	}
+}
