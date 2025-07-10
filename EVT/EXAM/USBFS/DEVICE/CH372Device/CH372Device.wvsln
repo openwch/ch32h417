@@ -1,0 +1,9 @@
+-arm:${eclipse_home}\toolchain\arm-none-eabi-gcc\bin
+-build:${eclipse_home}\toolchain\Build Tools\bin
+-openocd name:openocd.exe
+-openocd path:${eclipse_home}\toolchain\OpenOCD\bin
+-rv:${eclipse_home}\toolchain\RISC-V Embedded GCC\bin
+e:\MyProject\ongoing\0_EVT维护相关\CH32\CH32H417\Code\CH32H417_EVT_20250427\EXAM\USBFS\DEVICE\CH372Device\V3F
+..\V3F
+e:\MyProject\ongoing\0_EVT维护相关\CH32\CH32H417\Code\CH32H417_EVT_20250427\EXAM\USBFS\DEVICE\CH372Device\V5F
+..\V5F

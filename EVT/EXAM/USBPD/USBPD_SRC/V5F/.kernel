@@ -1,0 +1,23 @@
+{
+	"kernelName": "V5F",
+	"isMaster": false,
+	"mate": "..\\V3F",
+	"debugOptions": {
+		"dualCoreDebug": false,
+		"slaveGDBPort": 0
+	},
+	"mergedOptions": {
+		"enabled": true,
+		"mergedList": {
+			"name": "Merge.bin",
+			"filledWith": "0xFF",
+			"files": [
+				{
+					"filePath": "../V3F/${ConfigName}/${DualCoreModuleName}_V3F.hex"
+				}
+			]
+		},
+		"downloadMerged": true,
+		"loadMergedBeforeDebug": false
+	}
+}
