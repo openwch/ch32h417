@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_dvp.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/08/12
 * Description        : This file contains all the functions prototypes for the 
 *                      DVP firmware library.
 *********************************************************************************
@@ -90,18 +90,18 @@ typedef struct
 #define DVP_FrameCapRate_25P           ((uint8_t)0x80)
 
 /* DVP_CaptureMode */
-#define DVP_CaptureMode_Snapshot       ((uint8_t)0x00)
-#define DVP_CaptureMode_Continuous     ((uint8_t)0x10)
+#define DVP_CaptureMode_Continuous     ((uint8_t)0x00)
+#define DVP_CaptureMode_Snapshot       ((uint8_t)0x10)
 
 /* DVP_interrupts_definition */
-#define DVP_IT_STR_FRM                 ((uint8_t)0x00)
+#define DVP_IT_STR_FRM                 ((uint8_t)0x01)
 #define DVP_IT_ROW_DONE                ((uint8_t)0x02)
 #define DVP_IT_FRM_DONE                ((uint8_t)0x04)
 #define DVP_IT_FIFO_OV                 ((uint8_t)0x08)
 #define DVP_IT_STP_FRM                 ((uint8_t)0x10)
 
 /* DVP_flags_definition */
-#define DVP_FLAG_STR_FRM               ((uint8_t)0x00)
+#define DVP_FLAG_STR_FRM               ((uint8_t)0x01)
 #define DVP_FLAG_ROW_DONE              ((uint8_t)0x02)
 #define DVP_FLAG_FRM_DONE              ((uint8_t)0x04)
 #define DVP_FLAG_FIFO_OV               ((uint8_t)0x08)

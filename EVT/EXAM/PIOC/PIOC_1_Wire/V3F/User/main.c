@@ -9,7 +9,6 @@
  * Attention: This software (modified or not) and binary are used for
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-
 /*
  * @Note
  * 1-wire example: 1W-RGB_WS2812, 1W-DS1820

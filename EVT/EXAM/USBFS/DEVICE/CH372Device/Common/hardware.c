@@ -9,6 +9,22 @@
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
+/*
+ *@Note
+  Example routine to emulate a custom USB device (CH372 device).
+  This routine demonstrates the use of a USBHS Device to emulate a custom device, the CH372,
+  with endpoints 1/3/5 downlinking data and uploading via endpoints 2/4/6 respectively
+  Endpoint 1 uploads and downlinks via a ring buffer with no bitwise inversion. Endpoints 3/4 
+  and 5/6 copy the data with a bitwise inversion before uploading.
+
+  [Ep1 OUT] ------ Not Invert ------> [Ep2 IN]
+  [Ep3 OUT] -------- Invert --------> [Ep4 IN]
+  [Ep5 OUT] -------- Invert --------> [Ep6 IN ]
+  
+  Note: This routine needs to be demonstrated in conjunction with the host software.
+  
+  Tool: https://www.wch.cn/downloads/USBEndpDebug_ZIP.html
+*/
 #include "hardware.h"
 #include "ch32h417_usbfs_device.h"
 
@@ -21,11 +37,14 @@
  */
 void Hardware(void)
 {
-	uint8_t ret;
-    printf( "CH372Device Running On usbfs-FS Controller\n" );
+    printf("Build Time: %s %s\n", __DATE__, __TIME__);
+    printf("GCC Version: %d.%d.%d\n",__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
+    printf("CH372Device Running On USBFS Controller\n");
 
+	/* USBFSD device init */
 	USBFS_RCC_Init( );
 	USBFS_Device_Init( ENABLE );
+
     while(1)
     {
         /* Determine if enumeration is complete, perform data transfer if completed */
@@ -34,9 +53,12 @@ void Hardware(void)
             /* Data Transfer */
             if(RingBuffer_Comm.RemainPack)
             {
-                ret = USBFS_Endp_DataUp(DEF_UEP2, &Data_Buffer[(RingBuffer_Comm.DealPtr) * DEF_USBD_FS_PACK_SIZE], RingBuffer_Comm.PackLen[RingBuffer_Comm.DealPtr], DEF_UEP_CPY_LOAD);
-                if( ret == 0 )
+                if((USBFSD->UEP2_TX_CTRL & USBFS_UEP_T_RES_MASK) == USBFS_UEP_T_RES_NAK)
                 {
+                    memcpy(USBFSD_UEP_BUF(DEF_UEP2),&Data_Buffer[(RingBuffer_Comm.DealPtr) * DEF_USBD_FS_PACK_SIZE], RingBuffer_Comm.PackLen[RingBuffer_Comm.DealPtr]);
+                    USBFSD->UEP2_TX_LEN = RingBuffer_Comm.PackLen[RingBuffer_Comm.DealPtr];
+                    USBFSD->UEP2_TX_CTRL = (USBFSD->UEP2_TX_CTRL & ~USBFS_UEP_T_RES_MASK) | USBFS_UEP_T_RES_ACK;
+                    
                     NVIC_DisableIRQ(USBFS_IRQn);
                     RingBuffer_Comm.RemainPack--;
                     RingBuffer_Comm.DealPtr++;

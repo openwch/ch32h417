@@ -12,13 +12,13 @@
 
 /*
  *@Note
-   FMC routine to operate TFTLCD:
+  FMC routine to operate TFTLCD:ATK-MD0280:
   LCD--PIN:
-    PD11--FMC_A16
-    PD12--FMC_A17
-    PD5 --FMC_NEW
-    PD4 --FMC_NOE
-    PA15--LCDRST#
+    PD11--CS
+    PD12--RS
+    PD5 --FMC_NEW(WR)
+    PD4 --FMC_NOE(RD)
+    PD3 --LCDRST#
     PD14--FMC_D0
     PD15--FMC_D1
     PD0 --FMC_D2
@@ -35,7 +35,7 @@
     PD8 --FMC_D13
     PD9--FMC_D14
     PD10--FMC_D15
-    PB14--IO_BLCTR
+    PB14--BL
 */
 
 
@@ -60,9 +60,6 @@ int main(void)
 	printf("SystemClk:%d\r\n", SystemClock);
 	printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
 	Delay_Ms(500);
-  RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR, ENABLE);
-  PWR_VIO18ModeCfg(PWR_VIO18CFGMODE_SW);
-  PWR_VIO18LevelCfg(PWR_VIO18Level_MODE3);
 #if (Run_Core == Run_Core_V3FandV5F)
 	NVIC_WakeUp_V5F(Core_V5F_StartAddr);//wake up V5
 	HSEM_ITConfig(HSEM_ID0, ENABLE);

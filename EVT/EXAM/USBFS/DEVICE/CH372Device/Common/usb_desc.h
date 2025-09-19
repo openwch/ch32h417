@@ -12,10 +12,7 @@
 #ifndef USER_USB_DESC_H_
 #define USER_USB_DESC_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "ch32h417_conf.h"
+#include "debug.h"
 
 /******************************************************************************/
 /* global define */

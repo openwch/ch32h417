@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_rcc.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/04
 * Description        : This file provides all the RCC firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -378,38 +378,38 @@ void RCC_ITConfig(uint8_t RCC_IT, FunctionalState NewState)
  *
  * @param   RCC_PPRE - defines the ADC clock divider. This clock is derived from
  *        the USBHS_PLL_CLK clock .
- *          RCC_USBHS_5 - ADC clock = USBHS_PLL_CLK/5.
- *          RCC_USBHS_6 - ADC clock = USBHS_PLL_CLK/6.
- *          RCC_USBHS_7 - ADC clock = USBHS_PLL_CLK/7.
- *          RCC_USBHS_8 - ADC clock = USBHS_PLL_CLK/8.
- *          RCC_USBHS_9 - ADC clock = USBHS_PLL_CLK/9.
- *          RCC_USBHS_10 - ADC clock = USBHS_PLL_CLK/10.
- *          RCC_USBHS_11 - ADC clock = USBHS_PLL_CLK/11.
- *          RCC_USBHS_12 - ADC clock = USBHS_PLL_CLK/12.
- *          RCC_USBHS_13 - ADC clock = USBHS_PLL_CLK/13.
- *          RCC_USBHS_14 - ADC clock = USBHS_PLL_CLK/14.
- *          RCC_USBHS_15 - ADC clock = USBHS_PLL_CLK/15.
- *          RCC_USBHS_16 - ADC clock = USBHS_PLL_CLK/16.
- *          RCC_USBHS_17 - ADC clock = USBHS_PLL_CLK/17.
- *          RCC_USBHS_18 - ADC clock = USBHS_PLL_CLK/18.
- *          RCC_USBHS_19 - ADC clock = USBHS_PLL_CLK/19.
- *          RCC_USBHS_20 - ADC clock = USBHS_PLL_CLK/20.
- *          RCC_USBHS_21 - ADC clock = USBHS_PLL_CLK/21.
- *          RCC_USBHS_22 - ADC clock = USBHS_PLL_CLK/22.
- *          RCC_USBHS_23 - ADC clock = USBHS_PLL_CLK/23.
- *          RCC_USBHS_24 - ADC clock = USBHS_PLL_CLK/24.
- *          RCC_USBHS_25 - ADC clock = USBHS_PLL_CLK/25.
- *          RCC_USBHS_26 - ADC clock = USBHS_PLL_CLK/26.
- *          RCC_USBHS_27 - ADC clock = USBHS_PLL_CLK/27.
- *          RCC_USBHS_28 - ADC clock = USBHS_PLL_CLK/28.
- *          RCC_USBHS_29 - ADC clock = USBHS_PLL_CLK/29.
- *          RCC_USBHS_30 - ADC clock = USBHS_PLL_CLK/30.
- *          RCC_USBHS_31 - ADC clock = USBHS_PLL_CLK/31.
- *          RCC_USBHS_32 - ADC clock = USBHS_PLL_CLK/32.
- *          RCC_USBHS_33 - ADC clock = USBHS_PLL_CLK/33.
- *          RCC_USBHS_34 - ADC clock = USBHS_PLL_CLK/34.
- *          RCC_USBHS_35 - ADC clock = USBHS_PLL_CLK/35.
- *          RCC_USBHS_36 - ADC clock = USBHS_PLL_CLK/36.
+ *          RCC_USBHS_Div5 - ADC clock = USBHS_PLL_CLK/5.
+ *          RCC_USBHS_Div6 - ADC clock = USBHS_PLL_CLK/6.
+ *          RCC_USBHS_Div7 - ADC clock = USBHS_PLL_CLK/7.
+ *          RCC_USBHS_Div8 - ADC clock = USBHS_PLL_CLK/8.
+ *          RCC_USBHS_Div9 - ADC clock = USBHS_PLL_CLK/9.
+ *          RCC_USBHS_Div10 - ADC clock = USBHS_PLL_CLK/10.
+ *          RCC_USBHS_Div11 - ADC clock = USBHS_PLL_CLK/11.
+ *          RCC_USBHS_Div12 - ADC clock = USBHS_PLL_CLK/12.
+ *          RCC_USBHS_Div13 - ADC clock = USBHS_PLL_CLK/13.
+ *          RCC_USBHS_Div14 - ADC clock = USBHS_PLL_CLK/14.
+ *          RCC_USBHS_Div15 - ADC clock = USBHS_PLL_CLK/15.
+ *          RCC_USBHS_Div16 - ADC clock = USBHS_PLL_CLK/16.
+ *          RCC_USBHS_Div17 - ADC clock = USBHS_PLL_CLK/17.
+ *          RCC_USBHS_Div18 - ADC clock = USBHS_PLL_CLK/18.
+ *          RCC_USBHS_Div19 - ADC clock = USBHS_PLL_CLK/19.
+ *          RCC_USBHS_Div20 - ADC clock = USBHS_PLL_CLK/20.
+ *          RCC_USBHS_Div21 - ADC clock = USBHS_PLL_CLK/21.
+ *          RCC_USBHS_Div22 - ADC clock = USBHS_PLL_CLK/22.
+ *          RCC_USBHS_Div23 - ADC clock = USBHS_PLL_CLK/23.
+ *          RCC_USBHS_Div24 - ADC clock = USBHS_PLL_CLK/24.
+ *          RCC_USBHS_Div25 - ADC clock = USBHS_PLL_CLK/25.
+ *          RCC_USBHS_Div26 - ADC clock = USBHS_PLL_CLK/26.
+ *          RCC_USBHS_Div27 - ADC clock = USBHS_PLL_CLK/27.
+ *          RCC_USBHS_Div28 - ADC clock = USBHS_PLL_CLK/28.
+ *          RCC_USBHS_Div29 - ADC clock = USBHS_PLL_CLK/29.
+ *          RCC_USBHS_Div30 - ADC clock = USBHS_PLL_CLK/30.
+ *          RCC_USBHS_Div31 - ADC clock = USBHS_PLL_CLK/31.
+ *          RCC_USBHS_Div32 - ADC clock = USBHS_PLL_CLK/32.
+ *          RCC_USBHS_Div33 - ADC clock = USBHS_PLL_CLK/33.
+ *          RCC_USBHS_Div34 - ADC clock = USBHS_PLL_CLK/34.
+ *          RCC_USBHS_Div35 - ADC clock = USBHS_PLL_CLK/35.
+ *          RCC_USBHS_Div36 - ADC clock = USBHS_PLL_CLK/36.
  *
  * @return  none
  */
@@ -1631,8 +1631,8 @@ void RCC_ADCCLKDutyCycleConfig(uint32_t RCC_DutyCycle)
  */
 void RCC_ADCCLKConfig(uint32_t RCC_ADCCLKSource)
 {
-    RCC->CFGR2 &= ~RCC_ADCSRC;
-    RCC->CFGR2 |= (RCC_ADCCLKSource << 31);
+    RCC->CFGR0 &= ~RCC_ADCSRC;
+    RCC->CFGR0 |= (RCC_ADCCLKSource << 31);
 }
 
 /*********************************************************************

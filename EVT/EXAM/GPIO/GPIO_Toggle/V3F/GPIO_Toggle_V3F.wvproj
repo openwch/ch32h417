@@ -7,8 +7,8 @@
 			"toolchain": "RISC-V",
 			"series": "CH32H417",
 			"rtos": "NoneOS",
-			"mcu": "CH32H417QEU6",
-			"description": "",
+			"mcu": "CH32H417QEU",
+			"description": "CH32H417 is an interconnected general-purpose microcontroller based on the dual core design of Qingke RISC-V5F and RISC-V3F. CH32H417 integrates USB 3.2 Gen1 controller and transceiver, 100Mbps Ethernet MAC and PHY, SerDes high-speed isolation transceiver, Type-C/PD controller and PHY, providing SD/EMMC controller, universal high-speed interface UHSIF, DVP digital image interface, single wire protocol main interface SWPMI, programmable protocol I/O controller PIOC, flexible storage controller FMC, DFSDM, LTDC, GPHA, DMA controller, multiple timers, 8 serial ports I3C, 4 sets of I2C, 2 sets of QSPI, 4 sets of SPI, 2 sets of I2S, 3 sets of CAN and other peripheral resources, built-in 5M sampling rate dual 12 bit ADC unit, 20M sampling rate 10 bit high-speed HSADC unit, 16 Touchkey, dual DAC unit, 3 sets of operational amplifiers OPA, voltage comparator CMP and other analog resources, supporting 10M/100M Ethernet communication, supporting USB 2.0 and USB 3.0, supporting USB Host host and USB Device device functions, Type-C and PDUSB fast charging functions, supporting SerDes high-speed isolation and long-distance transmission, supporting dual core division of labor to improve network protocol processing efficiency and communication response speed. ",
 			"link": "WCH-Link",
 			"peripheral_version": "1.4",
 			"calibrateSupport": false,
@@ -54,7 +54,7 @@
 			"kernelName": "V3F",
 			"isMaster": true,
 			"debugOptions": {
-				"dualCoreDebug": false,
+				"dualCoreDebug": true,
 				"slaveGDBPort": 3334,
 				"masterGDBPort": 3333
 			},
@@ -372,10 +372,10 @@
 	"flashConfig": {
 		"mcutype": "CH32H417",
 		"address": "0x08000000",
-		"target_path": "obj\\GPIO_Toggle_V3F.hex",
+		"target_path": "obj/GPIO_Toggle_V3F.hex",
 		"clkSpeed": "High",
 		"debug_interface_mode": "1-wire serial",
-		"erase": true,
+		"erase": false,
 		"program": true,
 		"verify": true,
 		"reset": true,
@@ -394,12 +394,12 @@
 			"telnetport": 4444,
 			"tclport": 6666,
 			"configOptions": [
-				"-f \"${WCH:OpenOCD:default}/bin/wch-dual-core.cfg\" -c page_erase"
+				"-f \"${WCH:OpenOCD:default}/bin/wch-dual-core.cfg\" -c noload"
 			],
 			"host": "localhost",
 			"port": 3333,
-			"skipDownloadBeforeDebug": false,
-			"enablePageEraser": true,
+			"skipDownloadBeforeDebug": true,
+			"enablePageEraser": false,
 			"enableNoZeroWaitingAreaFlash": false
 		},
 		"gdbCfg": {
@@ -458,8 +458,10 @@
 			"ATTR_BUILD_BEFORE_LAUNCH_ATTR": 2,
 			"GdbServerAllocateConsole": true,
 			"GdbServerAllocateTelnetConsole": false,
+			"SkipDownloadBeforeDebug": false,
 			"StartGdbCLient": true,
-			"UPDATE_THREADLIST_ON_SUSPEND": false
+			"UPDATE_THREADLIST_ON_SUSPEND": false,
+			"DebugInRam": false
 		}
 	}
 }

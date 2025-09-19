@@ -33,13 +33,13 @@ void UDisk_USBH_ByteOperation( void )
     uint8_t i,t;
     uint16_t TotalCount = 0;
 
-    UDisk_USBH_DiskReady( );
-    if( (CHRV3DiskStatus >= DISK_MOUNTED)&&( UDisk_Opeation_Flag == 1 ) )
+    ret = UDisk_USBH_DiskReady( );
+    if( (ret == DISK_READY)&&( UDisk_Opeation_Flag == 1 ) )
     {
         UDisk_Opeation_Flag = 0;
         printf("CHRV3DiskStatus:%02x\r\n",CHRV3DiskStatus);
         /* 读文件 */
-        strcpy( (char *)mCmdParam.Open.mPathName, "/NEWFILE.C" ); //设置将要操作的文件路径和文件名/NEWFILE.C
+        strcpy( (char *)mCmdParam.Open.mPathName, "/NEWFILE.C" ); //设置将要操作的文件路径和文件名/C51/NEWFILE.C
         ret = CHRV3FileOpen( );                                       //打开文件
         if ( ret == ERR_MISS_DIR || ret == ERR_MISS_FILE )            //没有找到文件
         {
@@ -109,7 +109,7 @@ void UDisk_USBH_ByteOperation( void )
 
             /* 二、读取文件前N字节 */
             TotalCount = 60;                                                  //设置准备读取总长度100字节
-            strcpy( (char *)mCmdParam.Open.mPathName, "/NEWFILE.C" );     //设置将要操作的文件路径和文件名/NEWFILE.C
+            strcpy( (char *)mCmdParam.Open.mPathName, "/NEWFILE.C" );     //设置将要操作的文件路径和文件名/C51/NEWFILE.C
             CHRV3FileOpen( );                                                 //打开文件
             printf( "读出的前%d个字符是:\r\n",TotalCount );
             while ( TotalCount )
@@ -129,7 +129,7 @@ void UDisk_USBH_ByteOperation( void )
                 TotalCount -= mCmdParam.ByteRead.mByteCount;         //计数,减去当前实际已经读出的字符数
                 for ( i=0; i!=mCmdParam.ByteRead.mByteCount; i++ )
                 {
-                    printf( "%c", mCmdParam.ByteRead.mByteBuffer[i] ); //显示读出的字符
+                    printf( "%02X ", mCmdParam.ByteRead.mByteBuffer[i] ); //显示读出的字符
                 }
                 printf( "\r\n" );
 

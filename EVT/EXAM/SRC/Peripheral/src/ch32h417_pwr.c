@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_pwr.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/16
 * Description        : This file provides all the PWR firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -214,4 +214,21 @@ void PWR_VIO18LevelCfg(uint16_t VIO18Level)
 PWR_VIO18InitialStatus PWR_GetVIO18InitialStatus(void)
 {
     return ((PWR->CSR & PWR_CSR_VIO18_SR) >> 8);
+}
+
+/*********************************************************************
+ * @fn      PWR_VDD12ExternPower
+ *
+ * @brief   Reduce the internal VDD12 voltage when the chip's VDD12 power supply is externally provided.
+ *
+ * @return  none.
+ */
+void PWR_VDD12ExternPower(void)
+{
+    uint32_t cfg = 0;
+
+    cfg = *(vu32*)SYS_CFGR0_BASE;
+    cfg &= ~((0x7 << 4) | (0x7 << 14) | (0x7 << 17));
+    cfg |= ((0x1 << 4) | (0x1 << 14) | (0x1 << 17));
+    *(vu32*)SYS_CFGR0_BASE = cfg;    
 }

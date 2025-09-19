@@ -1,5 +1,5 @@
 /********************************** (C) COPYRIGHT  *******************************
-* File Name          : ch32h417_crc.c
+* File Name          : hardware.c
 * Author             : WCH
 * Version            : V1.0.0
 * Date               : 2025/05/24
@@ -12,7 +12,7 @@
 
 /*
  *@Note
-   FMC routine to operate TFTLCD:
+   FMC routine to operate TFTLCD-:
   LCD--PIN:
     PD11--FMC_A16
     PD12--FMC_A17
@@ -59,12 +59,12 @@ void LCD_Reset_GPIO_Init(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure={0};
 
-    RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOA, ENABLE);
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
+    RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOD, ENABLE);
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_Very_High;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-    GPIO_SetBits(GPIOA,GPIO_Pin_15);
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
+    GPIO_SetBits(GPIOD,GPIO_Pin_3);
 }
 
 
@@ -78,11 +78,14 @@ void LCD_Reset_GPIO_Init(void)
 void Hardware(void)
 {
 	u8 x=0;
+    RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR, ENABLE);
+    PWR_VIO18ModeCfg(PWR_VIO18CFGMODE_SW);
+    PWR_VIO18LevelCfg(PWR_VIO18Level_MODE3);
 	LCD_Reset_GPIO_Init();
 	//LCD reset
-	GPIO_ResetBits(GPIOA,GPIO_Pin_15);
+	GPIO_ResetBits(GPIOD,GPIO_Pin_3);
 	Delay_Ms(100);
-	GPIO_SetBits(GPIOA,GPIO_Pin_15);
+	GPIO_SetBits(GPIOD,GPIO_Pin_3);
 
     LCD_Init();
 	POINT_COLOR=RED;		

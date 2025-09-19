@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
-* File Name          : ch32h417_crc.c
+* File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/12
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -12,21 +12,18 @@
 #include "hardware.h"
 
 /* Global define */
-#define Buf_Size 32
+#define Bank5_SDRAM_ADDR                         ((u32)(0XC0000000)) //SDRAM address
+#define FMC_SDRAM_CMD_TARGET_BANK2               FMC_SDCMR_CTB2
+#define FMC_SDRAM_CMD_TARGET_BANK1               FMC_SDCMR_CTB1
+#define FMC_SDRAM_CMD_TARGET_BANK1_2             ((uint32_t)0x00000018U)
 
-/* Global Variable */
-#define Bank5_SDRAM_ADDR    ((u32)(0XC0000000)) //SDRAM¿ªÊ¼µØÖ·
-#define FMC_SDRAM_CMD_TARGET_BANK2            FMC_SDCMR_CTB2
-#define FMC_SDRAM_CMD_TARGET_BANK1            FMC_SDCMR_CTB1
-#define FMC_SDRAM_CMD_TARGET_BANK1_2          ((uint32_t)0x00000018U)
-
-#define FMC_SDRAM_CMD_NORMAL_MODE             ((uint32_t)0x00000000U)
-#define FMC_SDRAM_CMD_CLK_ENABLE              ((uint32_t)0x00000001U)
-#define FMC_SDRAM_CMD_PALL                    ((uint32_t)0x00000002U)
-#define FMC_SDRAM_CMD_AUTOREFRESH_MODE        ((uint32_t)0x00000003U)
-#define FMC_SDRAM_CMD_LOAD_MODE               ((uint32_t)0x00000004U)
-#define FMC_SDRAM_CMD_SELFREFRESH_MODE        ((uint32_t)0x00000005U)
-#define FMC_SDRAM_CMD_POWERDOWN_MODE          ((uint32_t)0x00000006U)
+#define FMC_SDRAM_CMD_NORMAL_MODE                ((uint32_t)0x00000000U)
+#define FMC_SDRAM_CMD_CLK_ENABLE                 ((uint32_t)0x00000001U)
+#define FMC_SDRAM_CMD_PALL                       ((uint32_t)0x00000002U)
+#define FMC_SDRAM_CMD_AUTOREFRESH_MODE           ((uint32_t)0x00000003U)
+#define FMC_SDRAM_CMD_LOAD_MODE                  ((uint32_t)0x00000004U)
+#define FMC_SDRAM_CMD_SELFREFRESH_MODE           ((uint32_t)0x00000005U)
+#define FMC_SDRAM_CMD_POWERDOWN_MODE             ((uint32_t)0x00000006U)
 
 
 #define SDRAM_MODEREG_BURST_LENGTH_1             ((u16)0x0000)
@@ -446,6 +443,21 @@ void GPIO_Config(void)
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 
+    // D[18] PF6(AF12)
+    GPIO_PinAFConfig(GPIOF, GPIO_PinSource6, GPIO_AF12);
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_Very_High;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+    GPIO_Init(GPIOF, &GPIO_InitStructure);
+
+    // D[19] PF7(AF12)
+    GPIO_PinAFConfig(GPIOF, GPIO_PinSource7, GPIO_AF12);
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_Very_High;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+    GPIO_Init(GPIOF, &GPIO_InitStructure);
+
+
     // D[20] PF8(AF12)
     GPIO_PinAFConfig(GPIOF, GPIO_PinSource8, GPIO_AF12);
     GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_8;
@@ -530,7 +542,7 @@ void GPIO_Config(void)
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-}
+} 
 
 /*********************************************************************
  * @fn      FMC_SDRAM_Init

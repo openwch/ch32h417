@@ -2,7 +2,7 @@
  * File Name          : usb_desc.h
  * Author             : WCH
  * Version            : V1.0.0
- * Date               : 2025/05/26
+ * Date               : 2024/07/31
  * Description        : header file of usb_desc.c
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.

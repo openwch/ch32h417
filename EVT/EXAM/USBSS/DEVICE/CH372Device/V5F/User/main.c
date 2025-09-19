@@ -14,7 +14,7 @@
   Example routine to emulate a custom USB device (CH372 device).
   This routine demonstrates the use of a USBSS Device to emulate a custom device, the CH372,
   with endpoints 1/2 downlinking data and uploading via endpoints 2/1 respectively
-  Endpoints 3 and 4 upload and download data separately respectively.
+  Endpoints 3 upload and download data separately respectively.
   The device can be operated using Bushund or other upper computer software.
   Note: This routine needs to be demonstrated in conjunction with the host software.
 
@@ -37,8 +37,6 @@ int main(void)
 	Delay_Init();
 	USART_Printf_Init(921600);
 	printf("V5F SystemCoreClk:%d\r\n", SystemCoreClock);
-
-	Delay_Ms(500);
 
 #if (Run_Core == Run_Core_V3FandV5F)
 	HSEM_FastTake(HSEM_ID0);

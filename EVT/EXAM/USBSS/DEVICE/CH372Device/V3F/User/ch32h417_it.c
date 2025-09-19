@@ -37,8 +37,7 @@ void NMI_Handler(void)
  */
 void HardFault_Handler(void)
 {
-  // NVIC_SystemReset();
-  printf("HardFault_Handler\n");
+  NVIC_SystemReset();
   while (1)
   {
   }

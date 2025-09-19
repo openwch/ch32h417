@@ -24,7 +24,7 @@
 #define LCD_Height        (272)
 
 #define layer1_w          (480)
-#define layer1_h          (272)
+#define layer1_h          (255)
 
 #define layer2_w          (40)
 #define layer2_h          (40)
@@ -180,6 +180,10 @@ void Drawrect_argb4444(uint32_t color, uint32_t x, uint32_t y, uint32_t w, uint3
 static void GPIO_Config(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
+
+    RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR, ENABLE);
+    PWR_VIO18ModeCfg(PWR_VIO18CFGMODE_SW);
+    PWR_VIO18LevelCfg(PWR_VIO18Level_MODE3);
 
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_AFIO, ENABLE);
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOA, ENABLE);
@@ -528,9 +532,12 @@ void Hardware(void)
     printf("LTDC_Display\n");
 
     uint32_t color_list[] = {
-        argb8888(0x9f, 0xff, 0xff, 0xff), argb8888(0x9f, 0x0, 0xff, 0xff),
-        argb8888(0x9f, 0xff, 0x0, 0xff),  argb8888(0x9f, 0xff, 0xff, 0x0),
-        argb8888(0x9f, 0x0, 0x0, 0xff),   argb8888(0x9f, 0x0, 0xff, 0x0),
+        argb8888(0x9f, 0xff, 0xff, 0xff),
+        argb8888(0x9f, 0x0, 0xff, 0xff),
+        argb8888(0x9f, 0xff, 0x0, 0xff),
+        argb8888(0x9f, 0xff, 0xff, 0x0),
+        argb8888(0x9f, 0x0, 0x0, 0xff),
+        argb8888(0x9f, 0x0, 0xff, 0x0),
         argb8888(0x9f, 0xff, 0x0, 0x0),
     };
     uint32_t color_index  = 0;
@@ -543,10 +550,14 @@ void Hardware(void)
     int32_t layer2_ay = 1;
 
     GPIO_Config();
-    RCC_LTDCClockSourceDivConfig(RCC_LTDCClockSource_Div31);
+
+    // LTDC¡¡CLK Settings
+    // In this routine, the CLK required for the screen is 10M and the PLL is 400M, so divide by 40
+    RCC_LTDCCLKConfig(RCC_LTDCClockSource_PLL);
+    RCC_LTDCClockSourceDivConfig(RCC_LTDCClockSource_Div40);
     LCD_Config();
 
-    Drawrect_rgb565(argb8888(0xff, 0x70, 0x70, 0x70), 0, 0, layer1_w, layer1_h, layer1_w, layer1_h,
+    Drawrect_rgb565(argb8888(0xff, 0xff, 0xff, 0xff), 0, 0, layer1_w, layer1_h, layer1_w, layer1_h,
                     layer1);
 
     const uint32_t mh = (layer1_h / 3);
@@ -568,6 +579,16 @@ void Hardware(void)
     for (size_t i = 0; i < 255; i++)
     {
         Drawrect_rgb565(i, i, h, 1, eh, layer1_w, layer1_h, layer1);
+    }
+    const uint32_t mw = layer1_w - 255;
+
+    for (uint8_t i = 0; i < 255; i++)
+    {
+        if (i > layer1_h)
+        {
+            break;
+        }
+        Drawrect_rgb565(i | (i << 8) | (i << 16), 255, i, mw, 1, layer1_w, layer1_h, layer1);
     }
 
     Drawrect_argb4444(color_list[0], 0, 0, layer2_w, layer2_h, layer2_w, layer2_h, layer2);

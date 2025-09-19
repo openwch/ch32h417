@@ -13,6 +13,7 @@
 
 #include "ch32h417.h"
 #include "usb_desc.h"
+#include "ch32h417_usbss_device.h"
 
 /* Device Descriptor */
 const uint8_t  MyDevDescr[ ] =
@@ -172,8 +173,16 @@ const uint8_t MyQuaDesc[ ] =
 /* Device BOS Descriptor */
 const uint8_t MyBOSDesc[ ] =
 {
-    0x05, 0x0F, 0x0C, 0x00, 0x01,
+    /* Binary Object Store (BOS) Descriptor */
+    0x05, 0x0F, 0x2A, 0x00, 0x01,
+    /* USB 2.0 Extension Descriptor */
     0x07, 0x10, 0x02, 0x02, 0x00, 0x00, 0x00,
+    /* SuperSpeed USB Device Capability Descriptor */
+    0x0A, 0x10, 0x03, 0x00, 0x0E, 0x00, 0x10, 0x0A, 0x20, 0x00,
+    /* SuperSpeedPlus USB Device Capability */
+    0x14, 0x10, 0x0A, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x11,
+    0x00, 0x00, 0x30, 0x40, 0x0A, 0x00, 0xB0, 0x40, 0x0A, 0x00,
+    
 };
 
 /* USB Full-Speed Mode, Other speed configuration Descriptor */
@@ -195,7 +204,7 @@ const uint8_t SS_DeviceDescriptor[ ] =
 {
     0x12,                                                   // bLength
     0x01,                                                   // bDescriptorType
-    0x00, 0x03,                                             // bcdUSB
+    0x20, 0x03,                                             // bcdUSB
     0xff,                                                   // bDeviceClass
     0x80,                                                   // bDeviceSubClass
     0x55,                                                   // bDeviceProtocol
@@ -214,7 +223,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     /* Configuration Descriptor */
     0x09,                                                   // bLength
     0x02,                                                   // bDescriptorType
-    0x7A, 0x00,                                             // wTotalLength
+    0x60, 0x00,                                             // wTotalLength
     0x01,                                                   // bNumInterfaces
     0x01,                                                   // bConfigurationValue
     0x00,                                                   // iConfiguration
@@ -226,7 +235,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x04,                                                   // bDescriptorType
     0x00,                                                   // bInterfaceNumber
     0x00,                                                   // bAlternateSetting
-    0x08,                                                   // bNumEndpoints
+    0x06,                                                   // bNumEndpoints
     0xff,                                                   // bInterfaceClass
     0xff,                                                   // bInterfaceSubClass
     0xff,                                                   // bInterfaceProtocol: Keyboard
@@ -319,36 +328,6 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     DEF_ENDP3_OUT_BURST_LEVEL - 1,                          // bMaxBurst
-    0x00,                                                   // bmAttributes
-    0x00, 0x00,                                             // wBytesPerInterval 
-
-    /* Endpoint Descriptor */
-    0x07,                                                   // bLength
-    0x05,                                                   // bDescriptorType
-    0x84,                                                   // bEndpointAddress: IN Endpoint 4
-    0x02,                                                   // bmAttributes
-    0x00, 0x04,                                             // wMaxPacketSize
-    0x00,                                                   // bInterval
-
-    /* Endpoint Compansion Descriptor */
-    0x06,                                                   // bLength
-    0x30,                                                   // bDescriptorType
-    DEF_ENDP4_IN_BURST_LEVEL - 1,                           // bMaxBurst
-    0x00,                                                   // bmAttributes
-    0x00, 0x00,                                             // wBytesPerInterval 
-
-    /* Endpoint Descriptor */
-    0x07,                                                   // bLength
-    0x05,                                                   // bDescriptorType
-    0x04,                                                   // bEndpointAddress: OUT Endpoint 4
-    0x02,                                                   // bmAttributes
-    0x00, 0x04,                                             // wMaxPacketSize
-    0x00,                                                   // bInterval
-
-    /* Endpoint Compansion Descriptor */
-    0x06,                                                   // bLength
-    0x30,                                                   // bDescriptorType
-    DEF_ENDP4_OUT_BURST_LEVEL - 1,                          // bMaxBurst
     0x00,                                                   // bmAttributes
     0x00, 0x00,                                             // wBytesPerInterval 
 };

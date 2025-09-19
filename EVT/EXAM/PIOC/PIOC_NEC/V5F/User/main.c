@@ -9,13 +9,11 @@
  * Attention: This software (modified or not) and binary are used for
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-
 /*
  *@Note
  * NEC Infrared remote control receiving example:
  * Receive pin PIOC-IO0 or PIOC-IO1.the HCLK requires 100Mhz.
  */
-
 
 #include "debug.h"
 #include "hardware.h"
@@ -44,7 +42,6 @@ int main(void)
 #elif (Run_Core == Run_Core_V5F)
 	Hardware();
 #endif
-
 
 	while(1)
 	{

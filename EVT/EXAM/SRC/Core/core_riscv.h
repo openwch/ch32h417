@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : core_riscv.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : RISC-V V3F_V5F Core Peripheral Access Layer Header File for CH32H417
+* Version            : V1.0.1
+* Date               : 2025/09/15
+* Description        : RISC-V V3F_V5F Core Peripheral Access Layer Header File for CH32H417_416_415
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -170,7 +170,8 @@ typedef struct
 #define Core_ID_V5F   ((uint8_t)0x01)
 
 
-extern uint32_t WFE_MASK;
+extern volatile uint32_t WFE_MASK;
+extern volatile uint32_t WFE_WkupSource;
 /*********************************************************************
  * @fn      __enable_irq
  *
@@ -450,6 +451,7 @@ __attribute__( ( always_inline ) ) RV_STATIC_INLINE void __WFE(void)
 
   *(__IO uint32_t*)0x40010400 |= WFE_MASK;
 
+  WFE_WkupSource = 0;
   NVIC->EPR = 0xFFFFFFFF;
   NVIC->SCTLR |= (1<<3);
   asm volatile ("wfi");
@@ -457,13 +459,14 @@ __attribute__( ( always_inline ) ) RV_STATIC_INLINE void __WFE(void)
   for(;;)
   {
     t = *(__IO uint32_t*)0x40010414;
-    if((t & WFE_MASK) | (WFE_MASK == 0))
+    if((t & WFE_MASK) || (WFE_MASK == 0))
     {
       break;
     } else{
      asm volatile ("wfi");
     }
   }  
+  WFE_WkupSource = *(__IO uint32_t*)0x40010414;
   *(__IO uint32_t*)0x40010400 &= ~WFE_MASK;
   *(__IO uint32_t*)0x40010414 |= WFE_MASK;
 }

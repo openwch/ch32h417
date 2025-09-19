@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : hardware.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/05/25
+ * Version            : V1.0.1
+ * Date               : 2025/08/04
  * Description        : This document contains example routines related to ECDC.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -15,9 +15,9 @@
 
 /* Global Variable */
 
-__attribute__((aligned(16))) volatile uint32_t plain_text[128] = {0};
-__attribute__((aligned(16))) volatile uint32_t encrypted_text[sizeof(plain_text) / sizeof(*plain_text)] = {0};
-__attribute__((aligned(16))) volatile uint32_t decrypted_text[sizeof(plain_text) / sizeof(*plain_text)] = {0};
+__attribute__((aligned(32))) volatile uint32_t plain_text[128] = {0};
+__attribute__((aligned(32))) volatile uint32_t encrypted_text[sizeof(plain_text) / sizeof(*plain_text)] = {0};
+__attribute__((aligned(32))) volatile uint32_t decrypted_text[sizeof(plain_text) / sizeof(*plain_text)] = {0};
 
 /*********************************************************************
  * @fn      Hardware
@@ -46,7 +46,7 @@ void Hardware(void)
     key.KEY_63T32 = 0x97d4570e;
     key.KEY_31T0 = 0x55acd4c5;
 
-    ECDC_InitTypeDef ecdc_initstruct;
+    ECDC_InitTypeDef ecdc_initstruct = {0};
     ecdc_initstruct.Algorithm = ECDCAlgorithm_AES;
     ecdc_initstruct.BlockCipherMode = ECDCBlockCipherMode_ECB;
     ecdc_initstruct.ExcuteMode = ECDC_RAM_Encrypt;

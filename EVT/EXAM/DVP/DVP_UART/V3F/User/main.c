@@ -9,7 +9,6 @@
  * Attention: This software (modified or not) and binary are used for
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-
 /*
  *@Note
  *DVP--PIN:
@@ -37,7 +36,6 @@
 
 #include "debug.h"
 #include "hardware.h"
-
 
 /*********************************************************************
  * @fn      main

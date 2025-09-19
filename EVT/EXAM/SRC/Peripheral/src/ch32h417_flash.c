@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_flash.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/18
 * Description        : This file provides all the FLASH firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -456,11 +456,14 @@ FLASH_Status FLASH_ReadOutProtection(FunctionalState NewState)
  * @param   OB_IWDG - Selects the IWDG mode
  *            OB_IWDG_SW - Software IWDG selected
  *            OB_IWDG_HW - Hardware IWDG selected
- *
+ *            OB_USBFSDL_EN - Boot Enable USBFS Download 
+ *            OB_USBFSDL_NoEN - Boot Disable USBFS Download 
+ *            OB_USARTDL_EN - Boot Enable USART Download
+ *            OB_USARTDL_NoEN - Boot Disable USART Download 
  * @return  FLASH Status - The returned value can be: FLASH_BUSY, FLASH_ERROR_PG,
  *        FLASH_ERROR_WRP, FLASH_COMPLETE or FLASH_TIMEOUT.
  */
-FLASH_Status FLASH_UserOptionByteConfig(uint16_t OB_IWDG)
+FLASH_Status FLASH_UserOptionByteConfig(uint16_t OB_IWDG,uint16_t OB_USBFSDL,uint16_t OB_USARTDL)
 {
     FLASH_Status status = FLASH_COMPLETE;
     uint32_t     Addr = 0x1FFFF800;
@@ -478,10 +481,9 @@ FLASH_Status FLASH_UserOptionByteConfig(uint16_t OB_IWDG)
         for(i = 0; i < 8; i++)
         {
             pbuf[i] = *(uint16_t *)(Addr + 2 * i);
-            printf("pbuf[%d] - %04x\r\n",i,pbuf[i]);
         }
 
-        temp=pbuf[1]&(~0x1);
+        temp=pbuf[1]&(~0xC1);
 
         /* Erase optionbytes */
         FLASH->CTLR |= CR_OPTER_Set;
@@ -490,7 +492,7 @@ FLASH_Status FLASH_UserOptionByteConfig(uint16_t OB_IWDG)
             ;
         FLASH->CTLR &= ~CR_OPTER_Set;
 
-        pbuf[1] = (uint16_t)(OB_IWDG | ((uint16_t)temp));
+        pbuf[1] = OB_IWDG | (uint16_t)(OB_USBFSDL | (uint16_t)(OB_USARTDL | ((uint16_t)temp)));
 
         FLASH->CTLR |= CR_OPTPG_Set;
         for(i = 0; i < 8; i++)
@@ -513,6 +515,8 @@ FLASH_Status FLASH_UserOptionByteConfig(uint16_t OB_IWDG)
  * @brief   Returns the FLASH User Option Bytes values.
  *
  * @return  The FLASH User Option Bytes values - IWDG_SW(Bit0)
+ *          The FLASH User Option Bytes values - USBFSDL_EN(Bit6)
+ *          The FLASH User Option Bytes values - USARTDL_EN(Bit7)
  */
 uint32_t FLASH_GetUserOptionByte(void)
 {
@@ -1247,17 +1251,40 @@ FLASH_Status FLASH_ROM_WRITE(uint32_t StartAddr, uint32_t *pbuf, uint32_t Length
  *
  * @brief   Returns the BOOT mode.
  *
- * @return BOOT mode identifier.
- *          BOOT mode List-
- *  0x00FFFFFF - UART-enable USBHS-enable USBSS-enable
- *  0x06FFFFF9 - UART-enable USBHS-Disable USBSS-disable
- *  0x05FFFFFA - UART-Disable USBHS-enable USBSS-disable
- *  0x03FFFFFC - UART-Disable USBHS-disable USBSS-enable
- *  0x04FFFFFB - UART-enable USBHS-enable USBSS-disable
- *  0x01FFFFFE - UART-disable USBHS-enable USBSS-enable
- *  0x02FFFFFD - UART-enable USBHS-Disable USBSS-enable 
+ * @return BOOT mode identifier.BOOT mode is controlled by user characters bit6 and bit7(FLASH_USER_USER)
+ *          Bit6 - BOOT enables USBFS download function.Bit7 - BOOT enables USART download function.
+ *          return - 0 - USBFS download disable and USART download disable.
+ *          return - 1 - USBFS download enable and USART download disable.
+ *          return - 2 - USBFS download disable and USART download enable.
+ *          return - 3 - USBFS download enable and USART download enable.
  */
 __attribute__((optimize("O0"))) uint32_t FLASH_BOOT_GetMode( void )
 {
-    return( *( uint32_t * )0x08000018 );
+    volatile uint32_t t = *( uint32_t* )0x08000000;
+    t = FLASH_GetUserOptionByte();
+    t &= (uint32_t)(~0xFF); 
+    return (t >> 6);
+}
+
+/*********************************************************************
+ * @fn      FLASH_GetCapacity
+ *
+ * @brief   Get FLASH Capacity .
+ *
+ * @param   none
+ *
+ * @return  FLASHCapacity - FLASH capacity of the chip.
+ *        FLASHCapacity_960K - 960K FLASH 
+ *        FLASHCapacity_480K - 480K FLASH
+ */
+FLASHCapacity FLASH_GetCapacity( void )
+{
+    if(((*(vu32*)FLASH_CFGR0_BASE) & (1<<28)) != 0)
+    {
+        return FLASHCapacity_960K;
+    }
+    else
+    {
+        return FLASHCapacity_480K;
+    }
 }

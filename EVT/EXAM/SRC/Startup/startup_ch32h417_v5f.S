@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : startup_ch32h417_v5f.s
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : CH32H417 vector table t0 V5F for eclipse toolchain.
+* Version            : V1.0.1
+* Date               : 2025/09/17
+* Description        : CH32h417_416_415 vector table t0 V5F for eclipse toolchain.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -420,16 +420,9 @@ USART_WKUP_IRQHandler:
 1:
 	j 1b
 
-	.section	.handle_reset,"ax",@progbits
-	.weak	handle_reset
-	.align	1
-handle_reset:
-.option push 
-.option	norelax 
-	la gp, __global_pointer$
-.option	pop 
-
-	la sp, _eusrstack 
+    .section    .load,"ax",@progbits
+    .align  1
+_load_base:
 
 /* Load highcode code  section from flash to RAM */
     la a0, _highcode_lma
@@ -455,6 +448,7 @@ handle_reset:
     addi a0, a0, 4
     addi a1, a1, 4
     bltu a1, a2, 1b
+
 /* Load data section from flash to RAM */
 2:
 	la a0, _data_lma
@@ -476,7 +470,7 @@ handle_reset:
 	sw zero, (a0)
 	addi a0, a0, 4
 	bltu a0, a1, 1b
-2:
+2:  
 /* Configure Prefetch */
     li t0, 0x123733E0
     csrw 0xBC0, t0
@@ -498,5 +492,41 @@ handle_reset:
 	la t0, main
 	csrw mepc, t0
 	mret
+
+	.section	.handle_reset,"ax",@progbits
+	.weak	handle_reset
+	.align	1
+handle_reset:
+.option push 
+.option	norelax 
+	la gp, __global_pointer$
+.option	pop 
+
+	la sp, _eusrstack 
+
+    lui a3, 0x40022
+    lw a4,0(a3)
+    li a5,0x3
+    or a5,a4,a5
+    sw a5,0(a3)
+
+/* Load loadcode  section from flash to RAM */
+    la a0, _loadcode_lma
+    la a1, _loadcode_vma_start
+    la a2, _loadcode_vma_end
+    bgeu a1, a2, 2f
+1:
+    lw t0, (a0)
+    sw t0, (a1)
+    addi a0, a0, 4
+    addi a1, a1, 4
+    bltu a1, a2, 1b
+2:
+    sw a4,0(a3)
+
+    call _load_base
+
+
+
 
 

@@ -119,7 +119,7 @@
                 </option>
                 <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.undef.1820512625" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.undef" useByScannerDiscovery="true" valueType="undefDefinedSymbols"/>
                 <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.include.paths.1567947810" name="Include paths (-I)" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.compiler.include.paths" useByScannerDiscovery="true" valueType="includePath">
-                  <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Debug}&quot;"/>
+                  <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Common/Debug}&quot;"/>
                   <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Core}&quot;"/>
                   <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/User}&quot;"/>
                   <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Peripheral/inc}&quot;"/>
@@ -171,7 +171,7 @@
               </tool>
               <tool id="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.c.linker.1620074387" name="GNU RISC-V Cross C Linker" outputPrefix="" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.c.linker">
                 <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.linker.scriptfile.1390103472" name="Script files (-T)" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.linker.scriptfile" useByScannerDiscovery="false" valueType="stringList">
-                  <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Ld/V3F/Link_v3f.ld}&quot;"/>
+                  <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Common/Ld/V3F/Link_v3f.ld}&quot;"/>
                 </option>
                 <option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.linker.nostart.913830613" name="Do not use standard start files (-nostartfiles)" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.linker.nostart" useByScannerDiscovery="false" value="true" valueType="boolean"/>
                 <option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.linker.nodeflibs.1285997013" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.c.linker.nodeflibs" useByScannerDiscovery="false" value="false" valueType="boolean"/>
@@ -205,7 +205,7 @@
               </tool>
               <tool id="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.cpp.linker.1947503520" name="GNU RISC-V Cross C++ Linker" outputPrefix="" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.tool.cpp.linker">
                 <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.cpp.linker.scriptfile.1751226764" name="Script files (-T)" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.cpp.linker.scriptfile" useByScannerDiscovery="false" valueType="stringList">
-                  <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Ld/V3F/Link_v3f.ld}&quot;"/>
+                  <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Common/Ld/V3F/Link_v3f.ld}&quot;"/>
                 </option>
                 <option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.cpp.linker.nostart.642896175" name="Do not use standard start files (-nostartfiles)" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.cpp.linker.nostart" useByScannerDiscovery="false" value="true" valueType="boolean"/>
                 <option id="ilg.gnumcueclipse.managedbuild.cross.riscv.option.cpp.linker.nodeflibs.282300763" superClass="ilg.gnumcueclipse.managedbuild.cross.riscv.option.cpp.linker.nodeflibs" useByScannerDiscovery="false" value="false" valueType="boolean"/>
@@ -263,7 +263,7 @@
             </toolChain>
           </folderInfo>
           <sourceEntries>
-            <entry excluding="Ld/V5F|Startup/startup_ch32h417_v5f.S|User/main.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+            <entry excluding="Ld/V5F|Startup/startup_ch32h417_v5f.S|User/main.c|Common/Startup/startup_ch32h417_v5f.S" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
           </sourceEntries>
         </configuration>
       </storageModule>

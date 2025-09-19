@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main_v3f.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2025/07/29
  * Description        : Main program body for V3F.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -19,6 +19,10 @@
  * This routine demonstrates WFI\WFE enters stop mode, v3f and v5f need to be configured with different interrupt numbers
  * or event lines.Input a high level at pin PB1 triggers the EXTI_Line1 to wake up V3F core, and input a high level 
  * at pin PA11 triggers the EXTI_Line11 to wake up V5F core.
+ *@Note
+ * For the small package model of the chip, there are some pins that have not been led out compared to the largest package, 
+ * or some pins that have been packaged but not used. These pins need to be set as pull-down\up inputs to reduce power 
+ * consumption.Please refer to the routine configuration for details. 
  */
 
 #include "debug.h"

@@ -26,8 +26,6 @@ void NMI_Handler(void)
 {
   while (1)
   {
-    // USART_Printf_Init(115200);
-    // printf("42222222222222\r\n");
   }
 }
 

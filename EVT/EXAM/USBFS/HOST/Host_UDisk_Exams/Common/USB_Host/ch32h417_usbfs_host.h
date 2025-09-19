@@ -24,13 +24,20 @@ extern "C" {
 #include "ch32h417_usb.h"
 
 /*******************************************************************************/
-/* USB Setup Request Macro Definition */
+/* Macro Definition */
+
+/* USB Setup Request */
 #define pUSBFS_SetupRequest        ( (PUSB_SETUP_REQ)USBFS_TX_Buf )
+
+/* USB Buffer Size */
+#ifndef USBFS_MAX_PACKET_SIZE
+#define USBFS_MAX_PACKET_SIZE      64
+#endif
 
 /*******************************************************************************/
 /* Constant Definition */
-#ifndef DEF_GET_USB_DEV_DESC
-#define DEF_GET_USB_DEV_DESC
+#ifndef DEF_USB_GEN_ENUM_CMD
+#define DEF_USB_GEN_ENUM_CMD
 /* Get Device Descriptor Command Packet */
 __attribute__((aligned(4))) static const uint8_t  SetupGetDevDesc[ ] =
 {
@@ -76,10 +83,10 @@ __attribute__((aligned(4))) static const uint8_t SetupSetInterface[ ] =
 
 /*******************************************************************************/
 /* Variable Declaration */
-extern __attribute__((aligned(4))) uint8_t  RxBuffer[ MAX_PACKET_SIZE ];
-extern __attribute__((aligned(4))) uint8_t  TxBuffer[ MAX_PACKET_SIZE ];
-#define USBFS_RX_Buf RxBuffer
-#define USBFS_TX_Buf TxBuffer
+extern __attribute__((aligned(4))) uint8_t  RxBuffer[ ];           // IN, must even address
+extern __attribute__((aligned(4))) uint8_t  TxBuffer[ ];           // OUT, must even address
+#define USBFS_RX_Buf  RxBuffer
+#define USBFS_TX_Buf  TxBuffer
 
 /*******************************************************************************/
 /* Function Declaration */
@@ -102,8 +109,6 @@ extern uint8_t USBFSH_SetUsbConfig( uint8_t ep0_size, uint8_t cfg_val );
 extern uint8_t USBFSH_ClearEndpStall( uint8_t ep0_size, uint8_t endp_num );
 extern uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t *plen );
 extern uint8_t USBFSH_SendEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t len );
-extern uint8_t USBFSH_PortDetect( uint8_t status );
-
 
 #ifdef __cplusplus
 }

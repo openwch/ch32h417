@@ -22,10 +22,6 @@ struct   _ROOT_HUB_DEVICE RootHubDev[ DEF_TOTAL_ROOT_HUB ];
 struct   __HOST_CTL HostCtl[ DEF_TOTAL_ROOT_HUB * DEF_ONE_USB_SUP_DEV_TOTAL ];
 volatile uint8_t  UDisk_Opeation_Flag = 0;
 
-/* For Udisk Lib */
-uint8_t *pHOST_RX_RAM_Addr;
-uint8_t *pHOST_TX_RAM_Addr;
-
 /*********************************************************************
  * @fn      mStopIfError
  *
@@ -43,12 +39,12 @@ void mStopIfError( uint8_t iError )
     }
     /* Display the errors */
     DUG_PRINTF( "Error:%02x\r\n", iError );
-    /* After encountering an error, you should analyze the error code and CH103DiskReday status, for example,
-     * call CH103DiskReday to check whether the current USB disk is connected or not,
+    /* After encountering an error, you should analyze the error code and CHRV3DiskStatus status, for example,
+     * call CHRV3DiskReady to check whether the current USB disk is connected or not,
      * if the disk is disconnected then wait for the disk to be plugged in again and operate again,
      * Suggested steps to follow after an error:
-     *     1,call CH103DiskReday once, if successful, then continue the operation, such as Open, Read/Write, etc.
-     *     2,If CH103DiskReday is not successful, then the operation will be forced to start from the beginning.
+     *     1, call CHRV3DiskReady once, if successful, then continue the operation, such as Open, Read/Write, etc.
+     *     2, If CHRV3DiskReady is not successful, then the operation will be forced to start from the beginning.
      */
     while(1)
     {  }
@@ -67,258 +63,18 @@ void mStopIfError( uint8_t iError )
  */
 void Udisk_USBH_Initialization( void )
 {
-    /* USB Host Initialization */
+	/* USB Host Initialization */
     printf( "USB Host & UDisk Lib Initialization. \r\n" );
-    /* Initialize USBHS host */
-    /* Note: Only CH32F205/CH32F207 support USB high-speed port. */
-#if DEF_USB_PORT_HS_EN
-
-#endif
-
     /* Initialize USBFS host */
-#if DEF_USB_PORT_FS_EN
     DUG_PRINTF( "USBFS Host Init\r\n" );
     USBFS_RCC_Init( );
     USBFS_Host_Init( ENABLE );
-    /* For Udisk Lib */
-    pHOST_TX_RAM_Addr = USBFS_TX_Buf;
-    pHOST_RX_RAM_Addr = USBFS_RX_Buf;
-    /* Clear Struct */
     memset( &RootHubDev[ DEF_USB_PORT_FS ].bStatus, 0, sizeof( struct _ROOT_HUB_DEVICE ) );
     memset( &HostCtl[ DEF_USB_PORT_FS ].InterfaceNum, 0, sizeof( struct __HOST_CTL ) );
-#endif
-
-    /* USB Libs Initialization */
+	
+	/* USB Libs Initialization */
     printf( "UDisk library Initialization. \r\n" );
     CHRV3LibInit( );
-}
-
-/*********************************************************************
- * @fn      USBH_CheckRootHubPortStatus
- *
- * @brief   Check status of USB port.
- *
- * @para    index: USB host port
- *
- * @return  The current status of the port.
- */
-uint8_t USBH_CheckRootHubPortStatus( uint8_t usb_port )
-{
-    uint8_t s = ERR_USB_UNSUPPORT;
-
-    if( usb_port == DEF_USB_PORT_FS )
-    {
-#if DEF_USB_PORT_FS_EN
-        s = USBFSH_CheckRootHubPortStatus( RootHubDev[ usb_port ].bStatus );
-#endif
-    }
-    else if( usb_port == DEF_USB_PORT_HS )
-    {
-#if DEF_USB_PORT_HS_EN
-
-#endif
-    }
-
-    return s;
-}
-
-/*********************************************************************
- * @fn      USBH_ResetRootHubPort
- *
- * @brief   Reset USB port.
- *
- * @para    index: USB host port
- *          mod: Reset host port operating mode.
- *               0 -> reset and wait end
- *               1 -> begin reset
- *               2 -> end reset
- *
- * @return  none
- */
-void USBH_ResetRootHubPort( uint8_t usb_port, uint8_t mode )
-{
-    if( usb_port == DEF_USB_PORT_FS )
-    {
-#if DEF_USB_PORT_FS_EN
-        USBFSH_ResetRootHubPort( mode );
-#endif
-    }
-    else if( usb_port == DEF_USB_PORT_HS )
-    {
-#if DEF_USB_PORT_HS_EN
-
-#endif
-    }
-}
-
-/*********************************************************************
- * @fn      USBH_EnableRootHubPort
- *
- * @brief   Enable USB host port.
- *
- * @para    index: USB host port
- *
- * @return  none
- */
-uint8_t USBH_EnableRootHubPort( uint8_t usb_port )
-{
-    uint8_t s = ERR_USB_UNSUPPORT;
-
-    if( usb_port == DEF_USB_PORT_FS )
-    {
-#if DEF_USB_PORT_FS_EN
-        s = USBFSH_EnableRootHubPort( &RootHubDev[ usb_port ].bSpeed );
-#endif
-    }
-    else if( usb_port == DEF_USB_PORT_HS )
-    {
-#if DEF_USB_PORT_HS_EN
-
-#endif
-    }
-
-    return s;
-}
-
-/*********************************************************************
- * @fn      USBH_SetSelfSpeed
- *
- * @brief   Set USB speed.
- *
- * @para    index: USB host port
- *
- * @return  none
- */
-void USBH_SetSelfSpeed( uint8_t usb_port )
-{
-    if( usb_port == DEF_USB_PORT_FS )
-    {
-#if DEF_USB_PORT_FS_EN
-        USBFSH_SetSelfSpeed( RootHubDev[ usb_port].bSpeed );
-#endif
-    }
-    else if( usb_port == DEF_USB_PORT_HS )
-    {
-#if DEF_USB_PORT_HS_EN
-
-#endif
-    }
-}
-
-/*********************************************************************
- * @fn      USBH_GetDeviceDescr
- *
- * @brief   Get the device descriptor of the USB device.
- *
- * @para    index: USB host port
- *
- * @return  none
- */
-uint8_t USBH_GetDeviceDescr( uint8_t usb_port )
-{
-    uint8_t s = ERR_USB_UNSUPPORT;
-
-    if( usb_port == DEF_USB_PORT_FS )
-    {
-#if DEF_USB_PORT_FS_EN
-        s = USBFSH_GetDeviceDescr( &RootHubDev[ usb_port ].bEp0MaxPks, DevDesc_Buf );
-#endif
-    }
-    else if( usb_port == DEF_USB_PORT_HS )
-    {
-#if DEF_USB_PORT_HS_EN
-
-#endif
-    }
-
-    return s;
-}
-
-/*********************************************************************
- * @fn      USBH_SetUsbAddress
- *
- * @brief   Set USB device address.
- *
- * @para    index: USB host port
- *
- * @return  none
- */
-uint8_t USBH_SetUsbAddress( uint8_t usb_port )
-{
-    uint8_t s = ERR_USB_UNSUPPORT;
-
-    if( usb_port == DEF_USB_PORT_FS )
-    {
-#if DEF_USB_PORT_FS_EN
-        RootHubDev[ usb_port ].bAddress = (uint8_t)( DEF_USB_PORT_FS + USB_DEVICE_ADDR );
-        s = USBFSH_SetUsbAddress( RootHubDev[ usb_port ].bEp0MaxPks, RootHubDev[ usb_port ].bAddress );
-#endif
-    }
-    else if( usb_port == DEF_USB_PORT_HS )
-    {
-#if DEF_USB_PORT_HS_EN
-
-#endif
-    }
-
-    return s;
-}
-
-/*********************************************************************
- * @fn      USBH_GetConfigDescr
- *
- * @brief   Get the configuration descriptor of the USB device.
- *
- * @para    index: USB host port
- *
- * @return  none
- */
-uint8_t USBH_GetConfigDescr( uint8_t usb_port, uint16_t *pcfg_len )
-{
-    uint8_t s = ERR_USB_UNSUPPORT;
-
-    if( usb_port == DEF_USB_PORT_FS )
-    {
-#if DEF_USB_PORT_FS_EN
-        s = USBFSH_GetConfigDescr( RootHubDev[ usb_port ].bEp0MaxPks, Com_Buffer, DEF_COM_BUF_LEN, pcfg_len );
-#endif
-    }
-    else if( usb_port == DEF_USB_PORT_HS )
-    {
-#if DEF_USB_PORT_HS_EN
-
-#endif
-    }
-    return s;
-}
-
-/*********************************************************************
- * @fn      USBFSH_SetUsbConfig
- *
- * @brief   Set USB configuration.
- *
- * @para    index: USB host port
- *
- * @return  none
- */
-uint8_t USBH_SetUsbConfig( uint8_t usb_port, uint8_t cfg_val )
-{
-    uint8_t s = ERR_USB_UNSUPPORT;
-
-    if( usb_port == DEF_USB_PORT_FS )
-    {
-#if DEF_USB_PORT_FS_EN
-        s = USBFSH_SetUsbConfig( RootHubDev[ usb_port ].bEp0MaxPks, cfg_val );
-#endif
-    }
-    else if( usb_port == DEF_USB_PORT_HS )
-    {
-#if DEF_USB_PORT_HS_EN
-
-#endif
-    }
-
-    return s;
 }
 
 /*********************************************************************
@@ -348,10 +104,10 @@ ENUM_START:
     Delay_Ms( 8 << enum_cnt );
 
     /* Reset the USB device and wait for the USB device to reconnect */
-    USBH_ResetRootHubPort( usb_port, 0 );
+    USBFSH_ResetRootHubPort( 0 );
     for( i = 0, s = 0; i < DEF_RE_ATTACH_TIMEOUT; i++ )
     {
-        if( USBH_EnableRootHubPort( usb_port ) == ERR_SUCCESS )
+        if( USBFSH_EnableRootHubPort( &RootHubDev[ usb_port ].bSpeed ) == ERR_SUCCESS )
         {
             i = 0;
             s++;
@@ -373,11 +129,11 @@ ENUM_START:
     }
 
     /* Select USB speed */
-    USBH_SetSelfSpeed( usb_port );
+    USBFSH_SetSelfSpeed( RootHubDev[ usb_port].bSpeed );
 
     /* Get USB device device descriptor */
     DUG_PRINTF("Get DevDesc: ");
-    s = USBH_GetDeviceDescr( usb_port );
+    s = USBFSH_GetDeviceDescr( &RootHubDev[ usb_port ].bEp0MaxPks, DevDesc_Buf );
     if( s == ERR_SUCCESS )
     {
         /* Print USB device device descriptor */
@@ -402,7 +158,8 @@ ENUM_START:
 
     /* Set the USB device address */
     DUG_PRINTF("Set DevAddr: ");
-    s = USBH_SetUsbAddress( usb_port );
+    RootHubDev[ usb_port ].bAddress = (uint8_t)( DEF_USB_PORT_FS + USB_DEVICE_ADDR );
+    s = USBFSH_SetUsbAddress( RootHubDev[ usb_port ].bEp0MaxPks, RootHubDev[ usb_port ].bAddress );
     if( s == ERR_SUCCESS )
     {
         DUG_PRINTF( "OK\n" );
@@ -421,7 +178,7 @@ ENUM_START:
 
     /* Get the USB device configuration descriptor */
     DUG_PRINTF("Get CfgDesc: ");
-    s = USBH_GetConfigDescr( usb_port, &len );
+    s = USBFSH_GetConfigDescr( RootHubDev[ usb_port ].bEp0MaxPks, Com_Buffer, DEF_COM_BUF_LEN, &len );
     if( s == ERR_SUCCESS )
     {
         cfg_val = ( (PUSB_CFG_DESCR)Com_Buffer )->bConfigurationValue;
@@ -448,7 +205,7 @@ ENUM_START:
 
     /* Set USB device configuration value */
     DUG_PRINTF("Set Cfg: ");
-    s = USBH_SetUsbConfig( usb_port, cfg_val );
+    s = USBFSH_SetUsbConfig( RootHubDev[ usb_port ].bEp0MaxPks, cfg_val );
     if( s == ERR_SUCCESS )
     {
         DUG_PRINTF( "OK\n" );
@@ -468,10 +225,10 @@ ENUM_START:
 }
 
 /*********************************************************************
- * @fn      IAP_USBH_PreDeal
+ * @fn      UDisk_USBH_PreDeal
  *
- * @brief   usb host preemption operations, 
-  *         including detecting device insertion and enumerating device information 
+ * @brief   usb host preemption operations,
+  *         including detecting device insertion and enumerating device information
  *
  * @return  none
  */
@@ -480,16 +237,12 @@ uint8_t UDisk_USBH_PreDeal( void )
     uint8_t usb_port;
     uint8_t index;
     uint8_t ret;
-#if DEF_USB_PORT_FS_EN
     usb_port = DEF_USB_PORT_FS;
-#elif DEF_USB_PORT_HS_EN
-
-#endif
-    ret = USBH_CheckRootHubPortStatus( usb_port );
+    ret = USBFSH_CheckRootHubPortStatus( RootHubDev[ usb_port ].bStatus );
     if( ret == ROOT_DEV_CONNECTED )
     {
         DUG_PRINTF("USB Dev In.\n");
-        USBH_CheckRootHubPortStatus( usb_port );
+        USBFSH_CheckRootHubPortStatus( RootHubDev[ usb_port ].bStatus );
         RootHubDev[ usb_port ].bStatus = ROOT_DEV_CONNECTED; // Set connection status_
         RootHubDev[ usb_port ].DeviceIndex = usb_port * DEF_ONE_USB_SUP_DEV_TOTAL;
 
@@ -515,6 +268,7 @@ uint8_t UDisk_USBH_PreDeal( void )
         index = RootHubDev[ usb_port ].DeviceIndex;
         memset( &RootHubDev[ usb_port ].bStatus, 0, sizeof( struct _ROOT_HUB_DEVICE ) );
         memset( &HostCtl[ index ].InterfaceNum, 0, sizeof( struct __HOST_CTL ) );
+        UDisk_Opeation_Flag = 1;
         CHRV3DiskStatus = DISK_UNKNOWN;
         return ERR_USB_DISCON;
     }
@@ -546,14 +300,14 @@ uint8_t UDisk_USBH_DiskReady( void )
               {
                   /* Disk Ready */
                   DUG_PRINTF( "Disk Ready Code:%02x.\r\n", ret );
-                  DUG_PRINTF( "CH103DiskStatus:%02x\n", CHRV3DiskStatus);
+                  DUG_PRINTF( "CHRV3DiskStatus:%02x\n", CHRV3DiskStatus);
                   UDisk_Opeation_Flag = 1;
                   return DISK_READY;
               }
               else
               {
                   DUG_PRINTF("Not Ready Code :%02x.\r\n", ret);
-                  DUG_PRINTF("CH103DiskStatus:%02x.\n", CHRV3DiskStatus);
+                  DUG_PRINTF("CHRV3DiskStatus:%02x.\n", CHRV3DiskStatus);
               }
               Delay_Ms( 50 );
           }

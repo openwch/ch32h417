@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/16
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -146,7 +146,7 @@ void DMA1_Channel1_IRQHandler(void)   __attribute__((interrupt("WCH-Interrupt-fa
 void DMA1_Channel1_IRQHandler()
 {
 
-    if(DMA_GetITStatus(DMA1,DMA1_IT_TC1)==RESET ){
+    if(DMA_GetITStatus(DMA1,DMA1_IT_TC1)==SET ){
         DMA_ClearITPendingBit(DMA1,DMA1_IT_TC1);
 
         Adc_Val[0]=TxBuf[0]&0xffff;

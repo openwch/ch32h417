@@ -18,7 +18,6 @@
 // #define Mode   DS1820
 #define Mode   RGB_WS2812
 
-
 __IO	uint16_t	temper;
 
 u8 RGBpbuf[] = {
@@ -65,16 +64,16 @@ u8 RGBpbuf2[] = {
 #define     rgb_data_bytes          sizeof(RGBpbuf2)  // 10 RGB LEDs, 30 bytes data
 #define     timer_to_run            1               // start by timer
 
-
 /*********************************************************************
- * @fn      Function_1Wire
+ * @fn      Hardware
  *
- * @brief   1 wire function.
+ * @brief   1_wire function
  *
  * @return  none
  */
-void Function_1Wire(void)
+void Hardware(void)
 {
+    printf("1 wire ...\r\n");
 #if (Mode==RGB_WS2812)  //RGB
     uint16_t    total_bytes;
 	uint8_t     t1=0;
@@ -95,6 +94,7 @@ void Function_1Wire(void)
         total_bytes = 0;
         if ( stat == RGB1W_ERR_OK ) printf("1-wire finished\r\n");
         else printf("1-wire error %02x\r\n", stat);
+        Delay_Ms(1000);
 #else
 // long data
         Delay_Ms(200);
@@ -159,31 +159,7 @@ void Function_1Wire(void)
         }
 
 #endif
-}
-}
-/*********************************************************************
- * @fn      Hardware
- *
- * @brief   Resets the CRC Data register (DR).
- *
- * @return  none
- */
-void Hardware(void)
-{
-#ifdef Core_V3F
-
-printf("V3F 1 wire ....\r\n");
-Function_1Wire();
-
-#elif defined(Core_V5F)
-
-printf("V5F 1 wire ...\r\n");
-Function_1Wire();
-
-#endif
-
-while(1);
-
+    }
 }
 
 

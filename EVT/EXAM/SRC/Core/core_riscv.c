@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : core_riscv.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : RISC-V V3F_V5F Core Peripheral Access Layer Source File for CH32H417
+* Version            : V1.0.1
+* Date               : 2025/09/15
+* Description        : RISC-V V3F_V5F Core Peripheral Access Layer Source File for CH32H417_416_415
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -30,7 +30,8 @@
 
 #endif
 
-uint32_t WFE_MASK = 0;
+volatile uint32_t WFE_MASK = 0;
+
 /*********************************************************************
  * @fn      __get_FFLAGS
  *

@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/17
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -128,15 +128,25 @@ void PWR_STOPMode_LP_Cmd(FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
-      cfg &= ~((0x7 << 17) | (0x7 << 4));
-      *(vu32*)SYS_CFGR0_BASE = cfg;
+        if(((*(uint32_t *)0x1FFFF704) & (0x000000F0)) == 0)
+        {
+            cfg &= ~((0x7 << 17));
+            cfg |= ((0x1 << 17));
+        }
+        else
+        {
+            cfg &= ~((0x7 << 17) | (0x7 << 4));
+            cfg |= ((0x1 << 4));
+        }
+
+        *(vu32*)SYS_CFGR0_BASE = cfg;
     }
     else
     {
       *(vu32*)SYS_CFGR0_BASE = tmp;
       Delay_Us(200);
     }
-}
+} 
 
 /*********************************************************************
  * @fn      Hardware
@@ -160,14 +170,14 @@ void Hardware(void)
         /* The frequency needs to be reduced before lowering the VDDK */
         HSIAsSystemSource();
         /* In stop lowpower mode,to reduce power consumption, VDDK needs to be lowered 
-		to 0.9V before stop, And it is recommended to turn off all peripherals. */
+		before stop, And it is recommended to turn off all peripherals. */
         PWR_STOPMode_LP_Cmd(ENABLE);
 #endif
 #else
         /* The frequency needs to be reduced before lowering the VDDK */
         HSIAsSystemSource();
         /* In stop lowpower mode,to reduce power consumption, VDDK needs to be lowered 
-		to 0.9V before stop, And it is recommended to turn off all peripherals. */
+		before stop, And it is recommended to turn off all peripherals. */
         PWR_STOPMode_LP_Cmd(ENABLE);
 #endif
 

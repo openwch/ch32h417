@@ -11,17 +11,31 @@
  *******************************************************************************/
 /*
  *@Note
- *low power, sleep mode routine:
- *EXTI_Line11(PA11)
- *This routine demonstrates WFI enters sleep mode, PA11 pin input low level triggers external interrupt
- *EXTI_Line11 to exit sleep mode,Program execution continues after wake-up.
+ *DVP--PIN:
+ *   D0--PE0(AF11)
+ *   D1--PE1(AF11)
+ *   D2--PE2(AF13)
+ *   D3--PE3(AF13)
+ *   D4--PE4(AF13)
+ *   D5--PB6(AF13)
+ *   D6--PE5(AF13)
+ *   D7--PE6(AF13)
+ *   D8--PC10(AF13)
+ *   D9--PC12(AF13)
+ *   D10--PD6(AF13)
+ *   D11--PD2(AF13)
+ *   VSYNC--PB7(AF13)
+ *   HERF--PB13(AF8)
+ *   DPCLK--PB12(AF15)
+ *   SDA--PC1
+ *   SDCLK--PC0
+ *   DPWDN--PB0
+ *   RESET--PB1
  *
  */
 
-
 #include "debug.h"
 #include "hardware.h"
-
 
 /*********************************************************************
  * @fn      main

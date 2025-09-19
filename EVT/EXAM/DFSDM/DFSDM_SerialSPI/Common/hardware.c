@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
-* File Name          : ch32h417_crc.c
+* File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/17
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -23,7 +23,7 @@ uint8_t SPI_Tx_Data[TxbuffSize] = {0};
 
 int32_t high_threshold_val = 32768;
 int32_t low_threshold_val = -32768;
-uint8_t ErrorFlag = 0;
+volatile uint8_t ErrorFlag = 0;
 
 /*********************************************************************
  * @fn      SPI_Function_Init

@@ -11,6 +11,7 @@
  *******************************************************************************/
 /*
  *@Note
+ *The captures images and displays them on the TFTLCD.
  *DVP--PIN:
  *   D0--PE0(AF11)
  *   D1--PE1(AF11)
@@ -26,20 +27,20 @@
  *   D11--PD2(AF13)
  *   VSYNC--PB7(AF13)
  *   HERF--PB13(AF8)
- *   DPCLK--PB12(AF15)
+ *   DPCLK--PF13(AF11)
  *   SDA--PC1
  *   SDCLK--PC0
  *   DPWDN--PB0
- *   RESET--PB1
+ *   RESET--PD2
  *
-
+ 
 FMC routine to operate TFTLCD:
   LCD--PIN:
     PD11--FMC_A16
     PD12--FMC_A17
     PD5 --FMC_NEW
     PD4 --FMC_NOE
-    PA15--LCDRST#
+    PD3--LCDRST#
     PD14--FMC_D0
     PD15--FMC_D1
     PD0 --FMC_D2
@@ -61,7 +62,6 @@ FMC routine to operate TFTLCD:
 
 #include "debug.h"
 #include "hardware.h"
-
 
 /*********************************************************************
  * @fn      main

@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/16
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -11,7 +11,7 @@
 *******************************************************************************/
 #include "hardware.h"
 u16 Adc_Val[2];
-u8 ADC_IT_Flag;
+vu8 ADC_IT_Flag;
 
 void ADC1_2_IRQHandler(void)   __attribute__((interrupt("WCH-Interrupt-fast")));
 

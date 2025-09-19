@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_usb.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/05/06
+* Version            : V1.0.1
+* Date               : 2025/09/16
 * Description        : This file contains all the functions prototypes for the 
 *                      USB firmware library.
 *********************************************************************************
@@ -54,6 +54,7 @@
 #ifndef USB_GET_DESCRIPTOR
 #define USB_GET_STATUS              0x00
 #define USB_CLEAR_FEATURE           0x01
+#define USB_SET_ENDPOINT            0x02
 #define USB_SET_FEATURE             0x03
 #define USB_SET_ADDRESS             0x05
 #define USB_GET_DESCRIPTOR          0x06
@@ -63,6 +64,8 @@
 #define USB_GET_INTERFACE           0x0A
 #define USB_SET_INTERFACE           0x0B
 #define USB_SYNCH_FRAME             0x0C
+#define USB_SET_SEL                 0x30
+#define USB_SET_ISOCH_DLY           0x31
 #endif
 
 #define DEF_STRING_DESC_LANG        0x00
@@ -98,6 +101,15 @@
 #define CDC_SET_LINE_CTLSTE         0x22                                      /* This request generates RS-232/V.24 style control signals */
 #define CDC_SEND_BREAK              0x23                                      /* Sends special carrier modulation used to specify RS-232 style break */
 #endif
+
+/* USB UVC device request code */
+#define UVC_GET_CUR                 0x81 
+#define UVC_GET_MIN                 0x82 
+#define UVC_GET_MAX                 0x83 
+#define UVC_GET_RES                 0x84 
+#define UVC_GET_LEN                 0x85 
+#define UVC_GET_INFO                0x86 
+#define UVC_GET_DEF                 0x87 
 
 /* Bit Define for USB Request Type */
 #ifndef USB_REQ_TYP_MASK
@@ -202,6 +214,8 @@
 #define USB_BO_CSW_SIG3             0x53
 #endif
 
+#define USB_U1_ENABLE               0x30
+#define USB_U2_ENABLE               0x31
 /*******************************************************************************/
 /* USBSS Related Register Macro Definition */
 
@@ -210,6 +224,7 @@
 #define LINK_FORCE_RXTERM           0x00800000
 #define LINK_FORCE_POLLING          0x00400000
 #define LINK_TOUT_MODE              0x00200000
+#define LINK_U1_PING_EN             0x00100000
 #define LINK_U2_ALLOW               0x00020000
 #define LINK_U1_ALLOW               0x00010000
 #define LINK_LTSSM_MODE             0x00008000
@@ -249,7 +264,11 @@
 #define LINK_GO_RECOVERY            0x00000040
 #define LINK_GO_INACTIVE            0x00000020
 #define LINK_GO_DISABLED            0x00000010
-#define LINK_PD_MODE_MASK           0x00000003
+ #define LINK_PD_MODE_MASK           0x00000003
+#define LINK_P0_MODE                0x00000000
+#define LINK_P1_MODE                0x00000001
+#define LINK_P2_MODE                0x00000002
+#define LINK_P3_MODE                0x00000003
 
 /* LINK_INT_CTRL */
 #define LINK_IE_STATE_CHG           0x80000000

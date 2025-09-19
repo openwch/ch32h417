@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
-* File Name          : ch32h417_crc.c
+* File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/17
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -35,7 +35,7 @@ __attribute__((aligned(32))) int32_t PDM_RightBuffer[BufferSize];
 /* audio data  */
 __attribute__((aligned(32))) int16_t PDM_PlayBuffer[Play_BufferSize] = {0};
 
-uint32_t TxCnt = 0;
+volatile uint32_t TxCnt = 0;
 
 /*********************************************************************
  * @fn      DFSDM_Function_Init

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  ******************************
 * File Name          : ch32h417_sdmmc.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/12
 * Description        : This file provides all the SDMMC firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -110,7 +110,6 @@ void SDMMC_SetClockSpeed(uint16_t ClockMode, uint16_t ClockDIV)
 {
     SDMMC->CLK_DIV &= ~(EMMC_CLKOE | EMMC_DIV_MASK);
     SDMMC->CLK_DIV |= ClockMode | ClockDIV | EMMC_CLKOE;
-    printf("SDMMC->CLK_DIV=%X\r\n",SDMMC->CLK_DIV);
 }
 
 /*********************************************************************
@@ -147,8 +146,6 @@ void SDMMC_ClockCmd(FunctionalState NewState)
  */
 void SDMMC_CommandConfig(SDMMC_CMDInitTypeDef *SDMMC_CMDInitStruct)
 {
-    // SDMMC->ARGUMENT = 0;
-    //  SDMMC->CMD_SET=0;
     SDMMC->ARGUMENT = SDMMC_CMDInitStruct->SDMMC_Argument;
     SDMMC->CMD_SET = ((uint16_t)SDMMC_CMDInitStruct->SDMMC_CheckCRC << 10) | 
                      ((uint16_t)SDMMC_CMDInitStruct->SDMMC_CheckIdx << 11)  | 
@@ -412,8 +409,6 @@ void SDMMC_ClearITPendingBits(uint16_t SDMMC_IT)
 void SDMMC_BlockConfig(uint32_t BlockSize, uint32_t BlockNum)
 {
     SDMMC->BLOCK_CFG = (uint32_t)((BlockSize << 16) | BlockNum);
-    // __NOP( );
-
 }
 
 /*********************************************************************
@@ -429,13 +424,12 @@ void SDMMC_BlockConfig(uint32_t BlockSize, uint32_t BlockNum)
 void SDMMC_TranMode_Init(SDMMC_TranModeTypeDef *SDMMC_TranModeStruct)
 {
     SDMMC->TRAN_MODE = 0;
-    SDMMC->TRAN_MODE = ((uint32_t)(SDMMC_TranModeStruct->TranMode_Direction)) | 
-          (SDMMC_TranModeStruct->TranMode_DDR_ClockSW_Mode) |
-          (((uint32_t)(SDMMC_TranModeStruct->TranMode_DualDMA_TNCnt) << 8)) |
-          ((uint32_t)SDMMC_TranModeStruct->TranMode_DualDMA) | ((uint32_t)SDMMC_TranModeStruct->TranMode_AutoGapStop) | 
-          ((uint32_t)SDMMC_TranModeStruct->TranMode_GapStop) | ((uint32_t)SDMMC_TranModeStruct->TranMode_Boot) | 
-          ((uint32_t)SDMMC_TranModeStruct->TranMode_DDR_EN) | ((uint32_t)SDMMC_TranModeStruct->TranMode_DDR_ClockFall_Check);
-         
+    SDMMC->TRAN_MODE = (uint32_t)(SDMMC_TranModeStruct->TranMode_Direction) | 
+                    (SDMMC_TranModeStruct->TranMode_DDR_ClockSW_Mode)|
+                    ((SDMMC_TranModeStruct->TranMode_DualDMA_TNCnt) << 8) |
+                    ((SDMMC_TranModeStruct->TranMode_DualDMA)<< 16) | ((SDMMC_TranModeStruct->TranMode_AutoGapStop)<<4) | 
+                    ((SDMMC_TranModeStruct->TranMode_GapStop)<<1) | ((SDMMC_TranModeStruct->TranMode_Boot)<<2) | 
+                    ((SDMMC_TranModeStruct->TranMode_DDR_EN)<<17) | ((SDMMC_TranModeStruct->TranMode_DDR_ClockFall_Check)<<18);
 }
 
 /*********************************************************************

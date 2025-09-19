@@ -40,7 +40,7 @@ uint8_t USBHostTransact( uint8_t endp_pid, uint8_t tog, uint32_t timeout )
     {
         USBFSD->HOST_EP_PID = endp_pid;       // Specify token PID and endpoint number
         USBFSD->INT_FG = USBFS_UIF_TRANSFER;  // Allow transmission
-        for( i = DEF_WAIT_USB_TOUT_200US; ( i != 0 ) && ( ( USBFSD->INT_FG & USBFS_UIF_TRANSFER ) == 0 ); i-- )
+        for( i = DEF_WAIT_USB_TRANSFER_CNT; ( i != 0 ) && ( ( USBFSD->INT_FG & USBFS_UIF_TRANSFER ) == 0 ); i-- )
         {
             Delay_Us( 1 );
         }

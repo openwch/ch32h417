@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : hardware.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/05/24
+ * Version            : V1.0.1
+ * Date               : 2025/09/16
  * Description        : This document demonstrates the use of TTCAN.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -20,6 +20,10 @@
 #define CAN_MODE RX_MODE
 
 #define USE_SOFT_FILTER
+
+#ifndef USE_SOFT_FILTER
+#warning "The chips of version-A are not support hardware filter."
+#endif
 
 #define CANSOFTFILTER_MAX_GROUP_NUM                                                                                    \
     2 // The maximum recommended configuration is 14.
@@ -436,7 +440,7 @@ void Hardware(void)
     CAN_FilterInitSturcture.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
     CAN_FilterInitSturcture.CAN_FilterActivation = ENABLE;
 
-    CAN_InitTypeDef CAN_InitSturcture = {};
+    CAN_InitTypeDef CAN_InitSturcture = {0};
     CAN_InitSturcture.CAN_TTCM = ENABLE;
     CAN_InitSturcture.CAN_ABOM = DISABLE;
     CAN_InitSturcture.CAN_AWUM = DISABLE;

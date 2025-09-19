@@ -22,14 +22,62 @@
 #define FLASH_CMD_ManufactDeviceID_QuadIO 0x94
 #define FLASH_CMD_SectorErase             0x20
 #define FLASH_CMD_Read                    0x03
-#define FLASH_CMD_FastReadQuad_IO         0xEB
+#define FLASH_CMD_FastReadQuadIO          0xEB
+#define FLASH_CMD_FastReadDualIO          0xBB
 #define FLASH_CMD_PageProgram             0x02
 #define FLASH_CMD_PageProgramQuad         0x32
 #define FLASH_CMD_ReadStatus_REG1         0X05
+#define FLASH_CMD_ReadStatus_REG2         0X35
 
 uint8_t readBuffer[512];
 uint8_t verifyBuffer[512];
 uint8_t writeBuffer[256];
+
+/*********************************************************************
+ * @fn      QSPI_Send
+ * 
+ * @brief   Send data to QSPI
+ * 
+ * @param   pBuffer - pointer to the data buffer
+ * @param   len - length of the data to be send
+ * 
+ * @return  none
+ */
+void QSPI_Send(uint8_t* pBuffer, uint32_t len)
+{
+    uint32_t i = 0;
+    while (i < len)
+    {
+        if (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT))
+        {
+            QSPI_SendData8(QSPI1, pBuffer[i]);
+            i++;
+        }
+    }
+}
+
+/*********************************************************************
+ * @fn      QSPI_Receive
+ * 
+ * @brief   Receive data from QSPI
+ * 
+ * @param   pBuffer - pointer to the data buffer
+ * @param   len - length of the data to be received
+ * 
+ * @return  none
+ */
+void QSPI_Receive(uint8_t* pBuffer, uint32_t len)
+{
+    uint32_t i = 0;
+    while (i < len)
+    {
+        if (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT))
+        {
+            pBuffer[i] = QSPI_ReceiveData8(QSPI1);
+            i++;
+        }
+    }
+}
 
 /*********************************************************************
  * @fn      GPIO_Config
@@ -104,9 +152,9 @@ static void QSPI1_Config(void)
 
     RCC_HB1PeriphClockCmd(RCC_HB1Periph_QSPI1, ENABLE);
 
-    QSPI_InitStructure.QSPI_Prescaler = 10;
+    QSPI_InitStructure.QSPI_Prescaler = 3;
     QSPI_InitStructure.QSPI_CKMode    = QSPI_CKMode_Mode3;
-    QSPI_InitStructure.QSPI_CSHTime   = QSPI_CSHTime_1Cycle;
+    QSPI_InitStructure.QSPI_CSHTime   = QSPI_CSHTime_8Cycle;
 
     // size = 2 ** (FSize + 1) = 2 ** 23 = 8MB
     QSPI_InitStructure.QSPI_FSize = 22;
@@ -115,7 +163,7 @@ static void QSPI1_Config(void)
     QSPI_InitStructure.QSPI_DFlash  = QSPI_DFlash_Disable;
 
     QSPI_Init(QSPI1, &QSPI_InitStructure);
-    QSPI_SetFIFOThreshold(QSPI1, 5);
+    QSPI_SetFIFOThreshold(QSPI1, 10);
 }
 
 /*********************************************************************
@@ -193,6 +241,44 @@ void QSPI_WriteCmd(uint8_t cmd)
 }
 
 /*********************************************************************
+ * @fn      QSPI_CmdWithData
+ * 
+ * @brief   Send a command with data to the QSPI
+ * 
+ * @param   cmd - the command to be sent
+ *          data - the data to be sent
+ * 
+ * @return  none
+ */
+void QSPI_CmdWithData(uint8_t cmd, uint8_t data)
+{
+    QSPI_ComConfig_InitTypeDef QSPI_ComConfig_InitStructure = {0};
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_IMode       = QSPI_ComConfig_IMode_1Line;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADMode      = QSPI_ComConfig_ADMode_NoAddress;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_DMode       = QSPI_ComConfig_DMode_1Line;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ABMode      = QSPI_ComConfig_ABMode_NoAlternateByte;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_FMode       = QSPI_ComConfig_FMode_Indirect_Write;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_SIOOMode    = QSPI_ComConfig_SIOOMode_Disable;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ABSize      = QSPI_ComConfig_ABSize_8bit;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADSize      = QSPI_ComConfig_ADSize_24bit;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_Ins         = cmd;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_DummyCycles = 0;
+    QSPI_ComConfig_Init(QSPI1, &QSPI_ComConfig_InitStructure);
+
+    QSPI_SetDataLength(QSPI1, 1);
+
+    QSPI_Start(QSPI1);
+
+    QSPI_SendData8(QSPI1, data);
+
+    while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_TC) == RESET)
+        ;
+
+    QSPI_ClearFlag(QSPI1, QSPI_FLAG_FT);
+    QSPI_ClearFlag(QSPI1, QSPI_FLAG_TC);
+}
+
+/*********************************************************************
  * @fn      QSPI_ReadSR
  * 
  * @brief   Read the status register of the QSPI
@@ -218,10 +304,10 @@ uint8_t QSPI_ReadSR(uint8_t cmd)
     QSPI_ComConfig_InitStructure.QSPI_ComConfig_DummyCycles = 0;
     QSPI_ComConfig_Init(QSPI1, &QSPI_ComConfig_InitStructure);
 
-    QSPI_SetDataLength(QSPI1, 0);
+    QSPI_SetDataLength(QSPI1, 1);
 
     QSPI_Start(QSPI1);
-    while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_TC) == RESET)
+    while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT) == RESET)
     {
     }
 
@@ -355,12 +441,7 @@ void QSPI_WritePage(uint32_t addr, uint8_t* data, uint16_t len)
 
     QSPI_Start(QSPI1);
 
-    for (uint16_t i = 0; i < len; i++)
-    {
-        while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT) == RESET)
-            ;
-        QSPI_SendData8(QSPI1, data[i]);
-    }
+    QSPI_Send(data, len);
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_FT);
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_TC);
 }
@@ -400,18 +481,8 @@ void QSPI_WritePageQuad(uint32_t addr, uint8_t* data, uint16_t len)
     QSPI_EnableQuad(QSPI1, ENABLE);
     QSPI_Start(QSPI1);
 
-    uint32_t i = 0;
-    while (i < len)
-    {
-        if (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT))
-        {
-            QSPI_SendData8(QSPI1, data[i]);
-            i++;
-        }
-    }
+    QSPI_Send(data, len);
 
-    while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_TC) == RESET)
-        ;
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_FT);
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_TC);
 
@@ -453,7 +524,6 @@ void QSPI_ProgramPageQuad(uint32_t addr, uint8_t* data, uint16_t len)
     QSPI_WritePageQuad(addr, data, len);
     QSPI_WaitForBsy();
 }
-
 /*********************************************************************
  * @fn      QSPI_GetManufacturerID
  * 
@@ -480,29 +550,72 @@ uint32_t QSPI_GetManufacturerID()
     QSPI_ComConfig_InitStructure.QSPI_ComConfig_DummyCycles = 0;
     QSPI_ComConfig_Init(QSPI1, &QSPI_ComConfig_InitStructure);
 
+    QSPI_SetAddress(QSPI1, 0);
     QSPI_SetDataLength(QSPI1, 2);
 
     QSPI_Start(QSPI1);
 
-    while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT) == RESET)
-        ;
+    uint32_t i = 0;
 
-    while (1)
+    while (i < 2)
     {
-
         if (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT))
         {
             res <<= 8;
             res |= QSPI_ReceiveData8(QSPI1);
-        }
-        else
-        {
-            break;
+            i++;
         }
     }
 
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_FT);
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_TC);
+    return res;
+}
+
+/*********************************************************************
+ * @fn      QSPI_GetManufacturerID_DualIO
+ * 
+ * @brief   Read the manufacturer and device ID of the QSPI in 2 lines mode
+ * 
+ * @param   none
+ * 
+ * @return  the manufacturer and device ID of the QSPI
+ */
+uint32_t QSPI_GetManufacturerID_DualIO()
+{
+    uint32_t res = 0;
+
+    QSPI_ComConfig_InitTypeDef QSPI_ComConfig_InitStructure = {0};
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_IMode       = QSPI_ComConfig_IMode_1Line;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADMode      = QSPI_ComConfig_ADMode_2Line;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_DMode       = QSPI_ComConfig_DMode_2Line;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ABMode      = QSPI_ComConfig_ABMode_NoAlternateByte;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_FMode       = QSPI_ComConfig_FMode_Indirect_Read;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_SIOOMode    = QSPI_ComConfig_SIOOMode_Disable;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ABSize      = QSPI_ComConfig_ABSize_8bit;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADSize      = QSPI_ComConfig_ADSize_24bit;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_Ins         = FLASH_CMD_ManufactDeviceID_DualIO;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_DummyCycles = 4;
+    QSPI_ComConfig_Init(QSPI1, &QSPI_ComConfig_InitStructure);
+
+    QSPI_SetDataLength(QSPI1, 2);
+    QSPI_EnableQuad(QSPI1, ENABLE);
+    QSPI_Start(QSPI1);
+
+    uint32_t i = 0;
+    while (i < 2)
+    {
+        if (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT))
+        {
+            res <<= 8;
+            res |= QSPI_ReceiveData8(QSPI1);
+            i++;
+        }
+    }
+
+    QSPI_ClearFlag(QSPI1, QSPI_FLAG_FT);
+    QSPI_ClearFlag(QSPI1, QSPI_FLAG_TC);
+    QSPI_EnableQuad(QSPI1, DISABLE);
     return res;
 }
 
@@ -536,19 +649,14 @@ uint32_t QSPI_GetManufacturerID_QuadIO()
     QSPI_EnableQuad(QSPI1, ENABLE);
     QSPI_Start(QSPI1);
 
-    while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT) == RESET)
-        ;
-    while (1)
+    uint32_t i = 0;
+    while (i < 2)
     {
-
         if (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT))
         {
             res <<= 8;
             res |= QSPI_ReceiveData8(QSPI1);
-        }
-        else
-        {
-            break;
+            i++;
         }
     }
 
@@ -589,19 +697,32 @@ void QSPI_GetData(uint32_t addr, uint8_t* data, uint32_t len)
     QSPI_SetDataLength(QSPI1, len);
     QSPI_Start(QSPI1);
 
-    while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT) == RESET)
-        ;
+    QSPI_Receive(data, len);
+    QSPI_ClearFlag(QSPI1, QSPI_FLAG_FT);
+    QSPI_ClearFlag(QSPI1, QSPI_FLAG_TC);
+}
 
-    uint32_t i = 0;
-    while (i < len)
-    {
+void QSPI_GetData_DualIO(uint32_t addr, uint8_t* data, uint32_t len)
+{
+    QSPI_ComConfig_InitTypeDef QSPI_ComConfig_InitStructure = {0};
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_IMode       = QSPI_ComConfig_IMode_1Line;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADMode      = QSPI_ComConfig_ADMode_2Line;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_DMode       = QSPI_ComConfig_DMode_2Line;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ABMode      = QSPI_ComConfig_ABMode_NoAlternateByte;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_FMode       = QSPI_ComConfig_FMode_Indirect_Read;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_SIOOMode    = QSPI_ComConfig_SIOOMode_Disable;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ABSize      = QSPI_ComConfig_ABSize_8bit;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADSize      = QSPI_ComConfig_ADSize_24bit;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_Ins         = FLASH_CMD_FastReadDualIO;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_DummyCycles = 4;
+    QSPI_ComConfig_Init(QSPI1, &QSPI_ComConfig_InitStructure);
 
-        if (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT))
-        {
-            data[i] = QSPI_ReceiveData8(QSPI1);
-            i++;
-        }
-    }
+    QSPI_SetAddress(QSPI1, addr);
+    QSPI_SetDataLength(QSPI1, len);
+    QSPI_Start(QSPI1);
+
+    QSPI_Receive(data, len);
+
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_FT);
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_TC);
 }
@@ -628,7 +749,7 @@ void QSPI_GetData_QuadIO(uint32_t addr, uint8_t* data, uint32_t len)
     QSPI_ComConfig_InitStructure.QSPI_ComConfig_SIOOMode    = QSPI_ComConfig_SIOOMode_Disable;
     QSPI_ComConfig_InitStructure.QSPI_ComConfig_ABSize      = QSPI_ComConfig_ABSize_8bit;
     QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADSize      = QSPI_ComConfig_ADSize_24bit;
-    QSPI_ComConfig_InitStructure.QSPI_ComConfig_Ins         = FLASH_CMD_FastReadQuad_IO;
+    QSPI_ComConfig_InitStructure.QSPI_ComConfig_Ins         = FLASH_CMD_FastReadQuadIO;
     QSPI_ComConfig_InitStructure.QSPI_ComConfig_DummyCycles = 6;
     QSPI_ComConfig_Init(QSPI1, &QSPI_ComConfig_InitStructure);
 
@@ -638,19 +759,7 @@ void QSPI_GetData_QuadIO(uint32_t addr, uint8_t* data, uint32_t len)
     QSPI_EnableQuad(QSPI1, ENABLE);
     QSPI_Start(QSPI1);
 
-    while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT) == RESET)
-        ;
-
-    uint32_t i = 0;
-    while (i < len)
-    {
-        if (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_FT))
-        {
-
-            data[i] = QSPI_ReceiveData8(QSPI1);
-            i++;
-        }
-    }
+    QSPI_Receive(data, len);
 
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_FT);
     QSPI_ClearFlag(QSPI1, QSPI_FLAG_TC);
@@ -670,7 +779,7 @@ void QSPI_GetData_QuadIO(uint32_t addr, uint8_t* data, uint32_t len)
  */
 int32_t Buffer_Cmp(uint8_t* buf1, uint8_t* buf2, uint32_t len)
 {
-    uint32_t res = -1;
+    int32_t res = -1;
     for (int i = 0; i < len; i++)
     {
         if (buf1[i] != buf2[i])
@@ -746,7 +855,7 @@ void Write_Test_Data(uint32_t write_page_count)
  * 
  * @return  none
  */
-void Hardware()
+void Hardware(void)
 {
 
     printf("QSPI TEST\n");
@@ -754,34 +863,62 @@ void Hardware()
     GPIO_Config();
     QSPI1_Config();
 
-    Delay_Ms(10);
     QSPI_Cmd(QSPI1, ENABLE);
 
     QSPI_WriteCmd(FLASH_CMD_EnableReset);
     QSPI_WriteCmd(FLASH_CMD_ResetDevice);
     Delay_Us(100);
+
     QSPI_WaitForBsy();
 
+#if 0
+    // Some chips do not have QUAD mode enabled by default.
+    // Use the following command to enable QUAD mode
+    QSPI_WriteEnable();
+    QSPI_WriteCmd(0x50);
+    QSPI_CmdWithData(0x31, 0x02);
+#endif
+
     printf("GetManufacturerID %x\n", QSPI_GetManufacturerID());
+    printf("GetManufacturerID_DualIO %x\n", QSPI_GetManufacturerID_DualIO());
     printf("GetManufacturerID_QuadIO %x\n", QSPI_GetManufacturerID_QuadIO());
+    printf("sr1 %x\n", QSPI_ReadSR(FLASH_CMD_ReadStatus_REG1));
+    printf("sr2 %x\n", QSPI_ReadSR(FLASH_CMD_ReadStatus_REG2));
 
-    const uint32_t rd_addr = 0x000;
+    const uint32_t rd_addr = 0x0;
     const uint32_t rd_len  = 256;
+    int32_t        res     = 0;
 
-    int32_t res = 0;
     printf("one line read\n");
     QSPI_GetData(rd_addr, verifyBuffer, rd_len);
     Print_Buffer(verifyBuffer, rd_len);
     Delay_Ms(1);
 
+    printf("DualIO read\n");
+    memset(readBuffer, 0, rd_len);
+    QSPI_GetData_DualIO(rd_addr, readBuffer, rd_len);
+
+    res = Buffer_Cmp(verifyBuffer, readBuffer, rd_len);
+
+    if (res != -1)
+    {
+        Print_Buffer(readBuffer, rd_len);
+        printf("error %d\n", res);
+    }
+    else
+    {
+        printf("DualIO read success\n");
+    }
+
     printf("QuadIO read\n");
     memset(readBuffer, 0, rd_len);
     QSPI_GetData_QuadIO(rd_addr, readBuffer, rd_len);
     res = Buffer_Cmp(verifyBuffer, readBuffer, rd_len);
+
     if (res != -1)
     {
-        printf("error %d\n", res);
         Print_Buffer(readBuffer, rd_len);
+        printf("error %d\n", res);
     }
     else
     {

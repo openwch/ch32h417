@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : startup_ch32h417_v3f.s
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : CH32h417 vector table t0 V3F for eclipse toolchain.
+* Version            : V1.0.1
+* Date               : 2025/09/17
+* Description        : CH32h417_416_415 vector table t0 V3F for eclipse toolchain.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -23,13 +23,7 @@ _vector_base:
     .word   0
     .word   NMI_Handler              
     .word   HardFault_Handler         
-    .word   0x00FFFFFF   //UART-enable USBHS-enable USBSS-enable /**/
-    /*.word   0x06FFFFF9   //UART-enable USBHS-Disable USBSS-disable */
-    /*.word   0x05FFFFFA   //UART-Disable USBHS-enable USBSS-disable */
-    /*.word   0x03FFFFFC   //UART-Disable USBHS-disable USBSS-enable */
-    /*.word   0x04FFFFFB   //UART-enable USBHS-enable USBSS-disable */
-    /*.word   0x01FFFFFE   //UART-disable USBHS-enable USBSS-enable */
-    /*.word   0x02FFFFFD   //UART-enable USBHS-Disable USBSS-enable */
+    .word   0
     .word   Ecall_M_Mode_Handler      
     .word   0
     .word   0
@@ -426,18 +420,11 @@ USART_WKUP_IRQHandler:
 1:
 	j 1b
 
-	.section	.handle_reset,"ax",@progbits
-	.weak	handle_reset
-	.align	1
-handle_reset:
-.option push 
-.option	norelax 
-	la gp, __global_pointer$
-.option	pop 
+    .section    .load,"ax",@progbits
+    .align  1
+_load_base:
 
-	la sp, _eusrstack 
-
-    /*Enable RCC 14*HSI_Value/5 = 70MHz*/
+     /*Enable RCC 14*HSI_Value/5 = 70MHz*/
     lui  s1 ,0x40021
     li  a1, 0x40E 
     sw a1 ,8(s1)
@@ -447,7 +434,6 @@ handle_reset:
     li t1,0x1000000
     or t0,t0,t1
     sw t0,0(s1)
-    fence
 
 1:
     lw t2,0(s1)   
@@ -460,12 +446,10 @@ handle_reset:
     li t5,0x80000000
     or t4,t4,t5
     sw t4,8(s1)
-    fence
 
     /*choose pll */
     li  t6, 0x2
     sw t6 ,4(s1)
-    fence
 
 1:
     lw s2, 4(s1)
@@ -519,7 +503,34 @@ handle_reset:
 	sw zero, (a0)
 	addi a0, a0, 4
 	bltu a0, a1, 1b
+2:  
+    ret
+
+	.section	.handle_reset,"ax",@progbits
+	.weak	handle_reset
+	.align	1
+handle_reset:
+.option push 
+.option	norelax 
+	la gp, __global_pointer$
+.option	pop 
+
+    la sp, _eusrstack 
+
+/* Load loadcode  section from flash to RAM */
+    la a0, _loadcode_lma
+    la a1, _loadcode_vma_start
+    la a2, _loadcode_vma_end
+    bgeu a1, a2, 2f
+1:
+    lw t0, (a0)
+    sw t0, (a1)
+    addi a0, a0, 4
+    addi a1, a1, 4
+    bltu a1, a2, 1b
 2:
+	call _load_base
+
 /* Configure Prefetch */
     li t0, 0x123703E1
     csrw 0xBC0, t0
@@ -532,7 +543,6 @@ handle_reset:
 /* Enable floating point and global interrupt, configure privileged mode */
    	li t0, 0x6088           
    	csrw mstatus, t0
-
 /* Configure the interrupt vector table recognition mode and entry address mode */
  	la t0, _vector_base
     ori t0, t0, 3           
@@ -541,5 +551,4 @@ handle_reset:
 BP:	la t0, main
 	csrw mepc, t0
 	mret
-
 

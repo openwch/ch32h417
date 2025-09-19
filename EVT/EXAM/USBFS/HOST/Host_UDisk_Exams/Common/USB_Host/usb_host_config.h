@@ -28,11 +28,9 @@ extern "C" {
 /* USB Host Communication Related Macro Definition */
 
 /* USB Host Port General Control */
-#define DEF_TOTAL_ROOT_HUB          2
+#define DEF_TOTAL_ROOT_HUB          1
 #define DEF_USB_PORT_FS_EN          1
-#define DEF_USB_PORT_HS_EN          0
-#define DEF_USB_PORT_FS             0x00                                        
-#define DEF_USB_PORT_HS             0x01      
+#define DEF_USB_PORT_FS             0x00
 
 /* USB Root Device Status */
 #define ROOT_DEV_DISCONNECT         0
@@ -70,13 +68,14 @@ extern "C" {
 #define DEF_DEV_DESCR_GETFAIL       0x45
 #define DEF_DEV_ADDR_SETFAIL        0x46
 #define DEF_CFG_DESCR_GETFAIL       0x47
-#define DEF_REP_DESCR_GETFAIL       0x48    
+#define DEF_REP_DESCR_GETFAIL       0x48
+#define DEF_CFG_VALUE_SETFAIL       0x49
 #define DEF_DEV_TYPE_UNKNOWN        0xFF
                        
 /* USB Communication Time */
 #define DEF_BUS_RESET_TIME          11          // USB bus reset time
 #define DEF_RE_ATTACH_TIMEOUT       100         // Wait for the USB device to reconnect after reset, 100mS timeout
-#define DEF_WAIT_USB_TOUT_200US     1000
+#define DEF_WAIT_USB_TRANSFER_CNT   1000        // Wait for the USB transfer to complete
 #define DEF_CTRL_TRANS_TIMEOVER_CNT 60000       // Control transmission delay timing
 
 /* General */
@@ -118,7 +117,7 @@ typedef struct _ROOT_HUB_DEVICE
 } ROOT_HUB_DEVICE, *PROOT_HUB_DEVICE;
 
 /* USB Host Control Structure */
-struct __HOST_CTL
+typedef struct __HOST_CTL
 {
     uint8_t  InterfaceNum;
     uint8_t  ErrorCount;
@@ -155,7 +154,7 @@ struct __HOST_CTL
         uint8_t  SetReport_Flag;
 
     }Interface[ DEF_INTERFACE_NUM_MAX ];
-};
+} HOST_CTL, *PHOST_CTL;
 
 /*******************************************************************************/
 /* Variable Declaration */

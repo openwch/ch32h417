@@ -9,9 +9,9 @@
  * Attention: This software (modified or not) and binary are used for
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-
 /*
  *@Note
+ *The captures images and displays them on the TFTLCD.
  *DVP--PIN:
  *   D0--PE0(AF11)
  *   D1--PE1(AF11)
@@ -27,11 +27,11 @@
  *   D11--PD2(AF13)
  *   VSYNC--PB7(AF13)
  *   HERF--PB13(AF8)
- *   DPCLK--PB12(AF15)
+ *   DPCLK--PF13(AF11)
  *   SDA--PC1
  *   SDCLK--PC0
  *   DPWDN--PB0
- *   RESET--PB1
+ *   RESET--PD2
  *
 
 FMC routine to operate TFTLCD:
@@ -40,7 +40,7 @@ FMC routine to operate TFTLCD:
     PD12--FMC_A17
     PD5 --FMC_NEW
     PD4 --FMC_NOE
-    PA15--LCDRST#
+    PD3--LCDRST#
     PD14--FMC_D0
     PD15--FMC_D1
     PD0 --FMC_D2
@@ -63,7 +63,6 @@ FMC routine to operate TFTLCD:
 #include "debug.h"
 #include "hardware.h"
 
-
 /*********************************************************************
  * @fn      main
  *
@@ -81,7 +80,7 @@ int main(void)
 	printf("SystemClk:%d\r\n", SystemClock);
 	printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
 	Delay_Ms(500);
-
+	
 	RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR, ENABLE);
 	/* The VIO18 power supply rail is adjusted to 3.3V through software. 
 	To ensure the safety of external devices, it is recommended to use hardware configuration. */

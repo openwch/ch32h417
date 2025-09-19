@@ -22,7 +22,6 @@
 
 	 
 void Hardware(void);
-void Function_1Wire(void);
 #ifdef __cplusplus
 }
 #endif

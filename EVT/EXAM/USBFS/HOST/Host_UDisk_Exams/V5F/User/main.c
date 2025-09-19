@@ -2,7 +2,7 @@
  * File Name          : main.c
  * Author             : WCH
  * Version            : V1.0.0
- * Date               : 2025/05/07
+ * Date               : 2025/05/26
  * Description        : Main program body for V5F.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -11,21 +11,14 @@
  *******************************************************************************/
 /*
  *@Note
-   1,Exam 1 :
-   USBFS host controller enumeration routines for byte manipulation of USB flash drives,
- including file creation, modification, reading and deletion.
-   2,Exam 6 :
-   USBFS host controller enumeration routines for sector manipulation of USB flash drives,
- including file creation, modification, reading and deletion
-   3,Exam 9 :
-   The USBFS host controller enumerates the USB flash drive to create folders on the drive,
- including the primary and secondary directories, and the demo files in the corresponding directories.
-   4,Exam 11 :
-   USBFS host controller enumerates USB flash drives, enabling the enumeration of
- the first 1000 files on the drive.
-   5,Exam 13 :USBFS host controller enumerates USB drives to create long filename files,
- or to get long filename files.
-  Important: Only FAT12/FAT16/FAT32 formats are supported:
+  Example routine to emulate a custom USB device (CH372 device).
+  This routine demonstrates the use of a USBHS Device to emulate a custom device, the CH372,
+  with endpoints 1/3/5 downlinking data and uploading via endpoints 1/4/6 respectively
+  Endpoint 1 uploads and downlinks via ring buffer with no data reversal, endpoints 3/4, and endpoints 5/6 copy and upload.
+  The device can be operated using Bushund or other upper computer software.
+  Note: This routine needs to be demonstrated in conjunction with the host software.
+
+  If the USB is set to high-speed, an external crystal oscillator is recommended for the clock source.
 */
 
 #include "debug.h"
@@ -39,11 +32,11 @@
  */
 int main(void)
 {
-	SystemAndCoreClockUpdate();
-	Delay_Init();
-	USART_Printf_Init(921600);
-	printf("V5F SystemCoreClk:%d\r\n", SystemCoreClock);
-
+    SystemAndCoreClockUpdate();
+    Delay_Init();
+    USART_Printf_Init(921600);
+    printf("V5F SystemCoreClk:%d\r\n", SystemCoreClock);
+    
 #if (Run_Core == Run_Core_V3FandV5F)
     HSEM_FastTake(HSEM_ID0);
     HSEM_ReleaseOneSem(HSEM_ID0, 0);
@@ -53,7 +46,7 @@ int main(void)
 #elif (Run_Core == Run_Core_V5F)
     Hardware();
 #endif
-    
+
     while(1)
     {
         ;

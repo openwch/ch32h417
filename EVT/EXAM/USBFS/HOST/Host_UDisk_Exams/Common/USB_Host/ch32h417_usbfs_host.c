@@ -33,16 +33,18 @@ void USBFS_RCC_Init(void)
     {
         /* Initialize USBHS 480M PLL */
         RCC_USBHS_PLLCmd(DISABLE);
-        RCC_USBHSPLLCLKConfig(RCC_USBHSPLLSource_HSE);
+        RCC_USBHSPLLCLKConfig((RCC->CTLR & RCC_HSERDY) ? RCC_USBHSPLLSource_HSE : RCC_USBHSPLLSource_HSI);
         RCC_USBHSPLLReferConfig(RCC_USBHSPLLRefer_25M);
         RCC_USBHSPLLClockSourceDivConfig(RCC_USBHSPLL_IN_Div1);
         RCC_USBHS_PLLCmd(ENABLE);
+        while (!(RCC->CTLR & RCC_USBHS_PLLRDY));
     }
     RCC_USBFSCLKConfig(RCC_USBFSCLKSource_USBHSPLL);
     RCC_USBFS48ClockSourceDivConfig(RCC_USBFS_Div10);
     RCC_HBPeriphClockCmd(RCC_HBPeriph_OTG_FS, ENABLE);
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOA, ENABLE);
 }
+
 /*********************************************************************
  * @fn      USBFS_Host_Init
  *
@@ -57,6 +59,7 @@ void USBFS_Host_Init( FunctionalState sta )
     if( sta == ENABLE )
     {
         USBFSH->BASE_CTRL = USBFS_UC_HOST_MODE;
+        while(!(USBFSH->BASE_CTRL & USBFS_UC_HOST_MODE));
         USBFSH->HOST_CTRL = 0;
         USBFSH->DEV_ADDR = 0;
         USBFSH->HOST_EP_MOD = USBFS_UH_EP_TX_EN | USBFS_UH_EP_RX_EN;
@@ -73,13 +76,16 @@ void USBFS_Host_Init( FunctionalState sta )
     else
     {
         USBFSH->BASE_CTRL = USBFS_UC_RESET_SIE | USBFS_UC_CLR_ALL;
+        Delay_Us( 10 );
+        USBFSH->BASE_CTRL = 0;
     }
 }
 
 /*********************************************************************
  * @fn      USBFSH_CheckRootHubPortStatus
  *
- * @brief   Check status of USB port.
+ * @brief   Check the current status of the USB port in combination with 
+ *          the saved status of the root device connected to this port.
  *
  * @para    dev_sta: The status of the root device connected to this port.
  *
@@ -88,10 +94,10 @@ void USBFS_Host_Init( FunctionalState sta )
 uint8_t USBFSH_CheckRootHubPortStatus( uint8_t dev_sta )
 {
     /* Check USB device connection or disconnection */
-    if( ( USBFSH->INT_FG ) & USBFS_UIF_DETECT )
+    if( USBFSH->INT_FG & USBFS_UIF_DETECT )
     {
         USBFSH->INT_FG = USBFS_UIF_DETECT; // Clear flag
-        if( USBFSH->MIS_ST & USBFS_UMS_DEV_ATTACH ) // Check that the USB device has been connected to the port
+        if( USBFSH->MIS_ST & USBFS_UMS_DEV_ATTACH ) // Check that there is a device connection to the port
         {
             if( ( dev_sta == ROOT_DEV_DISCONNECT ) || ( ( dev_sta != ROOT_DEV_FAILED ) && ( USBFSH_CheckRootHubPortEnable( ) == 0x00 ) ) )
             {
@@ -102,7 +108,7 @@ uint8_t USBFSH_CheckRootHubPortStatus( uint8_t dev_sta )
                 return ROOT_DEV_FAILED;
             }
         }
-        else
+        else // Check that there is no device connection to the port
         {
             return ROOT_DEV_DISCONNECT;
         }
@@ -117,6 +123,7 @@ uint8_t USBFSH_CheckRootHubPortStatus( uint8_t dev_sta )
  * @fn      USBFSH_CheckRootHubPortEnable
  *
  * @brief   Check the enable status of the USB port.
+ *          Note: This bit is automatically cleared when the device is disconnected.
  *
  * @return  The current enable status of the port.
  */
@@ -162,14 +169,17 @@ void USBFSH_SetSelfAddr( uint8_t addr )
  */
 void USBFSH_SetSelfSpeed( uint8_t speed )
 {
-    if( speed )
+    if( speed == USB_FULL_SPEED )
     {
         USBFSH->BASE_CTRL &= ~USBFS_UC_LOW_SPEED;
+        USBFSH->HOST_CTRL &= ~USBFS_UH_LOW_SPEED;
         USBFSH->HOST_SETUP &= ~USBFS_UH_PRE_PID_EN;
     }
     else
     {
         USBFSH->BASE_CTRL |= USBFS_UC_LOW_SPEED;
+        USBFSH->HOST_CTRL |= USBFS_UH_LOW_SPEED;
+        USBFSH->HOST_SETUP |= USBFS_UH_PRE_PID_EN;
     }
 }
 
@@ -189,7 +199,7 @@ void USBFSH_ResetRootHubPort( uint8_t mode )
 {
     USBFSH_SetSelfAddr( 0x00 );
     USBFSH_SetSelfSpeed( USB_FULL_SPEED );
-    
+
     if( mode <= 1 )
     {
         USBFSH->HOST_CTRL |= USBFS_UH_BUS_RESET; // Start reset
@@ -229,9 +239,9 @@ uint8_t USBFSH_EnableRootHubPort( uint8_t *pspeed )
         if( USBFSH_CheckRootHubPortEnable( ) == 0x00 )
         { 
             *pspeed = USBFSH_CheckRootHubPortSpeed( );
-            if( *pspeed == 0 )
+            if( *pspeed == USB_LOW_SPEED )
             {
-                USBFSH->HOST_CTRL |= USBFS_UH_LOW_SPEED;
+                USBFSH_SetSelfSpeed( USB_LOW_SPEED );
             }
         }
         USBFSH->HOST_CTRL |= USBFS_UH_PORT_EN;
@@ -256,32 +266,34 @@ uint8_t USBFSH_EnableRootHubPort( uint8_t *pspeed )
  */
 uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
 {
-    uint8_t  r, trans_rerty;
+    uint8_t  r, trans_retry;
     uint16_t i;
 
     USBFSH->HOST_TX_CTRL = USBFSH->HOST_RX_CTRL = endp_tog;
-    trans_rerty = 0;
+
+    trans_retry = 0;
     do
     {
+
         USBFSH->HOST_EP_PID = endp_pid;       // Specify token PID and endpoint number
-        USBFSH->INT_FG = USBFS_UIF_TRANSFER;  // Allow transmission
-        for( i = DEF_WAIT_USB_TOUT_200US; ( i != 0 ) && ( ( USBFSH->INT_FG & USBFS_UIF_TRANSFER ) == 0 ); i-- )
+        USBFSH->INT_FG = USBFS_UIF_TRANSFER;  // Allow transfer
+        for( i = DEF_WAIT_USB_TRANSFER_CNT; ( i != 0 ) && ( ( USBFSH->INT_FG & USBFS_UIF_TRANSFER ) == 0 ); i-- )
         {
-            Delay_Us( 1 );
+            Delay_Us( 1 ); // Delay for USB transfer
         }
         USBFSH->HOST_EP_PID = 0x00;  // Stop USB transfer
         if( ( USBFSH->INT_FG & USBFS_UIF_TRANSFER ) == 0 )
         {
             return ERR_USB_UNKNOWN;
         }
-        else
+        else // Complete transfer
         {
-            /* Complete transfer */
+
             if( USBFSH->INT_ST & USBFS_UIS_TOG_OK )
             {
                 return ERR_SUCCESS;
             }
-            r = USBFSH->INT_ST & USBFS_UIS_H_RES_MASK;  // USB device answer status
+            r = USBFSH->INT_ST & USBFS_UIS_H_RES_MASK; // Response status of current USB transaction
             if( r == USB_PID_STALL )
             {
                 return ( r | ERR_USB_TRANSFER );
@@ -296,19 +308,19 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
                 {
                     timeout--;
                 }
-                --trans_rerty;
+                --trans_retry;
             }
             else switch ( endp_pid >> 4 )
             {
                 case USB_PID_SETUP:
                 case USB_PID_OUT:
-                    if( r ) 
+                    if( r )
                     {
                         return ( r | ERR_USB_TRANSFER );
                     }
                     break;
                 case USB_PID_IN:
-                    if( ( r == USB_PID_DATA0 ) && ( r == USB_PID_DATA1 ) )
+                    if( ( r == USB_PID_DATA0 ) || ( r == USB_PID_DATA1 ) )
                     {
                         ;
                     }
@@ -320,17 +332,23 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
                 default:
                     return ERR_USB_UNKNOWN;
             }
-        } 
-        Delay_Us( 15 );
+        }
+        Delay_Us( 20 );
+
         if( USBFSH->INT_FG & USBFS_UIF_DETECT )
         {
             Delay_Us( 200 );
-            if( USBFSH_CheckRootHubPortEnable( ) == 0 )
+
+            if( USBFSH_CheckRootHubPortEnable( ) == 0x00 )
             {
                 return ERR_USB_DISCON;  // USB device disconnect event
             }
+            else
+            {
+                USBFSH->INT_FG = USBFS_UIF_DETECT;
+            }
         }
-    }while( ++trans_rerty < 10 );
+    }while( ++trans_retry < 10 );
 
     return ERR_USB_TRANSFER; // Reply timeout
 }
@@ -356,13 +374,12 @@ uint8_t USBFSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen )
         *plen = 0;
     }
     USBFSH->HOST_TX_LEN = sizeof( USB_SETUP_REQ );
-    s = USBFSH_Transact( USB_PID_SETUP << 4 | 0x00, 0x00, DEF_CTRL_TRANS_TIMEOVER_CNT );  // SETUP stage, 200mS timeout
+    s = USBFSH_Transact( ( USB_PID_SETUP << 4 ) | 0x00, 0x00, DEF_CTRL_TRANS_TIMEOVER_CNT );  // SETUP stage
     if( s != ERR_SUCCESS )
     {
         return s;
     }
-    USBFSH->HOST_TX_CTRL = USBFSH->HOST_RX_CTRL = USBFS_UH_T_TOG | USBFS_UH_R_TOG | USBFS_UH_T_AUTO_TOG | USBFS_UH_R_AUTO_TOG; // Default DATA1
-    USBFSH->HOST_TX_LEN = 0x01; // The default no-data state stage is IN
+    USBFSH->HOST_TX_CTRL = USBFSH->HOST_RX_CTRL = USBFS_UH_T_TOG | USBFS_UH_R_TOG; // Default DATA1
     rem_len = pUSBFS_SetupRequest->wLength;
     if( rem_len && pbuf )
     {
@@ -371,12 +388,15 @@ uint8_t USBFSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen )
             /* Receive data */
             while( rem_len )
             {
+
                 Delay_Us( 100 );
-                s = USBFSH_Transact( USB_PID_IN << 4 | 0x00, USBFSH->HOST_RX_CTRL, DEF_CTRL_TRANS_TIMEOVER_CNT );  // IN
+                s = USBFSH_Transact( ( USB_PID_IN << 4 ) | 0x00, USBFSH->HOST_RX_CTRL, DEF_CTRL_TRANS_TIMEOVER_CNT );  // IN
                 if( s != ERR_SUCCESS )
                 {
                     return s;
                 }
+                USBFSH->HOST_RX_CTRL ^= USBFS_UH_R_TOG;
+
                 rx_len = ( USBFSH->RX_LEN < rem_len )? USBFSH->RX_LEN : rem_len;
                 rem_len -= rx_len;
                 if( plen )
@@ -394,7 +414,7 @@ uint8_t USBFSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen )
                     break; // Short package
                 }
             }
-            USBFSH->HOST_TX_LEN = 0x00; // Status stage is OUT
+            USBFSH->HOST_TX_LEN = 0; // Status stage is OUT
         }
         else
         {
@@ -413,6 +433,8 @@ uint8_t USBFSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen )
                 {
                     return s;
                 }
+                USBFSH->HOST_TX_CTRL ^= USBFS_UH_T_TOG;
+
                 rem_len -= USBFSH->HOST_TX_LEN;
                 if( plen )
                 {
@@ -422,7 +444,7 @@ uint8_t USBFSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen )
         }
     }
     Delay_Us( 100 );
-    s = USBFSH_Transact( ( USBFSH->HOST_TX_LEN )? ( USB_PID_IN << 4 | 0x00 ) : ( USB_PID_OUT << 4 | 0x00 ), USBFS_UH_R_TOG | USBFS_UH_T_TOG, DEF_CTRL_TRANS_TIMEOVER_CNT );  /* STATUS½×¶Î */
+    s = USBFSH_Transact( ( USBFSH->HOST_TX_LEN )? ( USB_PID_IN << 4 | 0x00 ) : ( USB_PID_OUT << 4 | 0x00 ), USBFS_UH_R_TOG | USBFS_UH_T_TOG, DEF_CTRL_TRANS_TIMEOVER_CNT ); // STATUS stage
     if( s != ERR_SUCCESS )
     {
         return s;
@@ -437,6 +459,7 @@ uint8_t USBFSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen )
     }
     return ERR_USB_BUF_OVER;
 }
+
 
 /*********************************************************************
  * @fn      USBFSH_GetDeviceDescr
@@ -611,7 +634,7 @@ uint8_t USBFSH_ClearEndpStall( uint8_t ep0_size, uint8_t endp_num )
  * @brief   Get data from USB device input endpoint.
  *
  * @para    endp_num: Endpoint number
- *          pendp_tog: Endpoint toggle
+ *          endp_tog: Endpoint toggle
  *          pbuf: Data Buffer
  *          plen: Data length
  *
@@ -626,7 +649,7 @@ uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf,
     {
         *plen = USBFSH->RX_LEN;
         memcpy( pbuf, USBFS_RX_Buf, *plen );
-        *pendp_tog ^= USBFS_UH_R_TOG;
+        *pendp_tog  ^= USBFS_UH_R_TOG;
     }
     
     return s;
@@ -638,9 +661,9 @@ uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf,
  * @brief   Send data to the USB device output endpoint.
  *
  * @para    endp_num: Endpoint number
- *          pendp_tog: Endpoint toggle
+ *          endp_tog: Endpoint toggle
  *          pbuf: Data Buffer
- *          plen: Data length
+ *          len: Data length
  *
  * @return  The result of sending data.
  */
@@ -650,12 +673,11 @@ uint8_t USBFSH_SendEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf
     
     memcpy( USBFS_TX_Buf, pbuf, len );
     USBFSH->HOST_TX_LEN = len;
-    
     s = USBFSH_Transact( ( USB_PID_OUT << 4 ) | endp_num, *pendp_tog, 0 );
     if( s == ERR_SUCCESS )
     {
-        *pendp_tog ^= USBFS_UH_T_TOG | USBFS_UH_R_TOG;
+        *pendp_tog ^= USBFS_UH_T_TOG;
     }
-  
+
     return s;
 }

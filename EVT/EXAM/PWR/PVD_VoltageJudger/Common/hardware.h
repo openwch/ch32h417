@@ -19,21 +19,8 @@
 
 #include "ch32h417.h"
 #include "debug.h"
-
-
-extern uint32_t GetHclkClock; 
-extern uint32_t GetSysClock; 
-extern uint32_t GetCoreClock; 
-extern uint8_t HSE_STATE;
 	 
 void Hardware(void);
-void SYSRInit(void);
-void SetClock(void);
-
-void SYSCLK_400M_V5F_400M_V3F_100M_HSE(void);
-void SYSCLK_480M_V5F_240M_V3F_120M_HSE(void);
-void SYSCLK_400M_V5F_400M_V3F_100M_HSI(void);
-void SYSCLK_480M_V5F_240M_V3F_120M_HSI(void);
 
 #ifdef __cplusplus
 }
