@@ -71,6 +71,7 @@ FlagStatus PWR_GetFlagStatus(uint32_t PWR_FLAG);
 void PWR_VIO18ModeCfg(uint32_t PWR_VIO18CfgMode);
 void PWR_VIO18LevelCfg(uint16_t VIO18Level);
 PWR_VIO18InitialStatus PWR_GetVIO18InitialStatus(void);
+void PWR_VDD12ExternPower(void);
 
 #ifdef __cplusplus
 }

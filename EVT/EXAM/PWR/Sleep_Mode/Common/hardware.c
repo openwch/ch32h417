@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/02
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -103,10 +103,12 @@ void Hardware(void)
     __WFI();
 #else
     __WFE();
+    /* get WFE wake-up event source,the set bit-x indicates the corresponding EXTI line-x */
+    printf("\r\nWFE wake-up event source: %08x\r\n",EXTI_GetWFEWkupSource());
 #endif
     
-    printf("\r\n ########## \r\n");
-
+    printf("##########\r\n");
+    
 }
 
 #if(Enter_MODE == Enter_WFI)

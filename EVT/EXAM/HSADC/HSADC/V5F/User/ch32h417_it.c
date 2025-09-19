@@ -37,9 +37,7 @@ void NMI_Handler(void)
  */
 void HardFault_Handler(void)
 {
-  // NVIC_SystemReset();
-  // printf("2\r\n");
-  // printf("MCAUSE V5- %08x\r\n",__get_MCAUSE());
+  NVIC_SystemReset();
   while (1)
   {
   }

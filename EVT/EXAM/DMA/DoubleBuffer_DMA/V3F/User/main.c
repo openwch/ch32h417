@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main_v3f.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2025/09/16
  * Description        : Main program body for V3F.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -14,7 +14,8 @@
  *@Note
  *DoubleBuffer_DMA routine:
  *Do not support memory to memory.
- *
+ *Mode1 :peripheral to RAM
+ *Mode2 :RAM to peripheral
  */
 
 #include "debug.h"
@@ -32,7 +33,7 @@ int main(void)
 	SystemInit();
 	SystemAndCoreClockUpdate();
 	Delay_Init();
-	USART_Printf_Init(115200);
+	USART_Printf_Init(921600);
 	Delay_Ms(1000);
 
 	printf("SystemClk:%d\r\n", SystemClock);

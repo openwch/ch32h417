@@ -50,6 +50,7 @@ uint32_t SystemClock = SYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSI;         /* Sys
 uint32_t SystemCoreClock = 120000000;
 
 
+
 #else
 
 uint32_t SystemClock = HSI_VALUE;       /* System Clock Frequency */
@@ -261,7 +262,7 @@ void SystemAndCoreClockUpdate (void)
 /*********************************************************************
  * @fn      SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE
  *
- * @brief   Sets System clock frequency to 400MHz(USBHS_PLL(480M)/15*12).
+ * @brief   Sets System clock frequency to 400MHz.
  *          Sets V5F Core clock frequency to 400MHz.
  *          Sets V3F Core clock frequency to 100MHz.
  *          configure HCLK prescalers.
@@ -270,7 +271,7 @@ void SystemAndCoreClockUpdate (void)
  */
 static void SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  __IO uint32_t StartUpCounter = 0, HSEStatus = 0, FLASH_Temp = 0;
    
   RCC->CTLR |= ((uint32_t)RCC_HSEON);
  
@@ -331,7 +332,10 @@ static void SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE(void)
     RCC->CFGR0 |= (uint32_t)RCC_FPRE_DIV4;  
 
     /* Select FLASH clock frequency*/
-    FLASH->ACTLR = FLASH_ACTLR_LATENCY_HCLK_DIV2;
+    FLASH_Temp = FLASH->ACTLR;
+    FLASH_Temp &= ~((uint32_t)0x3);
+    FLASH_Temp |= FLASH_ACTLR_LATENCY_HCLK_DIV2;
+    FLASH->ACTLR = FLASH_Temp;
 
     /* Select PLL as system clock source */
     RCC->PLLCFGR |= (uint32_t)RCC_SYSPLL_GATE; 
@@ -366,7 +370,7 @@ static void SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE(void)
  */
 static void SetSYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  __IO uint32_t StartUpCounter = 0, HSEStatus = 0, FLASH_Temp = 0;
 
   RCC->CTLR |= ((uint32_t)RCC_HSEON);
  
@@ -426,7 +430,10 @@ static void SetSYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE(void)
     RCC->CFGR0 |= (uint32_t)RCC_FPRE_DIV2;  
 
     /* Select FLASH clock frequency*/
-    FLASH->ACTLR = FLASH_ACTLR_LATENCY_HCLK_DIV2;
+    FLASH_Temp = FLASH->ACTLR;
+    FLASH_Temp &= ~((uint32_t)0x3);
+    FLASH_Temp |= FLASH_ACTLR_LATENCY_HCLK_DIV2;
+    FLASH->ACTLR = FLASH_Temp;
 
     /* Select PLL as system clock source */
     RCC->PLLCFGR |= (uint32_t)RCC_SYSPLL_GATE; 
@@ -461,6 +468,7 @@ static void SetSYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE(void)
  */
 static void SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSI(void)
 {
+  __IO uint32_t FLASH_Temp = 0;
   /* configure PLL Clock */  
   RCC->PLLCFGR &= (uint32_t)((uint32_t)~(RCC_PLLMUL)); 
   RCC->PLLCFGR |= (uint32_t)RCC_PLLMUL16;   
@@ -500,7 +508,10 @@ static void SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSI(void)
   RCC->CFGR0 |= (uint32_t)RCC_FPRE_DIV4;  
 
   /* Select FLASH clock frequency*/
-  FLASH->ACTLR = FLASH_ACTLR_LATENCY_HCLK_DIV2;
+  FLASH_Temp = FLASH->ACTLR;
+  FLASH_Temp &= ~((uint32_t)0x3);
+  FLASH_Temp |= FLASH_ACTLR_LATENCY_HCLK_DIV2;
+  FLASH->ACTLR = FLASH_Temp;
 
   /* Select PLL as system clock source */
   RCC->PLLCFGR |= (uint32_t)RCC_SYSPLL_GATE; 
@@ -527,6 +538,7 @@ static void SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSI(void)
  */
 static void SetSYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSI(void)
 {
+  __IO uint32_t FLASH_Temp = 0;
   /* Select 25MHz as USBHS PLL clock reference */
   RCC->PLLCFGR2 &= (uint32_t)((uint32_t)~(RCC_USBHSPLL_REFSEL)); 
 
@@ -566,7 +578,10 @@ static void SetSYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSI(void)
   RCC->CFGR0 |= (uint32_t)RCC_FPRE_DIV2;  
 
   /* Select FLASH clock frequency*/
-  FLASH->ACTLR = FLASH_ACTLR_LATENCY_HCLK_DIV2;
+  FLASH_Temp = FLASH->ACTLR;
+  FLASH_Temp &= ~((uint32_t)0x3);
+  FLASH_Temp |= FLASH_ACTLR_LATENCY_HCLK_DIV2;
+  FLASH->ACTLR = FLASH_Temp;
 
   /* Select PLL as system clock source */
   RCC->PLLCFGR |= (uint32_t)RCC_SYSPLL_GATE; 
@@ -593,7 +608,7 @@ static void SetSYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSI(void)
  */
 static void SetSYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSE(void)
 {
-  __IO uint32_t StartUpCounter = 0, HSEStatus = 0;
+  __IO uint32_t StartUpCounter = 0, HSEStatus = 0, FLASH_Temp = 0;
 
   /* Select VDDK to 1.25V */
   vu32 tmp = 0;
@@ -660,7 +675,10 @@ static void SetSYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSE(void)
     RCC->CFGR0 |= (uint32_t)RCC_FPRE_DIV4;  
 
     /* Select FLASH clock frequency*/
-    FLASH->ACTLR = FLASH_ACTLR_LATENCY_HCLK_DIV2;
+    FLASH_Temp = FLASH->ACTLR;
+    FLASH_Temp &= ~((uint32_t)0x3);
+    FLASH_Temp |= FLASH_ACTLR_LATENCY_HCLK_DIV2;
+    FLASH->ACTLR = FLASH_Temp;
 
     /* Select PLL as system clock source */
     RCC->PLLCFGR |= (uint32_t)RCC_SYSPLL_GATE; 
@@ -695,6 +713,7 @@ static void SetSYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSE(void)
  */
 static void SetSYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSI(void)
 {
+  __IO uint32_t FLASH_Temp = 0;
   /* Select VDDK to 1.25V */
   vu32 tmp = 0;
   tmp = *(vu32*)SYS_CFGR0_BASE;
@@ -741,7 +760,10 @@ static void SetSYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSI(void)
   RCC->CFGR0 |= (uint32_t)RCC_FPRE_DIV4;  
 
   /* Select FLASH clock frequency*/
-  FLASH->ACTLR = FLASH_ACTLR_LATENCY_HCLK_DIV2;
+  FLASH_Temp = FLASH->ACTLR;
+  FLASH_Temp &= ~((uint32_t)0x3);
+  FLASH_Temp |= FLASH_ACTLR_LATENCY_HCLK_DIV2;
+  FLASH->ACTLR = FLASH_Temp;
 
   /* Select PLL as system clock source */
   RCC->PLLCFGR |= (uint32_t)RCC_SYSPLL_GATE; 

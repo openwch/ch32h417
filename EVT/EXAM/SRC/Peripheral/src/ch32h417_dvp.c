@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_dvp.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/08/12
 * Description        : This file provides all the DVP firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -47,7 +47,7 @@ void DVP_Init(DVP_InitTypeDef *DVP_InitStruct)
                (uint8_t)DVP_InitStruct->DVP_VSYNC_P;
     DVP->CR1 = (uint8_t)DVP_InitStruct->DVP_FrameCapRate | ((uint8_t)DVP_InitStruct->DVP_Crop << 5) |
                (uint8_t)DVP_InitStruct->DVP_CaptureMode;
-    DVP->ROW_NUM = (uint16_t )DVP_InitStruct->DVP_COL_NUM;
+    DVP->ROW_NUM = (uint16_t )DVP_InitStruct->DVP_ROW_NUM;
     DVP->COL_NUM = (uint16_t )DVP_InitStruct->DVP_COL_NUM;
     DVP->DMA_BUF0 = (uint32_t )DVP_InitStruct->DVP_DMA_BUF0_Addr;
     DVP->DMA_BUF1 = (uint32_t )DVP_InitStruct->DVP_DMA_BUF1_Addr;
@@ -263,7 +263,7 @@ FlagStatus DVP_GetFlagStatus(uint8_t DVP_FLAG)
  */
 void DVP_ClearFlag(uint8_t DVP_FLAG)
 {
-    DVP->IFR |= (uint8_t)DVP_FLAG;
+    DVP->IFR = (uint8_t)DVP_FLAG;
 }
 
 /*********************************************************************
@@ -315,7 +315,7 @@ ITStatus DVP_GetITStatus(uint8_t DVP_IT)
  */
 void DVP_ClearITPendingBit(uint8_t DVP_IT)
 {
-    DVP->IFR |= (uint8_t)DVP_IT;
+    DVP->IFR = (uint8_t)DVP_IT;
 }
 
 /*********************************************************************

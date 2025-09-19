@@ -1,5 +1,5 @@
 
-南京沁恒微电子股份有限公司 2025.06
+南京沁恒微电子股份有限公司 2025.09
 最新资料请到我们的网站上查询
 https://wch.cn
 
@@ -33,6 +33,8 @@ https://wch.cn
   |      |      |      |      |-- DualADC_RegSimul：双ADC同步规则采样例程
   |      |      |      |      |-- DualADC_SlowInterleaved：双ADC慢速交叉采样例程  
   |      |      |      |      |-- TIM_trigger：定时器触发ADC转换例程 
+  |      |      |      |-- APPLICATION
+  |      |      |      |      |-- SoftUART：I/O口模拟串口例程 
   |      |      |      |-- CAN
   |      |      |      |      |-- Networking：CAN例程：正常模式，标准帧和扩展帧数据收发
   |      |      |      |      |-- TestMode：测试模式，包括静默模式、回环模式、回环静默模式
@@ -45,6 +47,7 @@ https://wch.cn
   |      |      |      |      |      |-- HSEM_CoreNotification：V5F通过信号量通知V3例程。
   |      |      |      |      |      |-- HSEM_CoreSync：内核同步例程。
   |      |      |      |      |      |-- HSEM_ResourceSharing：内核通过信号量共享信息例程。
+  |      |      |      |      |      |-- HSEM_DataSharing：内核通过信号量共享全局变量例程。
   |      |      |      |      |-- IPC：IPC例程
   |      |      |      |      |-- PFIC
   |      |      |      |      |      |-- Interrupt_Nest：中断嵌套例程
@@ -78,16 +81,23 @@ https://wch.cn
   |      |      |      |      |-- DMA_MEM2PERIP：储存器到外设模式、外设到储存器模式例程见各外设子例程
   |      |      |      |      |-- DoubleBuffer_DMA：DMA双缓冲模式例程
   |      |      |      |-- DVP 
-  |      |      |      |      |-- DVP_TFTLCD：DVP操作OV2640摄像头视频模式在LCD显示图像例程
+  |      |      |      |      |-- DVP_TFTLCD：DVP操作OV2640/OV5640摄像头视频模式在LCD显示图像例程
   |      |      |      |      |-- DVP_UART：DVP操作OV2640摄像头JPEG模式例程
   |      |      |      |-- EXTI
   |      |      |      |      |-- EXTI0：外部中断线例程 
   |      |      |      |-- FLASH
   |      |      |      |      |-- FLASH_Program：FLASH的擦/读/写，以及快速编程
-  |      |      |      |-- FSMC  
+  |      |      |      |      |-- LoadInFlash：启动过程中搬运代码在FLASH中进行
+  |      |      |      |-- FMC  
   |      |      |      |      |-- LCD：FSMC操作TFTLCD例程
-  |      |      |      |      |-- NANDFLASH：FSMC操作NANDFLASH例程
-  |      |      |      |      |-- SDRAM-32bit：FSMC操作32bit_SDRAM例程  
+  |      |      |      |      |-- LCD_8bit：8bit数据总线LCD例程
+  |      |      |      |      |-- NAND：FSMC操作NANDFLASH例程
+  |      |      |      |      |-- NORFLASH：FSMC操作NORFLASH例程
+  |      |      |      |      |-- SDRAM-16bit：FMC操作16bit_SDRAM例程  
+  |      |      |      |      |-- SDRAM-16bit_DMA：FSMC通过DMA的方式操作16bit_SDRAM例程 
+  |      |      |      |      |-- SDRAM-32bit：FMC操作32bit_SDRAM例程 
+  |      |      |      |      |-- SDRAM-32bit_DMA：FSMC通过DMA的方式操作32bit_SDRAM例程   
+  |      |      |      |      |-- SDRAM：FSMC通过DMA操作NOR_SRAM例程  
   |      |      |      |-- GPIO
   |      |      |      |      |-- GPIO_Toggle：GPIO例程 
   |      |      |      |-- HSADC
@@ -105,6 +115,8 @@ https://wch.cn
   |      |      |      |-- I3C
   |      |      |      |      |-- I3C_DMA_Controller：I3C主机例程
   |      |      |      |      |-- I3C_DMA_Target：I3C从机例程  
+  |      |      |      |-- IAP：IAP升级例程-内置Hex转Bin工具和IAP升级工具  
+  |      |      |      |      |-- USB_UART：USB+UART IAP例程  
   |      |      |      |-- IWDG
   |      |      |      |      |-- IWDG：独立看门狗例程 
   |      |      |      |-- LPTIM：低功耗定时器例程
@@ -143,10 +155,29 @@ https://wch.cn
   |      |      |      |      |      |      |-- PIOC_NEC.BIN：编译生成的数据文件
   |      |      |      |      |      |      |-- PIOC_NEC.LST：编译生成的列表文件
   |      |      |      |      |      |      |-- PIOC_NEC.h：数据文件转成的hex文件
+  |      |      |      |      |-- PIOC_UART
+  |      |      |      |      |      |-- PIOC_UART：PIOC接口模拟串口
+  |      |      |      |      |      |-- Ams
+  |      |      |      |      |      |      |-- PIOC_INC.ASM：PIOC汇编头文件 
+  |      |      |      |      |      |      |-- PIOC_UART.ASM：串口汇编源文件
+  |      |      |      |      |      |      |-- PIOC_UART.BAT：编译脚本
+  |      |      |      |      |      |      |-- PIOC_UART.BIN：编译生成的数据文件
+  |      |      |      |      |      |      |-- PIOC_UART.LST：编译生成的列表文件
+  |      |      |      |      |      |      |-- PIOC_UART_inc.h：数据文件转成的hex文件
+  |      |      |      |      |-- PIOC_Single_Wire
+  |      |      |      |      |      |-- PIOC_Single_Wire：单线调试接口，读写外部芯片RAM数据
+  |      |      |      |      |      |-- Ams
+  |      |      |      |      |      |      |-- PIOC_INC.ASM：PIOC汇编头文件 
+  |      |      |      |      |      |      |-- PIOC_Single_Wire.ASM：单线汇编源文件
+  |      |      |      |      |      |      |-- PIOC_Single_Wire.BAT：编译脚本
+  |      |      |      |      |      |      |-- PIOC_Single_Wire.BIN：编译生成的数据文件
+  |      |      |      |      |      |      |-- PIOC_Single_Wire.LST：编译生成的列表文件
+  |      |      |      |      |      |      |-- PIOC_Single_Wire_inc.h：数据文件转成的hex文件  
   |      |      |      |      |-- Tool_Manual：工具和手册
   |      |      |      |      |      |-- Manual
   |      |      |      |      |      |      |-- CHRISC8B.PDF：RISC8B 内核单片机指令集
   |      |      |      |      |      |      |-- PIOC.PDF：可编程协议I/O 微控制器PIOC手册
+  |      |      |      |      |      |      |-- PIOC使用说明.pdf：PIOC使用说明
   |      |      |      |      |      |-- Tool
   |      |      |      |      |      |      |-- BIN_HEX.EXE：BIN文件转HEX文件工具
   |      |      |      |      |      |      |-- WASM53B.EXE：RISC8B单片机的汇编工具，用于将汇编源程序编译为指令码目标数据
@@ -155,6 +186,7 @@ https://wch.cn
   |      |      |      |      |-- Stop_Mode：低功耗，停机模式例程
   |      |      |      |      |-- PVD_VoltageJudger：PVD电压判定例程
   |      |      |      |      |-- SEL_VIO18：VIO18软件配置例程
+  |      |      |      |      |-- VDD12_ExternPower：VDD 1.2V外部供电例程
   |      |      |      |-- QSPI
   |      |      |      |      |-- QSPI_FLASH：QSPI操作Winbond W25Qxx SPI_FLASH例程
   |      |      |      |-- RCC
@@ -209,19 +241,44 @@ https://wch.cn
   |      |      |      |-- USB
   |      |      |      |      |-- USBFS
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372Device：模拟自定义USB设备（CH372设备），端点1，3下传，2，4上传，端点1下传的数据从端点3上传，不取反，端点2下传的数据从端点4上传，取反。
+  |      |      |      |      |      |      |-- CH372：模拟自定义USB设备（CH372设备）。
+  |      |      |      |      |      |      |-- Compatibility_HID：模拟HID设备，数据通过串口上下传。
+  |      |      |      |      |      |      |-- CompositeKM：模拟键盘和鼠标，使用IO模拟按键，同时模拟数据可以通过串口4上传。
+  |      |      |      |      |      |      |-- CompositeKM_LowSpeed：模拟低速键盘和鼠标复合设备。 
+  |      |      |      |      |      |      |-- MSC_U-Disk: 模拟简单U盘，可选使用片内Flash或外部SPI-Flash
+  |      |      |      |      |      |      |-- MSC_CD-ROM: 模拟CDROM，需要外挂SPI-Flash
+  |      |      |      |      |      |      |-- SimulateCDC：模拟一个CDC串口，使用串口4收发
+  |      |      |      |      |      |      |-- SimulateCDC-HID：模拟一个CDC串口，使用串口4收发,HID中断端点下发数据取反上传。
   |      |      |      |      |      |-- HOST
-  |      |      |      |      |      |      |-- Host_UDisk_Exams：USB主机操作U盘例程
-  |      |      |      |      |      |      |-- Udisk_Lib：U盘文件系统库文件   
+  |      |      |      |      |      |      |-- HOST_IAP
+  |	     |      |      |      |      |      |      |-- APP: 与HOST_IAP配套使用的APP，工程修改了程序起始位置，编译后需自行将文件转化为bin文件并重命名为APP.bin
+  |      |      |      |      |      |      |      |-- HOST_IAP:  基于U盘读取文件例程整理的主机U盘IAP例程，从U盘内读取名称位APP.bin的文件，写入内部flash，校验后自动跳转。
+  |      |      |      |      |      |      |-- HOST_KM: 主机操作键鼠，获取键鼠上传的端点的数据并打印，支持USBFS口下1级hub
+  |      |      |      |      |      |      |-- MTP_FileSystem：枚举过程的USB主机到一个支持MTP和PTP协议的设备，支持MTP和PTP协议，并读取其文件
+  |      |      |      |      |      |      |-- Host_Udisk：USB主机操作U盘例程
+  |      |      |      |      |      |      |-- Udisk_Lib：U盘文件系统库文件  
   |      |      |      |      |-- USBHS 
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372Device：模拟自定义USB设备（CH372设备），端点1，3下传，2，4上传，端点1下传的数据从端点3上传，不取反，端点2下传的数据从端点4上传，取反。 
+  |      |      |      |      |      |      |-- CH372：模拟自定义USB设备（CH372设备）。
+  |      |      |      |      |      |      |-- Compatibility_HID：模拟HID设备，数据通过串口上下传。
+  |      |      |      |      |      |      |-- CompositeKM：模拟键盘和鼠标，使用IO模拟按键，同时模拟数据可以通过串口4上传。
+  |      |      |      |      |      |      |-- MSC_U-Disk: 模拟简单U盘，可选使用片内Flash或外部SPI-Flash
+  |      |      |      |      |      |      |-- MSC_CD-ROM: 模拟CDROM，需要外挂SPI-Flash
+  |      |      |      |      |      |      |-- SimulateCDC：模拟一个CDC串口，使用串口4收发。
+  |      |      |      |      |      |      |-- SimulateCDC-HID：模拟一个CDC串口，使用串口4收发,HID中断端点下发数据取反上传。  
   |      |      |      |      |      |-- HOST
-  |      |      |      |      |      |      |-- Host_UDisk_Exams：USB主机操作U盘例程
-  |      |      |      |      |      |      |-- Udisk_Lib：U盘文件系统库文件。
+  |      |      |      |      |      |      |-- HOST_IAP
+  |	     |      |      |      |      |      |      |-- APP: 与HOST_IAP配套使用的APP，工程修改了程序起始位置，编译后需自行将文件转化为bin文件并重命名为APP.bin
+  |      |      |      |      |      |      |      |-- HOST_IAP:  基于U盘读取文件例程整理的主机U盘IAP例程，从U盘内读取名称位APP.bin的文件，写入内部flash，校验后自动跳转。
+  |      |      |      |      |      |      |-- HOST_KM: 主机操作键鼠，获取键鼠上传的端点的数据并打印，支持USBFS口下1级hub
+  |      |      |      |      |      |      |-- MTP_FileSystem：枚举过程的USB主机到一个支持MTP和PTP协议的设备，支持MTP和PTP协议，并读取其文件
+  |      |      |      |      |      |      |-- Host_Udisk：USB主机操作U盘例程
+  |      |      |      |      |      |      |-- Udisk_Lib：U盘文件系统库文件
   |      |      |      |      |-- USBSS
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372Device：模拟自定义USB设备（CH372设备），端点1，3下传，2，4上传，端点1下传的数据从端点3上传，不取反，端点2下传的数据从端点4上传，取反。
+  |      |      |      |      |      |      |-- CH372Device：模拟自定义USB设备（CH372设备），端点1下传数据通过端点2上传，端点2下传数据通过端点1上传，端点3独立下传数据和独立上传数据。
+  |      |      |      |      |      |      |-- UVC
+  |	     |      |      |      |      |      |      |-- UVC-DVP: 从DVP获取数据通过USB上传，支持MJPEG格式。 
   |      |      |      |-- USBPD
   |      |      |      |      |-- USBPD_SNK：PD SNK 例程
   |      |      |      |      |-- USBPD_SRC：PD SRC 例程   

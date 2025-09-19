@@ -1,17 +1,49 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/16
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
+#define ADC_SPEED_High   0
+#define ADC_SPEED_Low    1
+
+#define ADC_SPEED   ADC_SPEED_High
+//#define ADC_SPEED   ADC_SPEED_Low
 
 u16 TxBuf[1024];
+/*********************************************************************
+ * @fn      USBHS_PLL
+ *
+ * @brief   Initializes USBHS_PLL.
+ *
+ * @return  none
+ */
+void USBHS_PLL(void)
+{
+    RCC->PLLCFGR2 &= (uint32_t)((uint32_t) ~(RCC_USBHSPLL_REFSEL));
+
+    /* Select HSI as USBHS PLL clock source */
+    RCC->PLLCFGR2 &= (uint32_t)((uint32_t) ~(RCC_USBHSPLLSRC));
+   RCC->PLLCFGR2 |= (uint32_t)RCC_USBHSPLLSRC_HSI;   
+    /* Wait till HSi is used as USBHS PLL clock source */
+    while ((RCC->PLLCFGR2 & (uint32_t)RCC_USBHSPLLSRC) != (uint32_t)0x01)
+    {
+    }
+
+    /* Enable USBHS PLL */
+    RCC->CTLR |= (uint32_t)RCC_USBHS_PLLON;
+
+    /* Wait till USBHS PLL is ready */
+    while ((RCC->CTLR & (uint32_t)RCC_USBHS_PLLRDY) != (uint32_t)RCC_USBHS_PLLRDY)
+    {
+    }
+}
 
 /*********************************************************************
  * @fn      ADC_Function_Init
@@ -26,10 +58,9 @@ void ADC_Function_Init(void)
     GPIO_InitTypeDef GPIO_InitStructure={0};
 
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_ADC1|RCC_HB2Periph_GPIOA, ENABLE );
-    RCC_ADCCLKConfig(RCC_ADCCLKSource_HCLK);
-    RCC_ADCHCLKCLKAsSourceConfig(RCC_PPRE2_DIV4,RCC_HCLK_ADCPRE_DIV8);
-
-
+    RCC_ADCCLKConfig(RCC_ADCCLKSource_USBHSPLL);
+    RCC_ADCUSBHSPLLCLKAsSourceConfig(RCC_USBHS_Div36);
+ 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -42,8 +73,12 @@ void ADC_Function_Init(void)
     ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
     ADC_InitStructure.ADC_NbrOfChannel = 1;
     ADC_Init(ADC1, &ADC_InitStructure);
-    ADC_LowPowerModeCmd(ADC1,ENABLE);
-
+    #if  (ADC_SPEED == ADC_SPEED_High)
+    ADC_LowPowerModeCmd(ADC1,DISABLE); 
+    #else
+     ADC_LowPowerModeCmd(ADC1,ENABLE);  
+    #endif 
+    ADC_SMP_ModeConfig(ADC1,ADC_Channel_1,ADC_SMP_CFG_MODE1);
     ADC_Cmd(ADC1, ENABLE);
     ADC_DMACmd(ADC1, ENABLE);
     ADC_BufferCmd(ADC1, DISABLE);
@@ -52,8 +87,23 @@ void ADC_Function_Init(void)
     while(ADC_GetResetCalibrationStatus(ADC1));
     ADC_StartCalibration(ADC1);
     while(ADC_GetCalibrationStatus(ADC1));
+    #if  (ADC_SPEED == ADC_SPEED_High)
+    RCC_ADCUSBHSPLLCLKAsSourceConfig(RCC_USBHS_Div6);
+    #endif
 }
 
+/*********************************************************************
+ * @fn      DMA_Rx_Init
+ *
+ * @brief   Initializes the DMAy Channelx configuration.
+ *
+ * @param   DMA_CHx - x can be 1 to 7.
+ *          ppadr - Peripheral base address.
+ *          memadr - Memory base address.
+ *          bufsize - DMA channel buffer size.
+ *
+ * @return  none
+ */ 
 void DMA_Rx_Init(DMA_Channel_TypeDef *DMA_CHx, int32_t ppadr, uint32_t memadr, uint16_t bufsize)
 {
     DMA_InitTypeDef DMA_InitStructure = {0};
@@ -73,7 +123,6 @@ void DMA_Rx_Init(DMA_Channel_TypeDef *DMA_CHx, int32_t ppadr, uint32_t memadr, u
     DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
     DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
     DMA_Init(DMA_CHx, &DMA_InitStructure); 
-    
 }
 
 /*********************************************************************
@@ -86,6 +135,8 @@ void DMA_Rx_Init(DMA_Channel_TypeDef *DMA_CHx, int32_t ppadr, uint32_t memadr, u
 void Hardware(void)
 {
 	u16 i=0;
+    USBHS_PLL();
+    printf("USBHS ready\r\n");
     ADC_Function_Init();
     ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_CyclesMode5);
     DMA_Rx_Init(DMA1_Channel1, (int32_t)& ADC1->RDATAR, (uint32_t)TxBuf, 1024);
@@ -98,9 +149,9 @@ void Hardware(void)
 
     }
 
-     for(i = 0; i < 1024; i++){
+	for(i = 0; i < 1024; i++){
 
-         printf("%d\r\n",TxBuf[i]);
+		printf("%d\r\n",TxBuf[i]);
 
         Delay_Ms(10);
     }

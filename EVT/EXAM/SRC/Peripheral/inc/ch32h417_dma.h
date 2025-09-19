@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_dma.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/07/22
 * Description        : This file contains all the functions prototypes for the 
 *                      DMA firmware library.
 *********************************************************************************
@@ -82,11 +82,13 @@ typedef struct
 #define DMA_PeripheralDataSize_Byte        ((uint32_t)0x00000000)
 #define DMA_PeripheralDataSize_HalfWord    ((uint32_t)0x00000100)
 #define DMA_PeripheralDataSize_Word        ((uint32_t)0x00000200)
+#define DMA_PeripheralDataSize_256         ((uint32_t)0x00000300)
 
 /* DMA_memory_data_size */
 #define DMA_MemoryDataSize_Byte            ((uint32_t)0x00000000)
 #define DMA_MemoryDataSize_HalfWord        ((uint32_t)0x00000400)
 #define DMA_MemoryDataSize_Word            ((uint32_t)0x00000800)
+#define DMA_MemoryDataSize_256             ((uint32_t)0x00000C00)
 
 /* DMA_circular_normal_mode */
 #define DMA_Mode_Circular                  ((uint32_t)0x00000020)

@@ -37,9 +37,6 @@ __attribute__ ((aligned(4))) uint8_t USBFS_EP4_Buf[ DEF_USBD_EP4_FS_SIZE*2 ];  /
 __attribute__ ((aligned(4))) uint8_t USBFS_EP5_Buf[ DEF_USBD_EP5_FS_SIZE*2 ];  //ep5_out(64)+ep5_in(64)
 __attribute__ ((aligned(4))) uint8_t USBFS_EP6_Buf[ DEF_USBD_EP6_FS_SIZE*2 ];  //ep6_out(64)+ep6_in(64)
 
-/* USB IN Endpoint Busy Flag */
-volatile uint8_t  USBFS_Endp_Busy[ DEF_UEP_NUM ];
-
 /* Ring buffer */
 RING_BUFF_COMM  RingBuffer_Comm;
 __attribute__ ((aligned(4))) uint8_t Data_Buffer[ DEF_RING_BUFFER_SIZE ];
@@ -61,10 +58,11 @@ void USBFS_RCC_Init(void)
     {
         /* Initialize USBHS 480M PLL */
         RCC_USBHS_PLLCmd(DISABLE);
-        RCC_USBHSPLLCLKConfig(RCC_USBHSPLLSource_HSE);
+        RCC_USBHSPLLCLKConfig((RCC->CTLR & RCC_HSERDY) ? RCC_USBHSPLLSource_HSE : RCC_USBHSPLLSource_HSI);
         RCC_USBHSPLLReferConfig(RCC_USBHSPLLRefer_25M);
         RCC_USBHSPLLClockSourceDivConfig(RCC_USBHSPLL_IN_Div1);
         RCC_USBHS_PLLCmd(ENABLE);
+        while (!(RCC->CTLR & RCC_USBHS_PLLRDY));
     }
     RCC_USBFSCLKConfig(RCC_USBFSCLKSource_USBHSPLL);
     RCC_USBFS48ClockSourceDivConfig(RCC_USBFS_Div10);
@@ -81,7 +79,6 @@ void USBFS_RCC_Init(void)
  */
 void USBFS_Device_Endp_Init( void )
 {
-
     USBFSD->UEP4_1_MOD = USBFS_UEP4_TX_EN|USBFS_UEP1_RX_EN;
     USBFSD->UEP2_3_MOD = USBFS_UEP2_TX_EN|USBFS_UEP3_RX_EN;
     USBFSD->UEP5_6_MOD = USBFS_UEP6_TX_EN|USBFS_UEP5_RX_EN;
@@ -110,12 +107,6 @@ void USBFS_Device_Endp_Init( void )
     USBFSD->UEP2_TX_CTRL = USBFS_UEP_T_RES_NAK;
     USBFSD->UEP4_TX_CTRL = USBFS_UEP_T_RES_NAK;
     USBFSD->UEP6_TX_CTRL = USBFS_UEP_T_RES_NAK;
-
-    /* Clear End-points Busy Status */
-    for(uint8_t i=0; i<DEF_UEP_NUM; i++ )
-    {
-        USBFS_Endp_Busy[ i ] = 0;
-    }
 }
 
 /*********************************************************************
@@ -148,105 +139,6 @@ void USBFS_Device_Init( FunctionalState sta )
 }
 
 /*********************************************************************
- * @fn      USBFS_Endp_DataUp
- *
- * @brief   USBFS device data upload
- *
- * @return  none
- */
-uint8_t USBFS_Endp_DataUp(uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mod)
-{
-    uint8_t endp_mode;
-    uint8_t buf_load_offset;
-
-    /* DMA config, endp_ctrl config, endp_len config */
-    if( (endp>=DEF_UEP1) && (endp<=DEF_UEP7) )
-    {
-        if( USBFS_Endp_Busy[ endp ] == 0 )
-        {
-            if( (endp == DEF_UEP1) || (endp == DEF_UEP4) )
-            {
-                /* endp1/endp4 */
-                endp_mode = USBFSD_UEP_MOD(0);
-                if( endp == DEF_UEP1 )
-                {
-                    endp_mode = (uint8_t)(endp_mode>>4);
-                }
-            }
-            else if( (endp == DEF_UEP2) || (endp == DEF_UEP3) )
-            {
-                /* endp2/endp3 */
-                endp_mode = USBFSD_UEP_MOD(1);
-                if( endp == DEF_UEP3 )
-                {
-                    endp_mode = (uint8_t)(endp_mode>>4);
-                }
-            }
-            else if( (endp == DEF_UEP5) || (endp == DEF_UEP6) )
-            {
-                /* endp5/endp6 */
-                endp_mode = USBFSD_UEP_MOD(2);
-                if( endp == DEF_UEP6 )
-                {
-                    endp_mode = (uint8_t)(endp_mode>>4);
-                }
-            }
-            else
-            {
-                /* endp7 */
-                endp_mode = USBFSD_UEP_MOD(3);
-            }
-
-            if( endp_mode & USBFSD_UEP_TX_EN )
-            {
-                if( endp_mode & USBFSD_UEP_RX_EN )
-                {
-                    buf_load_offset = 64;
-                }
-                else
-                {
-                    buf_load_offset = 0;
-                }
-
-                if( buf_load_offset == 0 )
-                {
-                    if( mod == DEF_UEP_DMA_LOAD )
-                    {
-                        /* DMA mode */
-                        USBFSD_UEP_DMA(endp) = (uint16_t)(uint32_t)pbuf;
-                    }
-                    else
-                    {
-                        /* copy mode */
-                        memcpy( USBFSD_UEP_BUF(endp), pbuf, len );
-                    }
-                }
-                else
-                {
-                    memcpy( USBFSD_UEP_BUF(endp)+buf_load_offset, pbuf, len );
-                }
-                /* Set end-point busy */
-                USBFS_Endp_Busy[ endp ] = 0x01;                
-                /* tx length */
-                USBFSD_UEP_TLEN(endp) = len;
-                /* response ack */
-                USBFSD_UEP_TX_CTRL(endp) = (USBFSD_UEP_TX_CTRL(endp) & ~USBFS_UEP_T_RES_MASK) | USBFS_UEP_T_RES_ACK;
-            }
-        }
-        else
-        {
-            return 1;
-        }
-    }
-    else
-    {
-        return 1;
-    }
-    return 0;
-}
-
-
-/*********************************************************************
  * @fn      USBFS_IRQHandler
  *
  * @brief   This function handles USBFS exception.
@@ -257,10 +149,9 @@ void USBFS_IRQHandler( void )
 {
     uint8_t  intflag, intst, errflag;
     uint16_t len, i;
-
+    
     intflag = USBFSD->INT_FG;
     intst = USBFSD->INT_ST;
-    
     if( intflag & USBFS_UIF_TRANSFER )
     {
         switch ( intst & USBFS_UIS_TOKEN_MASK )
@@ -307,7 +198,6 @@ void USBFS_IRQHandler( void )
                             
                             USBFSD->UEP2_TX_CTRL = (USBFSD->UEP2_TX_CTRL & ~USBFS_UEP_T_RES_MASK) | USBFS_UEP_T_RES_NAK;
                             USBFSD->UEP2_TX_CTRL ^= USBFS_UEP_T_TOG;
-                            USBFS_Endp_Busy[ DEF_UEP2 ] = 0;
                             break;
 
                         /* end-point 4 data in interrupt */

@@ -9,7 +9,6 @@
  * Attention: This software (modified or not) and binary are used for
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-
 /*
  * @Note
  * 1-wire example: 1W-RGB_WS2812, 1W-DS1820
@@ -45,7 +44,6 @@ int main(void)
 #elif (Run_Core == Run_Core_V5F)
 	Hardware();
 #endif
-
 
 	while(1)
 	{

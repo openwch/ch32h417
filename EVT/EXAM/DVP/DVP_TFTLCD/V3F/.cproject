@@ -263,7 +263,7 @@
             </toolChain>
           </folderInfo>
           <sourceEntries>
-            <entry excluding="Ld/V5F|Startup/startup_ch32h417_v5f.S" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+            <entry excluding="Ld/V5F|Startup/startup_ch32h417_v5f.S|Common/ATK_MC5640" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
           </sourceEntries>
         </configuration>
       </storageModule>

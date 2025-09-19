@@ -34,9 +34,6 @@ extern "C" {
 #define DEF_USB_PORT_FS             0x00                                        
 #define DEF_USB_PORT_HS             0x01      
 
-#define DEF_USBFS_PORT_INDEX        0x00
-#define DEF_USBHS_PORT_INDEX        0x01
-
 /* USB Root Device Status */
 #define ROOT_DEV_DISCONNECT         0
 #define ROOT_DEV_CONNECTED          1
@@ -78,6 +75,7 @@ extern "C" {
                        
 /* USB Communication Time */
 #define DEF_BUS_RESET_TIME          11          // USB bus reset time
+#define DEF_BUS_RESET_TIMEOUT       30          // USBHS bus reset timeout
 #define DEF_RE_ATTACH_TIMEOUT       100         // Wait for the USB device to reconnect after reset, 100mS timeout
 #define DEF_WAIT_USB_TOUT_200US     1000
 #define DEF_CTRL_TRANS_TIMEOVER_CNT 60000       // Control transmission delay timing

@@ -33,21 +33,31 @@
  *
  * @return  none
  */
+
+
 int main(void)
 {
-	SystemInit();
+    SystemInit();
     SystemAndCoreClockUpdate();
-	Delay_Init();
-	USART_Printf_Init(921600);
 
-	printf("SystemClk:%d\r\n", SystemClock);
-	printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
+    /*  The current in the VDD12 power domain of the chip is relatively high. 
+     If the VDD12 power supply is externally provided and the internal LDO is turned off, 
+     the following function can be executed to reduce the chip's power consumption and 
+     alleviate overheating. Note that this operation should only be performed when the 
+     external 1.2V power supply has stabilized.*/
+    // PWR_VDD12ExternPower();
+
+    Delay_Init();
+    USART_Printf_Init(921600);
+    printf("SystemClk:%d\r\n", SystemClock);
+    printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
     printf("CH372Device Running On USBSS Controller\n");
 
 #if (Run_Core == Run_Core_V3FandV5F)
     NVIC_WakeUp_V5F(Core_V5F_StartAddr);//wake up V5
     HSEM_ITConfig(HSEM_ID0, ENABLE);
     NVIC->SCTLR |= 1<<4;
+    RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR,ENABLE);
     PWR_EnterSTOPMode(PWR_Regulator_ON, PWR_STOPEntry_WFE);
     HSEM_ClearFlag(HSEM_ID0);
     printf("V3F wake up\r\n");
@@ -68,4 +78,4 @@ int main(void)
 
     }
 
-}
+}  

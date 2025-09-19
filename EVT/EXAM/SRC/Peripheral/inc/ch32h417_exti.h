@@ -86,8 +86,9 @@ FlagStatus EXTI_GetFlagStatus(uint32_t EXTI_Line);
 void EXTI_ClearFlag(uint32_t EXTI_Line);
 ITStatus EXTI_GetITStatus(uint32_t EXTI_Line);
 void EXTI_ClearITPendingBit(uint32_t EXTI_Line);
+uint32_t EXTI_GetWFEWkupSource(void);
 
-#ifdef __cplusplus1
+#ifdef __cplusplus
 }
 #endif
 

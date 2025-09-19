@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_flash.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/18
 * Description        : This file contains all the functions prototypes for the FLASH  
 *                      firmware library.
 *********************************************************************************
@@ -72,6 +72,14 @@ typedef enum
 #define OB_IWDG_SW                     ((uint16_t)0x0001)  /* Software IWDG selected */
 #define OB_IWDG_HW                     ((uint16_t)0x0000)  /* Hardware IWDG selected */
 
+/* Option_Bytes_USBFSDLEN */
+#define OB_USBFSDL_EN                  ((uint16_t)0x0040)  /* Boot Enable USBFS Download */
+#define OB_USBFSDL_NoEN                ((uint16_t)0x0000)  /* Boot Disable USBFS Download */
+
+/* Option_Bytes_USARTDLEN */
+#define OB_USARTDL_EN                  ((uint16_t)0x0080)  /* Boot Enable USART Download*/
+#define OB_USARTDL_NoEN                ((uint16_t)0x0000)  /* Boot Disable USART Download */
+
 /* FLASH_Interrupts */	
 #define FLASH_IT_ERROR                 ((uint32_t)0x00000400)  
 #define FLASH_IT_EOP                   ((uint32_t)0x00001000)  
@@ -95,6 +103,13 @@ typedef enum
 #define Start_Mode_USER                ((uint32_t)0x00000000)
 #define Start_Mode_BOOT                ((uint32_t)0x00004000)
 
+/* FLASH Capacity enumeration */
+typedef enum
+{
+	FLASHCapacity_480K = 0,
+  FLASHCapacity_960K
+}FLASHCapacity;
+
 /*Functions used for all devices*/
 void FLASH_Unlock(void);
 void FLASH_Lock(void);
@@ -105,7 +120,7 @@ FLASH_Status FLASH_ProgramHalfWord(uint32_t Address, uint16_t Data);
 FLASH_Status FLASH_ProgramOptionByteData(uint32_t Address, uint8_t Data);
 FLASH_Status FLASH_EnableWriteProtection(uint32_t FLASH_Sectors);
 FLASH_Status FLASH_ReadOutProtection(FunctionalState NewState);
-FLASH_Status FLASH_UserOptionByteConfig(uint16_t OB_IWDG);
+FLASH_Status FLASH_UserOptionByteConfig(uint16_t OB_IWDG,uint16_t OB_USBFSDL,uint16_t OB_USARTDL);
 uint32_t FLASH_GetUserOptionByte(void);
 uint32_t FLASH_GetWriteProtectionOptionByte(void);
 FlagStatus FLASH_GetReadOutProtectionStatus(void);
@@ -125,6 +140,7 @@ void SystemReset_StartMode(uint32_t Mode);
 FLASH_Status FLASH_ROM_ERASE(uint32_t StartAddr, uint32_t Length);
 FLASH_Status FLASH_ROM_WRITE(uint32_t StartAddr, uint32_t *pbuf, uint32_t Length);
 uint32_t FLASH_BOOT_GetMode( void );
+FLASHCapacity FLASH_GetCapacity( void );
 
 #ifdef __cplusplus
 }

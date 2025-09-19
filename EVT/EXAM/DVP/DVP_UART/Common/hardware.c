@@ -1,32 +1,27 @@
 /********************************** (C) COPYRIGHT  *******************************
-* File Name          : ch32h417_crc.c
+* File Name          : hardware.c
 * Author             : WCH
 * Version            : V1.0.0
 * Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-#include "ov.h"
+#include "ov2640.h"
 
 /* DVP Work Mode JPEG_MODE */
 
-UINT32  JPEG_DVPDMAaddr0 = 0x2011A000;
-UINT32  JPEG_DVPDMAaddr1 = 0x2011A000 + OV2640_JPEG_WIDTH;
-
-UINT32  RGB565_DVPDMAaddr0 = 0x2011A000;
-UINT32  RGB565_DVPDMAaddr1 = 0x2011A000 + RGB565_COL_NUM;
+__attribute__ ((aligned(32))) UINT32  JPEG_DVPDMAaddr0 = 0x2011A000;
+__attribute__ ((aligned(32))) UINT32  JPEG_DVPDMAaddr1 = 0x2011A000 + OV2640_JPEG_WIDTH;
 
 volatile UINT32 frame_cnt = 0;
 volatile UINT32 addr_cnt = 0;
 volatile UINT32 href_cnt = 0;
 
-
 void DVP_IRQHandler (void) __attribute__((interrupt("WCH-Interrupt-fast")));
-
 
 /*********************************************************************
  * @fn      USART_Send_Byte
@@ -46,13 +41,12 @@ void USART_Send_Byte(u8 t)
 /*********************************************************************
  * @fn      DVP_Init
  *
- * @brief   Init DVP
+ * @brief   dvp fuunction
  *
  * @return  none
  */
 void DVP_Function_Init(void)
 {
-
     DVP_InitTypeDef DVP_InitStructure = {0};
     RCC_HBPeriphClockCmd(RCC_HBPeriph_DVP, ENABLE);
 
@@ -78,7 +72,6 @@ void DVP_Function_Init(void)
     
     DVP_DMACmd(ENABLE);
     DVP_Cmd(ENABLE);
-
 }
 
 /*********************************************************************
@@ -95,12 +88,12 @@ void DVP_IRQHandler(void)
         DVP_ClearITPendingBit(DVP_IT_ROW_DONE);
 
         href_cnt++;
-        if (addr_cnt%2)     //buf1 done
+        if (addr_cnt%2)     /* buf1 done */
         {
             addr_cnt++;
             DVP->DMA_BUF1 += OV2640_JPEG_WIDTH *2;
         }
-        else                //buf0 done
+        else                /* buf0 done */
         {
             addr_cnt++;
             DVP->DMA_BUF0 += OV2640_JPEG_WIDTH *2;
@@ -112,7 +105,7 @@ void DVP_IRQHandler(void)
         DVP_ClearITPendingBit(DVP_IT_FRM_DONE);
 
         DVP_Cmd(DISABLE);
-        // /* Use uart2 send JPEG data */
+        /* Use uart2 send JPEG data */
         {
             UINT32 i;
             UINT8 val;
@@ -126,8 +119,8 @@ void DVP_IRQHandler(void)
         }
         DVP_Cmd(ENABLE);
 
-        DVP->DMA_BUF0 = JPEG_DVPDMAaddr0;        //DMA addr0
-        DVP->DMA_BUF1 = JPEG_DVPDMAaddr1;        //DMA addr1
+        DVP->DMA_BUF0 = JPEG_DVPDMAaddr0;  /* DMA addr0 */
+        DVP->DMA_BUF1 = JPEG_DVPDMAaddr1;  /* DMA addr1 */
         href_cnt = 0;
 
         addr_cnt =0;       
@@ -153,26 +146,23 @@ void DVP_IRQHandler(void)
 /*********************************************************************
  * @fn      Hardware
  *
- * @brief   
+ * @brief   dvp fuunction
  *
  * @return  none
  */
 void Hardware(void)
 {
-	
   while(OV2640_Init())
   {
-      printf("Camera Model Err\r\n");
+      printf("Camera Model Error\r\n");
       Delay_Ms(1000);
   }
-
     Delay_Ms(1000);
-
     RGB565_Mode_Init();
     Delay_Ms(1000);
 
 #if (DVP_Work_Mode == JPEG_MODE)
-    printf("JPEG_MODE\r\n");
+    printf("JPEG Mode\r\n");
     JPEG_Mode_Init();
     Delay_Ms(1000);
 

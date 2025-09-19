@@ -1,5 +1,5 @@
 
-Nanjing Qinheng Microelectronics Co., Ltd. 2025.06
+Nanjing Qinheng Microelectronics Co., Ltd. 2025.09
 
 https://wch-ic.com
 
@@ -33,6 +33,8 @@ Directory
   |      |      |      |      |-- DualADC_RegSimul: dual ADC regular simultaneous sampling routine
   |      |      |      |      |-- DualADC_SlowInterleaved: dual ADC slow interleaved sampling routine  
   |      |      |      |      |-- TIM_Trigger:TIM trigger ADC conversion routine 
+  |      |      |      |-- APPLICATION
+  |      |      |      |      |-- SoftUART: I/O port simulation serial port routine 
   |      |      |      |-- CAN
   |      |      |      |      |-- Networking: CAN routine: normal mode, standard frame and expanded frame data transceiver
   |      |      |      |      |-- TestMode: test mode, including silent mode, loopback mode and loopback silent mode
@@ -45,6 +47,7 @@ Directory
   |      |      |      |      |      |-- HSEM_CoreNotification：HSEM CoreNotication routine
   |      |      |      |      |      |-- HSEM_CoreSync：core synchronization routine
   |      |      |      |      |      |-- HSEM_ResourceSharing：HSEM ResourceSharing routine
+  |      |      |      |      |      |-- HSEM_DataSharing：HSEM global variable Sharing routine
   |      |      |      |      |-- IPC：IPC routine
   |      |      |      |      |-- PFIC
   |      |      |      |      |      |-- Interrupt_Nest：interrupt nested routine
@@ -78,16 +81,23 @@ Directory
   |      |      |      |      |-- DMA_MEM2PERIP: see each peripheral subroutine for memory to peripheral mode and peripheral to memory mode routines
   |      |      |      |      |-- DoubleBuffer_DMA：Double Buffer mode routine
   |      |      |      |-- DVP 
-  |      |      |      |      |-- DVP_TFTLCD: DVP routine to operate OV2640 camera video mode to display image on LCD
+  |      |      |      |      |-- DVP_TFTLCD: DVP routine to operate OV2640 and OV5640 camera video mode to display image on LCD
   |      |      |      |      |-- DVP_UART: DVP routine to operate OV2640 camera JPEG mode
   |      |      |      |-- EXTI
   |      |      |      |      |-- EXTI0:External Interrupt routine
   |      |      |      |-- FLASH
   |      |      |      |      |-- FLASH_Program:FLASH erase/read/write, and fast programming 
-  |      |      |      |-- FSMC  
-  |      |      |      |      |-- LCD: FSMC routine to operate TFTLCD
-  |      |      |      |      |-- NANDFLASH: FSMC routine to operate NANDFLASH 
-  |      |      |      |      |-- SDRAM: FSMC routine to operate 32bit_SDRAM 
+  |      |      |      |      |-- LoadInFlash：Transfer code in FLASH during startup process
+  |      |      |      |-- FMC  
+  |      |      |      |      |-- LCD：FSMC operation TFTLCD routine
+  |      |      |      |      |-- LCD_8bit：8-bit data bus LCD routine
+  |      |      |      |      |-- NAND：FSMC operation NANDFFLASH routine
+  |      |      |      |      |-- NORFLASH：FSMC operation NORFLASH routine
+  |      |      |      |      |-- SDRAM-16bit：FSMC operation 16bit_SDRAM routine  
+  |      |      |      |      |-- SDRAM-16bit_DMA：FSMC operates 16bit_SDRAM routines through DMA 
+  |      |      |      |      |-- SDRAM-32bit：FSMC operation 32bit_SDRAM routine 
+  |      |      |      |      |-- SDRAM-32bit_DMA：FSMC operates 32bit_SDRAM routines through DMA   
+  |      |      |      |      |-- SDRAM：FSMC operates NOR_SRAM routine through DMA
   |      |      |      |-- GPIO
   |      |      |      |      |-- GPIO_Toggle:GPIO routines 
   |      |      |      |-- HSADC
@@ -105,6 +115,8 @@ Directory
   |      |      |      |-- I3C
   |      |      |      |      |-- I3C_DMA_Controller：I3C master routine
   |      |      |      |      |-- I3C_DMA_Target：I3C slave routine
+  |      |      |      |-- IAP：IAP upgrade routine-built-in Hex to Bin tool and IAP upgrade tool  
+  |      |      |      |      |-- USB_UART：USB+UART IAP routine  
   |      |      |      |-- IWDG
   |      |      |      |      |-- IWDG:Independent Watchdog routine 
   |      |      |      |-- LPTIM：low power consumption timer routine
@@ -143,10 +155,29 @@ Directory
   |      |      |      |      |      |      |-- PIOC_NEC.BIN: Compile the generated data files
   |      |      |      |      |      |      |-- PIOC_NEC.LST: Compile the generated list file
   |      |      |      |      |      |      |-- PIOC_NEC.h: Data files converted to hex files
+  |      |      |      |      |-- PIOC_UART
+  |      |      |      |      |      |-- PIOC_UART: PIOC simulates UART
+  |      |      |      |      |      |-- Ams
+  |      |      |      |      |      |      |-- PIOC_INC.ASM: PIOC assembly header file 
+  |      |      |      |      |      |      |-- PIOC_UART.ASM: UART compilation source file
+  |      |      |      |      |      |      |-- PIOC_UART.BAT: Compile Scripts
+  |      |      |      |      |      |      |-- PIOC_UART.BIN: Compile the generated data files
+  |      |      |      |      |      |      |-- PIOC_UART.LST: Compile the generated list file
+  |      |      |      |      |      |      |-- PIOC_UART_inc.h: Data files converted to hex files 
+  |      |      |      |      |-- PIOC_Single_Wire
+  |      |      |      |      |      |-- PIOC_Single_Wire: Single-wire debug interface to read and write external chip RAM data
+  |      |      |      |      |      |-- Ams
+  |      |      |      |      |      |      |-- PIOC_INC.ASM: PIOC assembly header file 
+  |      |      |      |      |      |      |-- PIOC_Single_Wire.ASM: IIC compilation source file
+  |      |      |      |      |      |      |-- PIOC_Single_Wire.BAT: Compile Scripts
+  |      |      |      |      |      |      |-- PIOC_Single_Wire.BIN: Compile the generated data files
+  |      |      |      |      |      |      |-- PIOC_Single_Wire.LST: Compile the generated list file
+  |      |      |      |      |      |      |-- PIOC_Single_Wire_inc.h: Data files converted to hex files
   |      |      |      |      |-- Tool_Manual
   |      |      |      |      |      |-- Manual
   |      |      |      |      |      |      |-- CHRISC8B.PDF: RISC8B Core Microcontroller Instruction Set
   |      |      |      |      |      |      |-- PIOC.PDF: Programmable Protocol I/O Microcontroller PIOC Handbook
+  |      |      |      |      |      |      |-- PIOC User Manual.PDF: PIOC User Manual
   |      |      |      |      |      |-- Tool
   |      |      |      |      |      |      |-- BIN_HEX.EXE: BIN to HEX file conversion tool
   |      |      |      |      |      |      |-- WASM53B.EXE: RISC8B microcontroller assembly tool for compiling assembly source programs into instruction code target data
@@ -155,6 +186,7 @@ Directory
   |      |      |      |      |-- Stop_Mode: low power, stop mode routine
   |      |      |      |      |-- PVD_VoltageJudger：PVD voltage Judger routine
   |      |      |      |      |-- SEL_VIO18：VIO18 software configuration routine
+  |      |      |      |      |-- VDD12_ExternPower：VDD 1.2V external power supply routine
   |      |      |      |-- QSPI
   |      |      |      |      |-- QSPI_FLASH：QSPI operate Winbond W25Qxx SPI_FLASH routine
   |      |      |      |-- RCC
@@ -209,19 +241,44 @@ Directory
   |      |      |      |-- USB
   |      |      |      |      |-- USBFS
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372Device:Simulates a custom USB device (CH372 device) with endpoints 1, 3 down and 2, 4 up. Data down from endpoint 1 is uploaded from endpoint 3 and not reversed, and data down from endpoint 2 is uploaded from endpoint 4 and reversed.
+  |      |      |      |      |      |      |-- CH372：Simulate custom USB devices (CH372 devices)
+  |      |      |      |      |      |      |-- Compatibility_HID：Simulate HID devices and transmit data up and down through a serial port.
+  |      |      |      |      |      |      |-- CompositeKM：Simulate keyboard and mouse, use IO to simulate keys, and simulate data that can be uploaded through serial port 4.
+  |      |      |      |      |      |      |-- CompositeKM_LowSpeed：Simulate a low-speed keyboard and mouse composite device. 
+  |      |      |      |      |      |      |-- MSC_U-Disk: Simulate a simple USB flash drive, optional use of on-chip Flash or external SPI Flash
+  |      |      |      |      |      |      |-- MSC_CD-ROM: Simulating CDROM requires external installation of SPI Flash
+  |      |      |      |      |      |      |-- SimulateCDC：Simulate a CDC serial port and use serial port 4 for transmitting and receiving
+  |      |      |      |      |      |      |-- SimulateCDC-HID：Simulate a CDC serial port, use serial port 4 for transmission and reception, HID interrupt endpoint for data retrieval and reverse upload.
   |      |      |      |      |      |-- HOST
-  |      |      |      |      |      |      |-- Host_UDisk_Exams:USB host operation USB disk routine 
-  |      |      |      |      |      |      |-- Udisk_Lib:U disk file system library file   
+  |      |      |      |      |      |      |-- HOST_IAP
+  |	     |      |      |      |      |      |      |-- APP: The APP used in conjunction with HOST_SAP has modified the starting position of the program. After compilation, the file needs to be converted to a bin file and renamed as APP.bin
+  |      |      |      |      |      |      |      |-- HOST_IAP:  A host U-disk IAP routine organized based on the U-disk read file routine, reads a file named APP.bin from the U-disk, writes it to internal flash, and automatically jumps after verification.
+  |      |      |      |      |      |      |-- HOST_KM: Host operation keyboard and mouse, retrieve the endpoint data uploaded by the keyboard and mouse, and print it. Supports level 1 hub under USBFS port
+  |      |      |      |      |      |      |-- MTP_FileSystem：List the process from a USB host to a device that supports MTP and PTP protocols, and read its files
+  |      |      |      |      |      |      |-- Host_Udisk：USB host operation USB drive routine
+  |      |      |      |      |      |      |-- Udisk_Lib：USB file system library files  
   |      |      |      |      |-- USBHS 
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372Device:Simulates a custom USB device (CH372 device) with endpoints 1, 3 down and 2, 4 up. Data down from endpoint 1 is uploaded from endpoint 3 and not reversed, and data down from endpoint 2 is uploaded from endpoint 4 and reversed.
+  |      |      |      |      |      |      |-- CH372：Simulate custom USB devices (CH372 devices)
+  |      |      |      |      |      |      |-- Compatibility_HID：Simulate HID devices and transmit data up and down through a serial port.
+  |      |      |      |      |      |      |-- CompositeKM：Simulate keyboard and mouse, use IO to simulate keys, and simulate data that can be uploaded through serial port 4.
+  |      |      |      |      |      |      |-- MSC_U-Disk: Simulate a simple USB flash drive, optional use of on-chip Flash or external SPI Flash
+  |      |      |      |      |      |      |-- MSC_CD-ROM: Simulating CDROM requires external installation of SPI Flash
+  |      |      |      |      |      |      |-- SimulateCDC：Simulate a CDC serial port and use serial port 4 for transmission and reception.
+  |      |      |      |      |      |      |-- SimulateCDC-HID：Simulate a CDC serial port, use serial port 4 for transmission and reception, HID interrupt endpoint for data retrieval and reverse upload.  
   |      |      |      |      |      |-- HOST
-  |      |      |      |      |      |      |-- Host_UDisk_Exams:USB host operation USB disk routine 
-  |      |      |      |      |      |      |-- Udisk_Lib:U disk file system library file   
-  |      |      |      |      |-- USBSS 
+  |      |      |      |      |      |      |-- HOST_IAP
+  |	     |      |      |      |      |      |      |-- APP: The APP used in conjunction with HOST_SAP has modified the starting position of the program. After compilation, the file needs to be converted to a bin file and renamed as APP.bin
+  |      |      |      |      |      |      |      |-- HOST_IAP:  A host U-disk IAP routine organized based on the U-disk read file routine, reads a file named APP.bin from the U-disk, writes it to internal flash, and automatically jumps after verification.
+  |      |      |      |      |      |      |-- HOST_KM: Host operation keyboard and mouse, retrieve the endpoint data uploaded by the keyboard and mouse, and print it. Supports level 1 hub under USBFS port
+  |      |      |      |      |      |      |-- MTP_FileSystem：List the process from a USB host to a device that supports MTP and PTP protocols, and read its files
+  |      |      |      |      |      |      |-- Host_Udisk：USB host operation USB drive routine
+  |      |      |      |      |      |      |-- Udisk_Lib：USB file system library files
+  |      |      |      |      |-- USBSS
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372Device:Simulates a custom USB device (CH372 device) with endpoints 1, 3 down and 2, 4 up. Data down from endpoint 1 is uploaded from endpoint 3 and not reversed, and data down from endpoint 2 is uploaded from endpoint 4 and reversed.
+  |      |      |      |      |      |      |-- CH372Device：Simulate custom USB devices (CH372 devices), with endpoint 1 downloading data and uploading it through endpoint 2, endpoint 2 downloading data and uploading it through endpoint 1, and endpoint 3 independently downloading and uploading data.
+  |      |      |      |      |      |      |-- UVC
+  |	     |      |      |      |      |      |      |-- UVC-DVP: Retrieve data from DVP and upload it via USB, supporting MJPEG format.
   |      |      |      |-- USBPD
   |      |      |      |      |-- USBPD_SNK：PD SNK routine
   |      |      |      |      |-- USBPD_SRC：PD SRC routine   

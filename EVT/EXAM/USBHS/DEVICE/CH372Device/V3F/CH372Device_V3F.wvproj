@@ -7,8 +7,8 @@
 			"toolchain": "RISC-V",
 			"series": "CH32H417",
 			"rtos": "NoneOS",
-			"mcu": "CH32H417QEU6",
-			"description": "",
+			"mcu": "CH32H417QEU",
+			"description": "ROM(byte): 256K, SRAM(byte): 64K, CHIP PINS: 64, GPIO PORTS: 51.\\nWCH CH32V3 series of mainstream MCUs covers the needs of a large variety of applications in the industrial,medical and consumer markets. High performance with first-class peripherals and low-power,low-voltage operation is paired with a high level of integration at accessible prices with a simple architecture and easy-to-use tools.",
 			"link": "WCH-Link",
 			"peripheral_version": "1.4",
 			"calibrateSupport": false,
@@ -24,16 +24,16 @@
 				"location": "../../../../SRC/Debug"
 			},
 			{
-				"name": "Startup",
-				"location": "../../../../SRC/Startup"
+				"name": "Ld",
+				"location": "../../../../SRC/Ld"
 			},
 			{
 				"name": "Peripheral",
 				"location": "../../../../SRC/Peripheral"
 			},
 			{
-				"name": "Ld",
-				"location": "../../../../SRC/Ld"
+				"name": "Startup",
+				"location": "../../../../SRC/Startup"
 			},
 			{
 				"name": "Common",
@@ -45,11 +45,6 @@
 				"parentLogicPath": "",
 				"type": "file",
 				"name": "*.wvproj"
-			},
-			{
-				"parentLogicPath": "User",
-				"type": "folder",
-				"name": "新建文件夹"
 			}
 		],
 		"projectName": "CH372Device_V3F",
@@ -75,7 +70,7 @@
 						}
 					]
 				},
-				"downloadMerged": true,
+				"downloadMerged": false,
 				"loadMergedBeforeDebug": true
 			}
 		}
@@ -201,7 +196,7 @@
 						"other_warning_flags": ""
 					},
 					"miscellaneous": {
-						"generate_assembler_listing": false,
+						"generate_assembler_listing": true,
 						"save_temporary_files": false,
 						"verbose": false,
 						"other_compiler_flags": ""
@@ -350,6 +345,7 @@
 					"show_totals": false,
 					"other_flags": ""
 				},
+				"configVariables": [],
 				"riscvTargetProcessor": {
 					"architecture": "rv32i",
 					"multiply_extension": true,
@@ -369,15 +365,14 @@
 					"other_target_flags": ""
 				},
 				"component_toolchain": "${WCH:Toolchain:GCC12}",
-				"name": "obj",
-				"configVariables": []
+				"name": "obj"
 			}
 		]
 	},
 	"flashConfig": {
 		"mcutype": "CH32H417",
 		"address": "0x08000000",
-		"target_path": "obj/CH372Device_V3F.hex",
+		"target_path": "obj\\CH372Device_V3F.bin",
 		"clkSpeed": "High",
 		"debug_interface_mode": "1-wire serial",
 		"erase": true,
@@ -385,8 +380,8 @@
 		"verify": true,
 		"reset": true,
 		"sdiPrintf": false,
-		"disablepowerout": false,
-		"clearcodeflash": false,
+		"disablepowerout": true,
+		"clearcodeflash": true,
 		"disablecodeprotect": false,
 		"exepath": "",
 		"exearguments": ""
@@ -463,10 +458,8 @@
 			"ATTR_BUILD_BEFORE_LAUNCH_ATTR": 2,
 			"GdbServerAllocateConsole": true,
 			"GdbServerAllocateTelnetConsole": false,
-			"SkipDownloadBeforeDebug": false,
 			"StartGdbCLient": true,
-			"UPDATE_THREADLIST_ON_SUSPEND": false,
-			"DebugInRam": false
+			"UPDATE_THREADLIST_ON_SUSPEND": false
 		}
 	}
 }

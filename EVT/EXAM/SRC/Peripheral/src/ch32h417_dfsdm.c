@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_dfsdm.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/08/12
 * Description        : This file contains all the functions prototypes for the  
 *                      DFSDM firmware library.
 *********************************************************************************
@@ -1319,7 +1319,7 @@ void DFSDM_ClearFlag(DFSDM_FLT_TypeDef *DFSDM_FLTx, uint8_t DFSDM_FLAG)
     
     if(tmp == 0x4)
     {
-        DFSDM_FLTx->AWCFR |= ((uint32_t)1 << bit_pos);
+        DFSDM_FLTx->AWCFR = ((uint32_t)1 << bit_pos);
     }
     else 
     {
@@ -1331,12 +1331,12 @@ void DFSDM_ClearFlag(DFSDM_FLT_TypeDef *DFSDM_FLTx, uint8_t DFSDM_FLAG)
                 (void)DFSDM_FLTx->RDATAR;
                 break;
             case DFSDM_FLAG_FLTx_AWDF:
-                DFSDM_FLTx->AWCFR |= (DFSDM_FLTAWSR_AWLTF | DFSDM_FLTAWSR_AWHTF);
+                DFSDM_FLTx->AWCFR = (DFSDM_FLTAWSR_AWLTF | DFSDM_FLTAWSR_AWHTF);
                 break;
             default:
             {
                 if(tmp == 0x3) DFSDM_FLTx = DFSDM_FLT0;
-                DFSDM_FLTx->ICR |= ((uint32_t)1 << bit_pos);
+                DFSDM_FLTx->ICR = ((uint32_t)1 << bit_pos);
                 break;
             }
         }
@@ -1463,12 +1463,12 @@ void DFSDM_ClearITPendingBit(DFSDM_FLT_TypeDef *DFSDM_FLTx,uint16_t DFSDM_FLAG)
             (void)DFSDM_FLTx->RDATAR;
             break;
         case DFSDM_IT_FLAG_FLTx_AWDF:
-            DFSDM_FLTx->AWCFR |= (DFSDM_FLTAWSR_AWLTF | DFSDM_FLTAWSR_AWHTF);
+            DFSDM_FLTx->AWCFR = (DFSDM_FLTAWSR_AWLTF | DFSDM_FLTAWSR_AWHTF);
             break;
         default:
         {
             if(is_flt0) DFSDM_FLTx = DFSDM_FLT0;
-            DFSDM_FLTx->ICR |= ((uint32_t)1 << bit_pos);
+            DFSDM_FLTx->ICR = ((uint32_t)1 << bit_pos);
             break;
         }
     }

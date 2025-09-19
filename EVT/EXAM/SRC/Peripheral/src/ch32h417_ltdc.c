@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_ltdc.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/07/16
 * Description        : This file provides all the LTDC firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -161,7 +161,7 @@ void LTDC_DitherCmd(FunctionalState NewState)
  */
 LTDC_RGBTypeDef LTDC_GetRGBWidth(void)
 {
-    LTDC_RGBTypeDef LTDC_RGB_InitStruct;
+    LTDC_RGBTypeDef LTDC_RGB_InitStruct = {0};
 
     LTDC->GCR &= (uint32_t)GCR_MASK;
 
@@ -342,7 +342,7 @@ void LTDC_LayerCmd(LTDC_Layer_TypeDef* LTDC_Layerx, FunctionalState NewState)
  */
 LTDC_PosTypeDef LTDC_GetPosStatus(void)
 {
-    LTDC_PosTypeDef LTDC_Pos_InitStruct;
+    LTDC_PosTypeDef LTDC_Pos_InitStruct = {0};
 
     LTDC->CPSR &= ~(LTDC_CPSR_CYPOS | LTDC_CPSR_CXPOS);
 

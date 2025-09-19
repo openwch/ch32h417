@@ -42,14 +42,14 @@
       <location>PARENT-4-PROJECT_LOC/SRC/Peripheral</location>
     </link>
     <link>
-      <name>Ld</name>
-      <type>2</type>
-      <location>PARENT-4-PROJECT_LOC/SRC/Ld</location>
-    </link>
-    <link>
       <name>Common</name>
       <type>2</type>
       <location>PARENT-1-PROJECT_LOC/Common</location>
+    </link>
+    <link>
+      <name>Ld</name>
+      <type>2</type>
+      <location>PARENT-4-PROJECT_LOC/SRC/Ld</location>
     </link>
   </linkedResources>
   <filteredResources>

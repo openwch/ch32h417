@@ -49,7 +49,7 @@
     <link>
       <name>Debug</name>
       <type>2</type>
-      <location>PARENT-1-PROJECT_LOC/Debug</location>
+      <location>../Debug</location>
     </link>
   </linkedResources>
   <filteredResources>

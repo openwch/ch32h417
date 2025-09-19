@@ -263,7 +263,7 @@
             </toolChain>
           </folderInfo>
           <sourceEntries>
-            <entry excluding="Ld/V3F|Startup/startup_ch32h417_v3f.S" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+            <entry excluding="Ld/V3F|Startup/startup_ch32h417_v3f.S|Common/Asm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
           </sourceEntries>
         </configuration>
       </storageModule>

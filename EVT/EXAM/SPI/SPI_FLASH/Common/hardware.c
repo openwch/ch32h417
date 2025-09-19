@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/15
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -142,8 +142,8 @@ void SPI_Flash_Init(void)
  * @fn      SPI_Flash_ReadSR
  *
  * @brief   Read W25Qxx status register.
- *        £¡£¡BIT7  6   5   4   3   2   1   0
- *        £¡£¡SPR   RV  TB  BP2 BP1 BP0 WEL BUSY
+ *         BIT7  6   5   4   3   2   1   0
+ *         SPR   RV  TB  BP2 BP1 BP0 WEL BUSY
  *
  * @return  byte - status register value.
  */
@@ -245,7 +245,7 @@ u16 SPI_Flash_ReadID(void)
  *
  * @brief   Erase one sector(4Kbyte).
  *
- * @param   Dst_Addr - 0 £¡£¡ 2047
+ * @param   Dst_Addr - 0 ~ 2047
  *
  * @return  none
  */

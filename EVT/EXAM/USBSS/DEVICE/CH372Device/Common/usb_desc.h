@@ -23,8 +23,7 @@ extern "C" {
 /* usb device info define  */
 #define DEF_USB_VID                  0x1A86
 #define DEF_USB_PID                  0x5537
-#define DEF_USB30_PID                0xF537     
-
+#define DEF_USB30_PID                0x5537     
 
 /* file version */
 #define DEF_FILE_VERSION             0x01
@@ -45,10 +44,6 @@ extern "C" {
 #define DEf_USBD_LS_UEP0_SIZE        8      /* usb ls device end-point 0 size */
 #define DEF_USBD_LS_PACK_SIZE        64     /* usb ls device max int pack size */
 
-#define DEF_USB_EP0_SIZE           0x40                                         /* 端点0大小 */
-#define DEF_USB_EP1_SIZE           64                                           /* 端点1大小 */
-#define DEF_USB_FS_EP2_SIZE        64                                           /* 端点2全速模式大小 */
-#define DEF_USB_HS_EP2_SIZE        512                                          /* 端点2高速模式大小 */
 
 /* HS end-point size */
 #define DEF_USB_EP1_HS_SIZE          DEF_USBD_HS_PACK_SIZE
@@ -67,21 +62,6 @@ extern "C" {
 #define DEF_USB_EP5_FS_SIZE          DEF_USBD_FS_PACK_SIZE
 #define DEF_USB_EP6_FS_SIZE          DEF_USBD_FS_PACK_SIZE
 #define DEF_USB_EP7_FS_SIZE          DEF_USBD_FS_PACK_SIZE
-
-#define DEF_ENDP1_IN_BURST_LEVEL  16
-#define DEF_ENDP1_OUT_BURST_LEVEL 16
-#define DEF_ENDP2_IN_BURST_LEVEL  16
-#define DEF_ENDP2_OUT_BURST_LEVEL 16
-#define DEF_ENDP3_IN_BURST_LEVEL  16
-#define DEF_ENDP3_OUT_BURST_LEVEL 16
-#define DEF_ENDP4_IN_BURST_LEVEL  16
-#define DEF_ENDP4_OUT_BURST_LEVEL 16
-#define DEF_ENDP5_IN_BURST_LEVEL  16
-#define DEF_ENDP5_OUT_BURST_LEVEL 16
-#define DEF_ENDP6_IN_BURST_LEVEL  16
-#define DEF_ENDP6_OUT_BURST_LEVEL 16
-#define DEF_ENDP7_IN_BURST_LEVEL  16
-#define DEF_ENDP7_OUT_BURST_LEVEL 16
 
 #define DEF_USBD_DEVICE_DESC_LEN     ((uint8_t)MyDevDescr[ 0 ])
 #define DEF_USBD_CONFIG_FS_DESC_LEN  ((uint16_t)MyCfgDescr_FS[ 2 ] + (uint16_t)(MyCfgDescr_FS[ 3 ] << 8))
@@ -104,6 +84,7 @@ extern "C" {
 #define DEF_USBSSD_PROD_DESC_LEN       ((uint16_t)MyProdInfo[ 0 ])
 #define DEF_USBSSD_SN_DESC_LEN         ((uint16_t)MySerNumInfo[ 0 ])
 #define DEF_USBSSD_OS_DESC_LEN         ((uint16_t)OSStringDescriptor[ 0 ])
+#define DEF_USBSSD_QUA_DESC_LEN        ((uint16_t)MyQuaDesc[ 0 ])
 #define DEF_USBSSD_BOS_DESC_LEN        ((uint16_t)MyBOSDesc_SS[ 2 ] + (uint16_t)(MyBOSDesc_SS[ 3 ] << 8))
 
 extern const uint8_t MyDevDescr[ ];

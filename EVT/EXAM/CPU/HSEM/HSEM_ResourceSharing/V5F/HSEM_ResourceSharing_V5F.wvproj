@@ -7,7 +7,7 @@
 			"toolchain": "RISC-V",
 			"series": "CH32H417",
 			"rtos": "NoneOS",
-			"mcu": "CH32H417QEU6",
+			"mcu": "CH32H417QEU",
 			"description": "",
 			"link": "WCH-Link",
 			"peripheral_version": "1.4",

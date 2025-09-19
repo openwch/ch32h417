@@ -13,6 +13,7 @@
 
 /* No interrupt selected */
 #define EXTI_LINENONE    ((uint32_t)0x00000)
+volatile uint32_t WFE_WkupSource;
 
 /*********************************************************************
  * @fn      EXTI_DeInit
@@ -179,4 +180,17 @@ ITStatus EXTI_GetITStatus(uint32_t EXTI_Line)
 void EXTI_ClearITPendingBit(uint32_t EXTI_Line)
 {
     EXTI->INTFR = EXTI_Line;
+}
+
+/*********************************************************************
+ * @fn      EXTI_GetWFEWkupSource
+ *
+ * @brief   Get WFE wake-up event source.the set bit-x indicates 
+ *          the corresponding EXTI line-x.
+ *
+ * @return  wake-up event source.
+ */
+uint32_t EXTI_GetWFEWkupSource(void)
+{
+    return WFE_WkupSource;
 }

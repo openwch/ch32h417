@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_can.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/16
 * Description        : This file contains all the functions prototypes for the 
 *                      CAN firmware library.
 *********************************************************************************
@@ -213,10 +213,12 @@ typedef struct
 #define CAN_FilterMode_IdList               ((uint8_t)0x01) /* identifier list mode */
 
 /* CAN_filter_scale */
+#define CAN_FilterScale_16bit               ((uint8_t)0x00) /* Two 16-bit filter */
 #define CAN_FilterScale_32bit               ((uint8_t)0x01) /* One 32-bit filter */
 
 /* CAN_filter_FIFO */
 #define CAN_Filter_FIFO0                    ((uint8_t)0x00) /* Filter FIFO 0 assignment for filter x */
+#define CAN_Filter_FIFO1                    ((uint8_t)0x01) /* Filter FIFO 1 assignment for filter x */
 
 /* CAN_identifier_type */
 #define CAN_Id_Standard                     ((uint32_t)0x00000000) /* Standard Id */
@@ -234,6 +236,7 @@ typedef struct
 
 /* CAN_receive_FIFO_number_constants */
 #define CAN_FIFO0                           ((uint8_t)0x00) /* CAN FIFO 0 used to receive */
+#define CAN_FIFO1                           ((uint8_t)0x01) /* CAN FIFO 0 used to receive */
 
 /* CAN_sleep_constants */
 #define CAN_Sleep_Failed                    ((uint8_t)0x00) /* CAN did not enter the sleep mode */
@@ -267,6 +270,9 @@ typedef struct
 #define CAN_FLAG_FMP0                       ((uint32_t)0x12000003) /* FIFO 0 Message Pending Flag */
 #define CAN_FLAG_FF0                        ((uint32_t)0x32000008) /* FIFO 0 Full Flag            */
 #define CAN_FLAG_FOV0                       ((uint32_t)0x32000010) /* FIFO 0 Overrun Flag         */
+#define CAN_FLAG_FMP1                       ((uint32_t)0x14000003) /* FIFO 1 Message Pending Flag */
+#define CAN_FLAG_FF1                        ((uint32_t)0x34000008) /* FIFO 1 Full Flag            */
+#define CAN_FLAG_FOV1                       ((uint32_t)0x34000010) /* FIFO 1 Overrun Flag         */
 
 /* Operating Mode Flags */
 #define CAN_FLAG_WKU                        ((uint32_t)0x31000008) /* Wake up Flag */
@@ -290,6 +296,9 @@ typedef struct
 #define CAN_IT_FMP0                         ((uint32_t)0x00000002) /* FIFO 0 message pending Interrupt*/
 #define CAN_IT_FF0                          ((uint32_t)0x00000004) /* FIFO 0 full Interrupt*/
 #define CAN_IT_FOV0                         ((uint32_t)0x00000008) /* FIFO 0 overrun Interrupt*/
+#define CAN_IT_FMP1                         ((uint32_t)0x00000010) /* FIFO 1 message pending Interrupt*/
+#define CAN_IT_FF1                          ((uint32_t)0x00000020) /* FIFO 1 full Interrupt*/
+#define CAN_IT_FOV1                         ((uint32_t)0x00000040) /* FIFO 1 overrun Interrupt*/
 
 /* Operating Mode Interrupts */
 #define CAN_IT_WKU                          ((uint32_t)0x00010000) /* Wake-up Interrupt*/
@@ -331,6 +340,7 @@ typedef struct
 
 void        CAN_DeInit(CAN_TypeDef *CANx);
 uint8_t     CAN_Init(CAN_TypeDef *CANx, CAN_InitTypeDef *CAN_InitStruct);
+void        CAN_FilterInit(CAN_FilterInitTypeDef* CAN_FilterInitStruct);
 void        CAN_StructInit(CAN_InitTypeDef *CAN_InitStruct);
 void        CAN_SlaveStartBank(CAN_TypeDef* CANx, uint8_t CAN_BankNumber);
 void        CAN_DBGFreeze(CAN_TypeDef *CANx, FunctionalState NewState);

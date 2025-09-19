@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_dbgmcu.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/05
 * Description        : This file provides all the DBGMCU firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -125,11 +125,11 @@ void DBGMCU_Config(uint32_t DBGMCU_Periph, FunctionalState NewState)
  *
  * @return Device identifier.
  *          ChipID List-
- *  CH32H417QEU6 - 0x417005xD 
- *  CH32H417MEU6 - 0x417105xD
- *  CH32H417WEU6 - 0x417205xD
- *  CH32H415REU6 - 0x415005xD
- *  CH32H416RDU6 - 0x416005xD
+ *  CH32H417QEU - 0x417005xD 
+ *  CH32H417MEU - 0x417105xD
+ *  CH32H417WEU - 0x417205xD
+ *  CH32H415REU - 0x415005xD
+ *  CH32H416RDU - 0x416005xD
  */
 uint32_t DBGMCU_GetCHIPID( void )
 {

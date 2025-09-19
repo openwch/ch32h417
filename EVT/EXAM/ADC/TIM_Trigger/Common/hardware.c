@@ -1,89 +1,170 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/16
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-
-/* Global define */
-#define Buf_Size 32
-
-/* Global Variable */
-u32 SRC_BUF[Buf_Size] = {0x01020304, 0x05060708, 0x090A0B0C, 0x0D0E0F10,
-						 0x11121314, 0x15161718, 0x191A1B1C, 0x1D1E1F20, 0x21222324, 0x25262728,
-						 0x292A2B2C, 0x2D2E2F30, 0x31323334, 0x35363738, 0x393A3B3C, 0x3D3E3F40,
-						 0x41424344, 0x45464748, 0x494A4B4C, 0x4D4E4F50, 0x51525354, 0x55565758,
-						 0x595A5B5C, 0x5D5E5F60, 0x61626364, 0x65666768, 0x696A6B6C, 0x6D6E6F70,
-						 0x71727374, 0x75767778, 0x797A7B7C, 0x7D7E7F80};
-
-u32 CRCValue = 0;
-
+u16 ADC_val;
 /*********************************************************************
- * @fn	    RecalculateCRC
+ * @fn      ADC_Function_Init
  *
- * @brief   The function RecalculateCRC calculates the CRC value of a given buffer and sets the ID register to a
- * 		  specific value.
+ * @brief   Initializes ADC collection.
  *
- * @param   SRC_BUF SRC_BUF is the source buffer, which is a pointer to the start of the data that needs
- * 		  to be used for CRC calculation.
- *          suze The parameter "suze" is likely a typo and should be "size". It represents the size of
- * 		  the source buffer in bytes.
- *
- * @return the calculated CRC value as a uint32_t.
+ * @return  none
  */
-uint32_t RecalculateCRC(uint32_t *SRC_BUF, uint32_t suze)
+void ADC_Function_Init(void)
 {
-	uint32_t temp;
-	if (CRC_GetIDRegister() == 0xaa)
-		CRC_ResetDR();
-	temp = CRC_CalcBlockCRC((u32 *)SRC_BUF, suze);
-	CRC_SetIDRegister(0xaa);
-	return temp;
+	ADC_InitTypeDef ADC_InitStructure={0};
+	GPIO_InitTypeDef GPIO_InitStructure={0};
+
+	RCC_HB2PeriphClockCmd(RCC_HB2Periph_ADC1|RCC_HB2Periph_GPIOA, ENABLE );
+	RCC_ADCCLKConfig(RCC_ADCCLKSource_HCLK);
+	RCC_ADCHCLKCLKAsSourceConfig(RCC_PPRE2_DIV4,RCC_HCLK_ADCPRE_DIV8);
+
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	ADC_DeInit(ADC1);
+	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
+	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigInjecConv_None;
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+	ADC_InitStructure.ADC_NbrOfChannel = 1;
+	ADC_Init(ADC1, &ADC_InitStructure);
+	ADC_LowPowerModeCmd(ADC1,ENABLE);
+
+	ADC_Cmd(ADC1, ENABLE);
+	ADC_LowPowerModeCmd(ADC1,ENABLE);
+    ADC_ExternalTrigInjectedConvConfig(ADC1, ADC_ExternalTrigInjecConv_T2_CC1);  
+    ADC_InjectedSequencerLengthConfig(ADC1, 1);
+    ADC_InjectedChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_CyclesMode5);
+    ADC_ExternalTrigInjectedConvCmd(ADC1, ENABLE);
+
+    NVIC_EnableIRQ(ADC1_2_IRQn);
+	NVIC_SetPriority(ADC1_2_IRQn,2);
+    ADC_ITConfig(ADC1, ADC_IT_JEOC, ENABLE);
+
+	ADC_ResetCalibration(ADC1);
+	while(ADC_GetResetCalibrationStatus(ADC1));
+	ADC_StartCalibration(ADC1);
+	while(ADC_GetCalibrationStatus(ADC1));
+	ADC_BufferCmd(ADC1, DISABLE);
 }
 
 /*********************************************************************
- * @fn      CRC_Is_Used
+ * @fn      Get_ADC_Val
  *
- * @brief   The function checks if the CRC module is being used by comparing the ID register value to 0xaa and
- *        returns 1 if it is being used, otherwise it returns 0.
+ * @brief   Returns ADCx conversion result data.
  *
- * @return  a value of type uint8_t, which is an 8-bit unsigned integer. The function is checking if the
- *        value returned by the CRC_GetIDRegister() function is equal to 0xaa. If it is, the function returns
- *        1. If it is not, the function returns 0.
+ * @param   ch - ADC channel.
+ *            ADC_Channel_0 - ADC Channel0 selected.
+ *            ADC_Channel_1 - ADC Channel1 selected.
+ *            ADC_Channel_2 - ADC Channel2 selected.
+ *            ADC_Channel_3 - ADC Channel3 selected.
+ *            ADC_Channel_4 - ADC Channel4 selected.
+ *            ADC_Channel_5 - ADC Channel5 selected.
+ *            ADC_Channel_6 - ADC Channel6 selected.
+ *            ADC_Channel_7 - ADC Channel7 selected.
+ *            ADC_Channel_8 - ADC Channel8 selected.
+ *            ADC_Channel_9 - ADC Channel9 selected.
+ *            ADC_Channel_10 - ADC Channel10 selected.
+ *            ADC_Channel_11 - ADC Channel11 selected.
+ *            ADC_Channel_12 - ADC Channel12 selected.
+ *            ADC_Channel_13 - ADC Channel13 selected.
+ *            ADC_Channel_14 - ADC Channel14 selected.
+ *            ADC_Channel_15 - ADC Channel15 selected.
+ *            ADC_Channel_16 - ADC Channel16 selected.
+ *            ADC_Channel_17 - ADC Channel17 selected.
+ *
+ * @return  none
  */
-uint8_t CRC_Is_Used()
+u16 Get_ADC_Val(u8 ch)
 {
-	if (CRC_GetIDRegister() == 0xaa)
-		return 1;
-	else
-		return 0;
+    u16 val;
+	ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_CyclesMode5);
+	ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+
+	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));
+
+	val = ADC_GetConversionValue(ADC1);
+
+	return val;
+}
+/*********************************************************************
+ * @fn      TIM1_PWM_In
+ *
+ * @brief   Initializes PWM.
+ *
+ * @return  none
+ */
+
+void TIM1_PWM_In(u16 arr, u16 psc, u16 ccp)
+{
+    TIM_OCInitTypeDef       TIM_OCInitStructure = {0};
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};
+
+    RCC_HB1PeriphClockCmd(RCC_HB1Periph_TIM2,ENABLE);
+
+    TIM_TimeBaseInitStructure.TIM_Period = arr;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = psc;
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM2, &TIM_TimeBaseInitStructure);
+
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_Pulse = ccp;
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_Low;
+    TIM_OC1Init(TIM2, &TIM_OCInitStructure);
+
+    TIM_CtrlPWMOutputs(TIM2, ENABLE);
+    TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Disable);
+    TIM_ARRPreloadConfig(TIM2, ENABLE);
+    TIM_SelectOutputTrigger(TIM2, TIM_TRGOSource_Update);
+    TIM_Cmd(TIM2, ENABLE);
 }
 
 /*********************************************************************
  * @fn      Hardware
  *
- * @brief   Resets the CRC Data register (DR).
+ * @brief   ADC TIM_Trigger.
  *
  * @return  none
  */
 void Hardware(void)
 {
-	printf("CRC TEST\r\n");
-	RCC_HBPeriphClockCmd(RCC_HBPeriph_CRC, ENABLE);
 
-	CRC_Is_Used() ? printf("CRC is not clear\r\n") : printf("CRC is clear\r\n");
-	/* The code is calling the function `RecalculateCRC` with the arguments `SRC_BUF` and `Buf_Size`. */
-	CRCValue = RecalculateCRC(SRC_BUF, Buf_Size);
+	TIM1_PWM_In(7200,1000-1,3600);
+    ADC_Function_Init();  
+}
 
-	printf("CRCValue: 0x%08X\r\n", CRCValue); /* CRCValue should be 0x199AC3CA in this example */
 
-	CRC_Is_Used() ? printf("CRC is not clear\r\n") : printf("CRC is clear\r\n");
-	while (1)
-		;
+void ADC1_2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+
+/*********************************************************************
+ * @fn      ADC1_IRQHandler
+ *
+ * @brief   ADC1 Interrupt Service Function.
+ *
+ * @return  none
+ */
+void ADC1_2_IRQHandler()
+{
+    if(ADC_GetITStatus( ADC1, ADC_IT_JEOC)){
+        printf("ADC Extline trigger conversion...\r\n");
+        ADC_val = ADC_GetInjectedConversionValue(ADC1, ADC_InjectedChannel_1);
+        printf("JADC %04d\r\n", ADC_val);
+    }
+
+    ADC_ClearITPendingBit( ADC1, ADC_IT_JEOC);
+ 
 }

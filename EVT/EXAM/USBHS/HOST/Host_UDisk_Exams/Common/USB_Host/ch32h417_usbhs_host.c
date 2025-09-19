@@ -71,6 +71,7 @@ void USBHS_RCC_Init(FunctionalState sta)
             RCC_USBHSPLLReferConfig(RCC_USBHSPLLRefer_25M);
             RCC_USBHSPLLClockSourceDivConfig(RCC_USBHSPLL_IN_Div1);
             RCC_USBHS_PLLCmd(ENABLE);
+            while (!(RCC->CTLR & RCC_USBHS_PLLRDY));
         }
         /* Enable UTMI Clock */
         RCC_UTMIcmd(ENABLE);
@@ -215,36 +216,25 @@ void USBHSH_SetSelfAddr( uint8_t addr )
  *
  * @brief   Reset USB port.
  *
- * @para    mod: Reset host port operating mode.
- *               0 -> reset and wait end
- *               1 -> begin reset
- *               2 -> end reset
- *
  * @return  none
  */
-void USBHSH_ResetRootHubPort( uint8_t mode )
+void USBHSH_ResetRootHubPort( void )
 {
+    uint32_t i = 0;
     USBHSH_SetSelfAddr( 0x00 );
+    
+    USBHSH->PORT_CTRL |= USBHS_UH_SET_PORT_RESET;
 
-    if( mode <= 1 )
+    while(i++ < 10 * DEF_BUS_RESET_TIMEOUT)
     {
-        USBHSH->PORT_CTRL |= USBHS_UH_SET_PORT_RESET;
-    }
-    if( mode == 0 )
-    {
-        Delay_Ms( DEF_BUS_RESET_TIME ); // Reset time from 10mS to 20mS
-    }
-    if( mode != 1 )
-    {
-        USBHSH->PORT_CTRL &= ~USBHS_UH_SET_PORT_RESET;
-    }
-    Delay_Ms( 2 );
-
-    if( USBHSH->PORT_STATUS_CHG & USBHS_UHIF_PORT_CONNECT )
-    {
-        if( USBHSH->PORT_STATUS & USBHS_UHIS_PORT_CONNECT )
+        if(USBHSH->PORT_STATUS_CHG & USBHS_UHIF_PORT_RESET) 
         {
-            USBHSH->PORT_STATUS_CHG = USBHS_UHIF_PORT_CONNECT;
+            USBHSH->PORT_STATUS_CHG = USBHS_UHIF_PORT_RESET;
+            return;;
+        }
+        else
+        {
+            Delay_Us(100);
         }
     }
 }

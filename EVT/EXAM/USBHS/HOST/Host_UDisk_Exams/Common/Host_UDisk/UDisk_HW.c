@@ -131,7 +131,7 @@ void USBH_ResetRootHubPort( uint8_t usb_port, uint8_t mode )
     if( usb_port == DEF_USB_PORT_HS )
     {
 #if DEF_USB_PORT_HS_EN
-        USBHSH_ResetRootHubPort( mode );
+        USBHSH_ResetRootHubPort();
 #endif
     }
 }

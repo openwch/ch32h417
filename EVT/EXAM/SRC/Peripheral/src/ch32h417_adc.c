@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_adc.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/16
 * Description        : This file provides all the ADC firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -314,6 +314,7 @@ FlagStatus ADC_GetResetCalibrationStatus(ADC_TypeDef *ADCx)
  */
 void ADC_StartCalibration(ADC_TypeDef *ADCx)
 {
+    ADCx->SAMPTR1 |= (0x7<<27);
     ADCx->CTLR2 |= CTLR2_CAL_Set;
 }
 
@@ -994,14 +995,14 @@ void ADC_TempSensorVrefintCmd(FunctionalState NewState)
  *            ADC_FLAG_JEOC - End of injected group conversion flag.
  *            ADC_FLAG_JSTRT - Start of injected group conversion flag.
  *            ADC_FLAG_STRT - Start of regular group conversion flag.
- *
+ *            ADC_FLAG_RST - RST of ADC flag.
  * @return  FlagStatus: SET or RESET.
  */
-FlagStatus ADC_GetFlagStatus(ADC_TypeDef *ADCx, uint8_t ADC_FLAG)
+FlagStatus ADC_GetFlagStatus(ADC_TypeDef *ADCx, uint16_t ADC_FLAG)
 {
     FlagStatus bitstatus = RESET;
 
-    if((ADCx->STATR & ADC_FLAG) != (uint8_t)RESET)
+    if((ADCx->STATR & ADC_FLAG) != (uint16_t)RESET)
     {
         bitstatus = SET;
     }
@@ -1028,7 +1029,7 @@ FlagStatus ADC_GetFlagStatus(ADC_TypeDef *ADCx, uint8_t ADC_FLAG)
  *
  * @return  none
  */
-void ADC_ClearFlag(ADC_TypeDef *ADCx, uint8_t ADC_FLAG)
+void ADC_ClearFlag(ADC_TypeDef *ADCx, uint16_t ADC_FLAG)
 {
     ADCx->STATR = ~(uint32_t)ADC_FLAG;
 }
@@ -1234,7 +1235,7 @@ void ADC_SMP_ModeConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel, uint8_t SMP_Mode
     {
         ADCx->AUX |= (1 << ADC_Channel);
     }
-    else if(SMP_Mode == ADC_SMP_CFG_MODE1)
+    else if(SMP_Mode == ADC_SMP_CFG_MODE0)
     {
         ADCx->AUX &= ~(1 << ADC_Channel);
     }

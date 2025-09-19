@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_dvp.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/08/12
 * Description        : This file provides all the DVP firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -290,7 +290,7 @@ FlagStatus SWPMI_GetFlagStatus(uint32_t SWPMI_FLAG)
  */
 void SWPMI_ClearFlag(uint32_t SWPMI_FLAG)
 {
-    SWPMI->ICR |= SWPMI_FLAG;
+    SWPMI->ICR = SWPMI_FLAG;
 }
 
 /*********************************************************************
@@ -383,5 +383,5 @@ ITStatus SWPMI_GetITStatus(uint32_t SWPMI_IT)
  */
 void SWPMI_ClearITPendingBit(uint32_t SWPMI_IT)
 {
-    SWPMI->ICR |= SWPMI_IT;
+    SWPMI->ICR = SWPMI_IT;
 }

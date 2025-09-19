@@ -117,9 +117,6 @@ extern volatile uint8_t  USBHS_DevSleepStatus;
 extern volatile uint8_t  USBHS_DevEnumStatus;
 extern volatile uint16_t USBHS_DevMaxPackLen;
 
-/* Endpoint tx busy flag */
-extern volatile uint8_t  USBHS_Endp_Busy[ ];
-
 /* Endpoint Buffer */
 extern  __attribute__ ((aligned(4))) uint8_t USBHS_EP0_Buf[ ];
 extern __attribute__ ((aligned(4))) uint8_t USBHS_EP3_Rx_Buf[ ];
@@ -134,7 +131,6 @@ extern void USBHS_Device_Endp_Init ( void );
 extern void USBHS_Device_Init ( FunctionalState sta );
 extern void USBHS_Device_SetAddress( uint32_t address );
 extern void USBHS_IRQHandler( void );
-extern uint8_t USBHS_Endp_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len, uint8_t mod );
 
 #ifdef __cplusplus
 }

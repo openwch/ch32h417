@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2025/07/17
  * Description        : Main program body.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -12,10 +12,8 @@
 
 /*
  *@Note
- *CRC routine:
- *Use CRC-32 polynomial 0x4C11DB7.
- *
- */
+   This example is used to demonstrate the FMC interface operating SDRAM-IS42S32800G.
+*/
 
 #include "debug.h"
 #include "hardware.h"

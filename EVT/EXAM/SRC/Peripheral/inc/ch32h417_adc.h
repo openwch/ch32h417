@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_adc.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/16
 * Description        : This file contains all the functions prototypes for the 
 *                      ADC firmware library.
 *********************************************************************************
@@ -153,11 +153,12 @@ typedef struct
 #define ADC_IT_JEOC                                 ((uint16_t)0x0480)
 
 /* ADC_flags_definition */
-#define ADC_FLAG_AWD                                ((uint8_t)0x01)
-#define ADC_FLAG_EOC                                ((uint8_t)0x02)
-#define ADC_FLAG_JEOC                               ((uint8_t)0x04)
-#define ADC_FLAG_JSTRT                              ((uint8_t)0x08)
-#define ADC_FLAG_STRT                               ((uint8_t)0x10)
+#define ADC_FLAG_AWD                                ((uint16_t)0x0001)
+#define ADC_FLAG_EOC                                ((uint16_t)0x0002)
+#define ADC_FLAG_JEOC                               ((uint16_t)0x0004)
+#define ADC_FLAG_JSTRT                              ((uint16_t)0x0008)
+#define ADC_FLAG_STRT                               ((uint16_t)0x0010)
+#define ADC_FLAG_RST                                ((uint16_t)0x8000)
 
 /* ADC_SMP_CFG_MODE_definition */
 #define ADC_SMP_CFG_MODE0                           ((uint8_t)0x00)
@@ -201,14 +202,15 @@ void ADC_AnalogWatchdogCmd(ADC_TypeDef* ADCx, uint32_t ADC_AnalogWatchdog);
 void ADC_AnalogWatchdogThresholdsConfig(ADC_TypeDef* ADCx, uint16_t HighThreshold, uint16_t LowThreshold);
 void ADC_AnalogWatchdogSingleChannelConfig(ADC_TypeDef* ADCx, uint8_t ADC_Channel);
 void ADC_TempSensorVrefintCmd(FunctionalState NewState);
-FlagStatus ADC_GetFlagStatus(ADC_TypeDef* ADCx, uint8_t ADC_FLAG);
-void ADC_ClearFlag(ADC_TypeDef* ADCx, uint8_t ADC_FLAG);
+FlagStatus ADC_GetFlagStatus(ADC_TypeDef* ADCx, uint16_t ADC_FLAG);
+void ADC_ClearFlag(ADC_TypeDef* ADCx, uint16_t ADC_FLAG);
 ITStatus ADC_GetITStatus(ADC_TypeDef* ADCx, uint16_t ADC_IT);
 void ADC_ClearITPendingBit(ADC_TypeDef* ADCx, uint16_t ADC_IT);
 s32 TempSensor_Volt_To_Temper(s32 Value);
 void ADC_BufferCmd(ADC_TypeDef* ADCx, FunctionalState NewState);
 void ADC_ANA_RST_Cmd(ADC_TypeDef *ADCx, FunctionalState NewState);
 void ADC_SW_PRE_Cmd(ADC_TypeDef *ADCx, FunctionalState NewState);
+void ADC_SMP_ModeConfig(ADC_TypeDef *ADCx, uint8_t ADC_Channel, uint8_t SMP_Mode);
 void ADC_TO_DFSDM_Cmd(ADC_TypeDef *ADCx, FunctionalState NewState);
 void ADC_LowPowerModeCmd(ADC_TypeDef *ADCx, FunctionalState NewState);
 void ADC_HD_CalibrationCmd(ADC_TypeDef *ADCx, FunctionalState NewState);

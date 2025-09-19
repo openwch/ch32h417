@@ -10,6 +10,25 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
+/*
+ *@Note
+   1,Exam 1 :
+   USBFS host controller enumeration routines for byte manipulation of USB flash drives,
+ including file creation, modification, reading and deletion.
+   2,Exam 6 :
+   USBFS host controller enumeration routines for sector manipulation of USB flash drives,
+ including file creation, modification, reading and deletion
+   3,Exam 9 :
+   The USBFS host controller enumerates the USB flash drive to create folders on the drive,
+ including the primary and secondary directories, and the demo files in the corresponding directories.
+   4,Exam 11 :
+   USBFS host controller enumerates USB flash drives, enabling the enumeration of
+ the first 1000 files on the drive.
+   5,Exam 13 :USBFS host controller enumerates USB drives to create long filename files,
+ or to get long filename files.
+  Important: Only FAT12/FAT16/FAT32 formats are supported:
+*/
+
 #include "debug.h"
 #include "stdio.h"
 #include "string.h"
@@ -32,11 +51,12 @@
  */
 void Hardware(void)
 {
-    printf( "USBFS HOST Test EXAM %d\r\n", DEF_TEST_FUNC_NUM ); 
+    printf("Build Time: %s %s\n", __DATE__, __TIME__);
+    printf("GCC Version: %d.%d.%d\n",__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__);
 
+	printf( "USBFS HOST Test EXAM %d\r\n", DEF_TEST_FUNC_NUM ); 
     /* General USB Host UDisk Operation Initialization */
     Udisk_USBH_Initialization( );
-    UDisk_Opeation_Flag = 1;
 
     while(1)
     {

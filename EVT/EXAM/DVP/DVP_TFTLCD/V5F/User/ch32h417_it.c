@@ -10,7 +10,6 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "ch32h417_it.h"
-#include "hardware.h"
 
 void NMI_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void HardFault_Handler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
@@ -38,11 +37,10 @@ void NMI_Handler(void)
  */
 void HardFault_Handler(void)
 {
-  // NVIC_SystemReset();
+  NVIC_SystemReset();
   while (1)
   {
   }
 }
-
 
 

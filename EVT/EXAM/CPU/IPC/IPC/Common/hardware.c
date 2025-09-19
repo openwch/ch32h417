@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/08/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -50,10 +50,12 @@ void Hardware(void)
 {
 	printf("IPC TEST\r\n");
 #ifdef Core_V3F
+	IPC_DeInit();
 	IPC_Config(IPC_CH0,IPC_TxCID1,IPC_RxCID0);
 	IPC_CH0_Lock();
 	IPC_WriteMSG(IPC_MSG0,0);
 	IPC_SetFlagStatus(IPC_CH0,IPC_CH_Sta_Bit0);
+	IPC_ClearFlagStatus(IPC_CH0,IPC_CH_Sta_Bit1);
 	NVIC_SetPriority(IPC_CH0_IRQn,0<<7); 
 	NVIC_EnableIRQ(IPC_CH0_IRQn);
     Delay_Ms(100);

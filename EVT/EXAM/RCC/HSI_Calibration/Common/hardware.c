@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/07/16
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -124,7 +124,7 @@ void Hardware(void)
     /* The above code is configuring the GPIO pin PB0 as an alternate function push-pull output with a
     maximum speed of 50MHz. It also enables the clock for GPIOA and configures the MCO
     (Microcontroller Clock Output) to use the HSI (High-Speed Internal) clock as the source. */
-    GPIO_InitTypeDef  GPIO_InitStructure;
+    GPIO_InitTypeDef  GPIO_InitStructure = {0};
 
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOB|RCC_HB2Periph_AFIO, ENABLE);
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource0, GPIO_AF0);

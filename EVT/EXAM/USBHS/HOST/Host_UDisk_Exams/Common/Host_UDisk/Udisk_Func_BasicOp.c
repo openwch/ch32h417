@@ -115,7 +115,7 @@ void UDisk_USBH_ByteOperation( void )
                 TotalCount -= mCmdParam.ByteRead.mByteCount;         //计数,减去当前实际已经读出的字符数
                 for ( i=0; i!=mCmdParam.ByteRead.mByteCount; i++ )
                 {
-                    printf( "%c", mCmdParam.ByteRead.mByteBuffer[i] ); //显示读出的字符
+                    printf( "%02X ", mCmdParam.ByteRead.mByteBuffer[i] ); //显示读出的字符
                 }
                 printf( "\r\n" );
 

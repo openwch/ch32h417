@@ -40,6 +40,7 @@ int main(void)
 #elif (Run_Core == Run_Core_V3F)
 
 #elif (Run_Core == Run_Core_V5F)
+	Hardware();
 
 #endif
 

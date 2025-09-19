@@ -12,13 +12,13 @@
 
 /*
  *@Note
-   FMC routine to operate TFTLCD:
+  FMC routine to operate TFTLCD:ATK-MD0280:
   LCD--PIN:
-    PD11--FMC_A16
-    PD12--FMC_A17
-    PD5 --FMC_NEW
-    PD4 --FMC_NOE
-    PA15--LCDRST#
+    PD11--CS
+    PD12--RS
+    PD5 --FMC_NEW(WR)
+    PD4 --FMC_NOE(RD)
+    PD3 --LCDRST#
     PD14--FMC_D0
     PD15--FMC_D1
     PD0 --FMC_D2
@@ -35,9 +35,8 @@
     PD8 --FMC_D13
     PD9--FMC_D14
     PD10--FMC_D15
-    PB14--IO_BLCTR
+    PB14--BL
 */
-
 
 #include "debug.h"
 #include "hardware.h"

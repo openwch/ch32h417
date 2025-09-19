@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_gpio.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/09/05
 * Description        : This file provides all the GPIO firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -586,10 +586,18 @@ void GPIO_IPD_Unused(void)
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOA | RCC_HB2Periph_GPIOB | RCC_HB2Periph_GPIOC|\
                            RCC_HB2Periph_GPIOD | RCC_HB2Periph_GPIOE | RCC_HB2Periph_GPIOF, ENABLE);
     FLASH_BOOT_GetMode();                       
+    
+    if( ((*(uint32_t *)0x1FFFF704) & (0x000000F0))  == 0 )
+    {
+        RCC_HB1PeriphClockCmd(RCC_HB1Periph_SWPMI,ENABLE);
+        SWPMI->OR |= 0x1;
+        RCC_HB1PeriphClockCmd(RCC_HB1Periph_SWPMI,DISABLE);
+    }
     chip =  *(uint32_t *)0x1FFFF704 & (~0x000000F0);
+
     switch(chip)
     {
-        case 0x4171050D:     //CH32H417MEU6
+        case 0x4171050D:     //CH32H417MEU
         {
             GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3\
                                           |GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8;
@@ -617,7 +625,7 @@ void GPIO_IPD_Unused(void)
             GPIO_Init(GPIOF, &GPIO_InitStructure);
             break;
         }
-        case 0x4172050D:     //CH32H417WEU6
+        case 0x4172050D:     //CH32H417WEU
         {
             GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2\
                                           |GPIO_Pin_3|GPIO_Pin_4|GPIO_Pin_6\
@@ -650,7 +658,7 @@ void GPIO_IPD_Unused(void)
             GPIO_Init(GPIOF, &GPIO_InitStructure);
             break;
         }
-        case 0x4150050D:     //CH32H415REU6
+        case 0x4150050D:     //CH32H415REU
         {
             GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
             GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
@@ -682,7 +690,7 @@ void GPIO_IPD_Unused(void)
             GPIO_Init(GPIOF, &GPIO_InitStructure);
             break;
         }
-        case 0x4160050D:     //CH32H416RDU6
+        case 0x4160050D:     //CH32H416RDU
         {
             GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10;
             GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;

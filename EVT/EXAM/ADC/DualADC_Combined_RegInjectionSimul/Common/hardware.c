@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
-* Description        : This file provides all the CRC firmware functions.
+* Version            : V1.0.1
+* Date               : 2025/09/16
+* Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -14,7 +14,7 @@
 u32 TxBuf[1];
 u16 Adc_Val[2];
 u16 ADC_Val1,ADC_Val2;
-u8 Injected_IT_Flag,DMA_IT_Flag;
+vu8 Injected_IT_Flag,DMA_IT_Flag;
 
 void ADC1_2_IRQHandler(void)   __attribute__((interrupt("WCH-Interrupt-fast")));
 void DMA1_Channel1_IRQHandler(void)   __attribute__((interrupt("WCH-Interrupt-fast")));
@@ -192,7 +192,7 @@ void ADC1_2_IRQHandler()
 void DMA1_Channel1_IRQHandler()
 {
 
-    if(DMA_GetITStatus(DMA1,DMA1_IT_TC1)==RESET ){
+    if(DMA_GetITStatus(DMA1,DMA1_IT_TC1)==SET ){
         DMA_IT_Flag=1;
         DMA_ClearITPendingBit(DMA1,DMA1_IT_TC1);
 

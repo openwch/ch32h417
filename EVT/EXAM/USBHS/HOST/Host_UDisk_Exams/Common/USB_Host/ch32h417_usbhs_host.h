@@ -33,7 +33,7 @@ extern __attribute__((aligned(4))) uint8_t  TxBuffer[ ];
 #define DEFAULT_ENDP0_SIZE          8          // default maximum packet size for endpoint 0
 #endif
 #ifndef USBHS_MAX_PACKET_SIZE
-#define USBHS_MAX_PACKET_SIZE      64
+#define USBHS_MAX_PACKET_SIZE      1024
 #endif
 
 /*******************************************************************************/
@@ -43,7 +43,7 @@ extern uint8_t USBHSH_CheckRootHubPortStatus( uint8_t status );
 extern uint8_t USBHSH_CheckRootHubPortEnable( void );
 extern uint8_t USBHSH_CheckRootHubPortSpeed( void );
 extern void USBHSH_SetSelfAddr( uint8_t addr );
-extern void USBHSH_ResetRootHubPort( uint8_t mode );
+extern void USBHSH_ResetRootHubPort( void );
 extern uint8_t USBHSH_EnableRootHubPort( uint8_t *pspeed );
 extern uint8_t USBHSH_Transact( uint8_t endp_pid, uint16_t endp_tog, uint32_t timeout );
 extern uint8_t USBHSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen );
