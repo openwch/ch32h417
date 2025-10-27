@@ -50,7 +50,7 @@ void ADC_Function_Init(void)
     ADC_ExternalTrigInjectedConvCmd(ADC1, ENABLE);
 
     NVIC_EnableIRQ(ADC1_2_IRQn);
-	NVIC_SetPriority(ADC1_2_IRQn,2);
+	NVIC_SetPriority(ADC1_2_IRQn,0);
     ADC_ITConfig(ADC1, ADC_IT_JEOC, ENABLE);
 
 	ADC_ResetCalibration(ADC1);

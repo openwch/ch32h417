@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : startup_ch32h417_v5f.s
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/17
-* Description        : CH32h417_416_415 vector table t0 V5F for eclipse toolchain.
+* Version            : V1.0.2
+* Date               : 2025/10/21
+* Description        : CH32h417_416_415 V5F StartUp File.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -81,7 +81,7 @@ _vector_base:
     .word   CAN1_SCE_IRQHandler       
     .word   CAN1_TX_IRQHandler      
     .word   CAN1_RX0_IRQHandler       
-    .word   0       
+    .word   CAN1_RX1_IRQHandler        
     .word   USBSS_IRQHandler          
     .word   USBSS_LINK_IRQHandler           
     .word   USBHSWakeup_IRQHandler     
@@ -135,7 +135,7 @@ _vector_base:
     .word   CAN2_SCE_IRQHandler       
     .word   CAN2_TX_IRQHandler      
     .word   CAN2_RX0_IRQHandler       
-    .word   0                  
+    .word   CAN2_RX1_IRQHandler                
     .word   USART7_IRQHandler               
     .word   USART8_IRQHandler             
     .word   I3C_EV_IRQHandler                
@@ -159,7 +159,7 @@ _vector_base:
     .word   CAN3_SCE_IRQHandler       
     .word   CAN3_TX_IRQHandler      
     .word   CAN3_RX0_IRQHandler       
-    .word   0              
+    .word   CAN3_RX1_IRQHandler            
     .word   LPTIM2_WKUP_IRQHandler         
     .word   LPTIM1_WKUP_IRQHandler          
     .word   I3C_WKUP_IRQHandler              
@@ -213,7 +213,8 @@ _vector_base:
     .weak   DMA1_Channel1_IRQHandler   
     .weak   CAN1_SCE_IRQHandler       
     .weak   CAN1_TX_IRQHandler      
-    .weak   CAN1_RX0_IRQHandler           
+    .weak   CAN1_RX0_IRQHandler 
+    .weak   CAN1_RX1_IRQHandler           
     .weak   USBSS_IRQHandler          
     .weak   USBSS_LINK_IRQHandler           
     .weak   USBHSWakeup_IRQHandler     
@@ -266,7 +267,8 @@ _vector_base:
     .weak   ETH_WKUP_IRQHandler  
     .weak   CAN2_SCE_IRQHandler       
     .weak   CAN2_TX_IRQHandler      
-    .weak   CAN2_RX0_IRQHandler                
+    .weak   CAN2_RX0_IRQHandler 
+    .weak   CAN2_RX1_IRQHandler                
     .weak   USART7_IRQHandler               
     .weak   USART8_IRQHandler             
     .weak   I3C_EV_IRQHandler                
@@ -284,7 +286,8 @@ _vector_base:
     .weak   SWPMI_WKUP_IRQHandler          
     .weak   CAN3_SCE_IRQHandler           
     .weak   CAN3_TX_IRQHandler             
-    .weak   CAN3_RX0_IRQHandler                    
+    .weak   CAN3_RX0_IRQHandler 
+    .weak   CAN3_RX1_IRQHandler                    
     .weak   LPTIM2_WKUP_IRQHandler         
     .weak   LPTIM1_WKUP_IRQHandler          
     .weak   I3C_WKUP_IRQHandler              
@@ -336,7 +339,8 @@ USBHS_IRQHandler:
 DMA1_Channel1_IRQHandler:   
 CAN1_SCE_IRQHandler:       
 CAN1_TX_IRQHandler:      
-CAN1_RX0_IRQHandler:             
+CAN1_RX0_IRQHandler: 
+CAN1_RX1_IRQHandler:             
 USBSS_IRQHandler:          
 USBSS_LINK_IRQHandler:           
 USBHSWakeup_IRQHandler:     
@@ -389,7 +393,8 @@ ETH_IRQHandler:
 ETH_WKUP_IRQHandler:   
 CAN2_SCE_IRQHandler:       
 CAN2_TX_IRQHandler:      
-CAN2_RX0_IRQHandler:           
+CAN2_RX0_IRQHandler: 
+CAN2_RX1_IRQHandler:           
 USART7_IRQHandler:               
 USART8_IRQHandler:             
 I3C_EV_IRQHandler:                
@@ -407,7 +412,8 @@ QSPI2_IRQHandler:
 SWPMI_WKUP_IRQHandler:          
 CAN3_SCE_IRQHandler:           
 CAN3_TX_IRQHandler:             
-CAN3_RX0_IRQHandler:                       
+CAN3_RX0_IRQHandler: 
+CAN3_RX1_IRQHandler:                       
 LPTIM2_WKUP_IRQHandler:         
 LPTIM1_WKUP_IRQHandler:          
 I3C_WKUP_IRQHandler:              

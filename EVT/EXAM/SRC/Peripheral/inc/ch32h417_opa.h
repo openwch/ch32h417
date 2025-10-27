@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_opa.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/22
 * Description        : This file contains all the functions prototypes for the 
 *                      OPA firmware library.
 *********************************************************************************
@@ -119,10 +119,13 @@ typedef enum
 /* CMP_PSEL_enumeration */
 typedef enum
 {
-    CMP_CHP1 = 0,
-    CMP_CHP2,
+    CMP_CHP_0 = 0,
+    CMP_CHP_1,
     CMP_OPA1
 } CMP_PSEL_TypeDef;
+
+#define  CMP_CHP1 CMP_CHP_0  
+#define  CMP_CHP2 CMP_CHP_1  
 
 /* CMP_VREF_enumeration */
 typedef enum

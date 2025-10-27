@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_eth.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2021/06/06
+* Version            : V1.0.1
+* Date               : 2025/10/23
 * Description        : This file contains all the functions prototypes for the
 *                      ETH firmware library.
 *********************************************************************************
@@ -326,8 +326,6 @@ typedef struct
 #define PHY_ANER                         0x06          /* Auto-Negotiation Expansion Register */
 #define PHY_BMCR                         PHY_BCR
 #define PHY_BMSR                         PHY_BSR
-#define PHY_STATUS                       0x10
-#define PHY_MDIX                         0x1E
 
 /* Bit or field definition for PHY basic control register */
 #define PHY_Reset                       ((uint16_t)0x8000)      /* PHY Reset */
@@ -640,6 +638,7 @@ typedef struct
 #define ETH_DMA_FLAG_AIS               ((uint32_t)0x00008000)  /* Abnormal interrupt summary flag */
 #define ETH_DMA_FLAG_ER                ((uint32_t)0x00004000)  /* Early receive flag */
 #define ETH_DMA_FLAG_FBE               ((uint32_t)0x00002000)  /* Fatal bus error flag */
+#define ETH_DMA_FLAG_PHYSR             ((uint32_t)0x00000800)  /* PHY interrupt */
 #define ETH_DMA_FLAG_ET                ((uint32_t)0x00000400)  /* Early transmit flag */
 #define ETH_DMA_FLAG_RWT               ((uint32_t)0x00000200)  /* Receive watchdog timeout flag */
 #define ETH_DMA_FLAG_RPS               ((uint32_t)0x00000100)  /* Receive process stopped flag */
@@ -653,7 +652,6 @@ typedef struct
 #define ETH_DMA_FLAG_T                 ((uint32_t)0x00000001)  /* Transmit flag */
 
 /* DMA interrupt */
-#define ETH_DMA_IT_PHYLINK   ((uint32_t)0x80000000)  /* Internal PHY link status change interrupt */
 #define ETH_DMA_IT_TST       ((uint32_t)0x20000000)  /* Time-stamp trigger interrupt (on DMA) */
 #define ETH_DMA_IT_PMT       ((uint32_t)0x10000000)  /* PMT interrupt (on DMA) */
 #define ETH_DMA_IT_MMC       ((uint32_t)0x08000000)  /* MMC interrupt (on DMA) */
@@ -661,6 +659,7 @@ typedef struct
 #define ETH_DMA_IT_AIS       ((uint32_t)0x00008000)  /* Abnormal interrupt summary */
 #define ETH_DMA_IT_ER        ((uint32_t)0x00004000)  /* Early receive interrupt */
 #define ETH_DMA_IT_FBE       ((uint32_t)0x00002000)  /* Fatal bus error interrupt */
+#define ETH_DMA_IT_PHYSR     ((uint32_t)0x00000800)  /* Internal PHY link status change interrupt */
 #define ETH_DMA_IT_ET        ((uint32_t)0x00000400)  /* Early transmit interrupt */
 #define ETH_DMA_IT_RWT       ((uint32_t)0x00000200)  /* Receive watchdog timeout interrupt */
 #define ETH_DMA_IT_RPS       ((uint32_t)0x00000100)  /* Receive process stopped interrupt */
@@ -1116,6 +1115,7 @@ Wake-UpFrame Filter Re7 : Filter3 CRC16 - Filter2 CRC16 */
 #define ETH_DMASR_AIS        ((unsigned int)0x00008000)  /* Abnormal interrupt summary */
 #define ETH_DMASR_ERS        ((unsigned int)0x00004000)  /* Early receive status */
 #define ETH_DMASR_FBES       ((unsigned int)0x00002000)  /* Fatal bus error status */
+#define ETH_DMASR_PLS        ((unsigned int)0x00000800)  /* PHY interrupt status*/
 #define ETH_DMASR_ETS        ((unsigned int)0x00000400)  /* Early transmit status */
 #define ETH_DMASR_RWTS       ((unsigned int)0x00000200)  /* Receive watchdog timeout status */
 #define ETH_DMASR_RPSS       ((unsigned int)0x00000100)  /* Receive process stopped status */
@@ -1157,6 +1157,7 @@ Wake-UpFrame Filter Re7 : Filter3 CRC16 - Filter2 CRC16 */
 #define ETH_DMAIER_AISE      ((unsigned int)0x00008000)  /* Abnormal interrupt summary enable */
 #define ETH_DMAIER_ERIE      ((unsigned int)0x00004000)  /* Early receive interrupt enable */
 #define ETH_DMAIER_FBEIE     ((unsigned int)0x00002000)  /* Fatal bus error interrupt enable */
+#define ETH_DMAIER_PLE       ((unsigned int)0x00000800)  /* PHY interrupt enable*/
 #define ETH_DMAIER_ETIE      ((unsigned int)0x00000400)  /* Early transmit interrupt enable */
 #define ETH_DMAIER_RWTIE     ((unsigned int)0x00000200)  /* Receive watchdog timeout interrupt enable */
 #define ETH_DMAIER_RPSIE     ((unsigned int)0x00000100)  /* Receive process stopped interrupt enable */
@@ -1217,6 +1218,37 @@ Wake-UpFrame Filter Re7 : Filter3 CRC16 - Filter2 CRC16 */
 #define  ETH_ERROR              ((uint32_t)0)
 #define  ETH_SUCCESS            ((uint32_t)1)
 
+#define PHY_REG_PAGE0                   0x00
+#define PHY_REG_PAGE4                   0x04
+#define PHY_REG_PAGE7                   0x07
+#define PHY_REG_PAGE17                  0x11
+#define PHY_REG_PAGE18                  0x12
+
+/* PHY basic register */
+#define PHY_BCR                         0x0           /*PHY transceiver Basic Control Register */
+#define PHY_BSR                         0x01          /*PHY transceiver Basic Status Register*/
+#define PHY_BMCR                        PHY_BCR
+#define PHY_BMSR                        PHY_BSR
+#define PHY_PHYIDR1                     0x02          /*PHY Identifier Register*/
+#define PHY_PHYIDR2                     0x03          /*PHY Identifier Register*/
+#define PHY_ANAR                        0x04          /* Auto-Negotiation Advertisement Register */
+#define PHY_ANLPAR                      0x05          /* Auto-Negotiation Link Partner Base  Page Ability Register*/
+#define PHY_PAG_SEL                     0x1F
+
+/****************Page 0********************/
+#define PHY_CONTROL1                    0x19
+#define PHY_STATUS                      0x1A
+#define PHY_INTERRUPT_IND               0x1E
+
+/****************Page 7********************/
+#define PHY_INTERRUPT_MASK              0x13
+
+
+
+#define PHY_SPEED_100M_MODE            (1<<3)
+#define PHY_SPEED_10M_MODE             (1<<2)
+#define PHY_FULL_DUPLEX_MODE           (1<<1)
+#define PHY_HALF_DUPLEX_MODE           (1<<1)
 
 void ETH_DeInit(void);
 void ETH_StructInit(ETH_InitTypeDef* ETH_InitStruct);

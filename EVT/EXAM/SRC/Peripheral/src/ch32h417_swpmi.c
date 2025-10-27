@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
-* File Name          : ch32h417_dvp.c
+* File Name          : ch32h417_swpmi.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/08/12
-* Description        : This file provides all the DVP firmware functions.
+* Version            : V1.0.2
+* Date               : 2025/10/21
+* Description        : This file provides all the SWPMI firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 

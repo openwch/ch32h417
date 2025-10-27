@@ -50,7 +50,7 @@ void ADC_Function_Init(void)
 	ADC_AnalogWatchdogCmd( ADC1, ADC_AnalogWatchdog_SingleRegEnable);
 
     NVIC_EnableIRQ(ADC1_2_IRQn);
-	NVIC_SetPriority(ADC1_2_IRQn,2);
+	NVIC_SetPriority(ADC1_2_IRQn,0);
     ADC_ITConfig(ADC1, ADC_IT_AWD, ENABLE);
 
 	ADC_ResetCalibration(ADC1);

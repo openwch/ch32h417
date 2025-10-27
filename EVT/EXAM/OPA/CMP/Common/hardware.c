@@ -37,7 +37,7 @@ void CMP_Init(void)
 
     CMP_InitTypeDef.Mode = OUT_TO_IO;
     CMP_InitTypeDef.NSEL = CMP_CHN0;
-    CMP_InitTypeDef.PSEL = CMP_CHP1;
+    CMP_InitTypeDef.PSEL = CMP_CHP_1;
     CMP_InitTypeDef.VREF = CMP_VREF_OFF;
     OPA_CMP_Init(&CMP_InitTypeDef);
     OPA_CMP_Cmd(ENABLE);

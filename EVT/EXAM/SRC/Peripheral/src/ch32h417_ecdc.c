@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : ch32h417_ecdc.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2025/10/22
  * Description        : This file provides all the ECDC firmware functions.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -218,7 +218,7 @@ void ECDC_HardwareClockCmd(FunctionalState NewState)
  * @brief   Configures the ECDC clock source and divider factor.
  *
  * @param   RCC_PLLDiv - specifies the PLL Division factor.
- *
+ *        ECDC_CLK should be greater than or equal to HCLK.
  *
  * @return  none
  */

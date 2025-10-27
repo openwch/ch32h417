@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417.h
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/15
+* Version            : V1.0.2
+* Date               : 2025/10/24
 * Description        : CH32H417_416_415 Device Peripheral Access Layer Header File.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -30,7 +30,7 @@
 
 /* CH32H417 Standard Peripheral Library version number */
 #define __CH32H417_STDPERIPH_VERSION_MAIN   (0x01) /* [15:8] main version */
-#define __CH32H417_STDPERIPH_VERSION_SUB    (0x02) /* [7:0] sub version */
+#define __CH32H417_STDPERIPH_VERSION_SUB    (0x03) /* [7:0] sub version */
 #define __CH32H417_STDPERIPH_VERSION        ( (__CH32H417_STDPERIPH_VERSION_MAIN << 8)\
                                              |(__CH32H417_STDPERIPH_VERSION_SUB << 0))
 
@@ -83,6 +83,7 @@ typedef enum IRQn
   CAN1_SCE_IRQn               = 58,      /* CAN1 SCE Interrupt                                   */
   CAN1_TX_IRQn                = 59,      /* CAN1 TX Interrupts                                   */
   CAN1_RX0_IRQn               = 60,      /* CAN1 RX0 Interrupts                                  */
+  CAN1_RX1_IRQn               = 61,      /* CAN1 RX1 Interrupts                                  */
   USBSS_IRQn                  = 62,      /* USBSS Interrupt                                      */  
   USBSS_LINK_IRQn             = 63,      /* USBSS LINK Interrupt                                 */
   USBHSWakeup_IRQn            = 64,      /* USBHS WakeUp Interrupt                               */
@@ -136,12 +137,13 @@ typedef enum IRQn
   CAN2_SCE_IRQn               = 112,     /* CAN2 SCE Interrupt                                   */
   CAN2_TX_IRQn                = 113,     /* CAN2 TX Interrupts                                   */
   CAN2_RX0_IRQn               = 114,     /* CAN2 RX0 Interrupts                                  */  
+  CAN2_RX1_IRQn               = 115,     /* CAN2 RX1 Interrupts                                  */
   USART7_IRQn                 = 116,     /* USART7 global Interrupt                              */
   USART8_IRQn                 = 117,     /* USART8 global Interrupt                              */
   I3C_EV_IRQn                 = 118,     /* I3C Event Interrupt                                  */
   I3C_ER_IRQn                 = 119,     /* I3C Error Interrupt                                  */
   DVP_IRQn                    = 120,     /* DVP global Interrupt                                 */
-  ECDC_IRQn                   = 121,     /* ECDC global Interrupt                                 */
+  ECDC_IRQn                   = 121,     /* ECDC global Interrupt                                */
   PIOC_IRQn                   = 122,     /* PIOC global Interrupt                                */
   SAI_IRQn                    = 123,     /* SAI global Interrupt                                 */
   LTDC_IRQn                   = 124,     /* LTDC global Interrupt                                */
@@ -154,6 +156,7 @@ typedef enum IRQn
   CAN3_SCE_IRQn               = 136,     /* CAN3 SCE Interrupt                                   */
   CAN3_TX_IRQn                = 137,     /* CAN3 TX Interrupts                                   */
   CAN3_RX0_IRQn               = 138,     /* CAN3 RX0 Interrupts                                  */
+  CAN3_RX1_IRQn               = 139,     /* CAN3 RX1 Interrupts                                  */
   LPTIM2_WKUP_IRQn            = 140,     /* LPTIM2 WakeUp Interrupt                              */
   LPTIM1_WKUP_IRQn            = 141,     /* LPTIM1 WakeUp Interrupt                              */
   I3C_WKUP_IRQn               = 142,     /* I3C WakeUp Interrupt                                 */
@@ -255,6 +258,7 @@ typedef struct
   __IO uint32_t FAFIFOR_CAN3;
   __IO uint32_t FWR;
   __IO uint32_t FWR_CAN3;
+  uint32_t  RESERVED2[7];
   CAN_FilterRegister_TypeDef sFilterRegister[42];
 } CAN_TypeDef;
 
@@ -1257,25 +1261,28 @@ typedef struct
   __IO uint32_t MACA2LR;
   __IO uint32_t MACA3HR;
   __IO uint32_t MACA3LR;
-  uint32_t RESERVED2[14];
+  uint32_t RESERVED2[8];
+  __IO uint32_t MACPHYCR;
+  uint32_t RESERVED3[5];
   __IO uint32_t MACCFG0;
-  uint32_t RESERVED10[25];
+  uint32_t RESERVED4[25];
   __IO uint32_t MMCCR;
   __IO uint32_t MMCRIR;
   __IO uint32_t MMCTIR;
   __IO uint32_t MMCRIMR;
   __IO uint32_t MMCTIMR;
-  uint32_t RESERVED3[14];
+  uint32_t RESERVED5[14];
   __IO uint32_t MMCTGFSCCR;
   __IO uint32_t MMCTGFMSCCR;
-  uint32_t RESERVED4[5];
+  uint32_t RESERVED6[5];
   __IO uint32_t MMCTGFCR;
-  uint32_t RESERVED5[10];
+  uint32_t RESERVED7[10];
   __IO uint32_t MMCRFCECR;
   __IO uint32_t MMCRFAECR;
-  uint32_t RESERVED6[10];
+  __IO uint32_t MMCRAFCR;
+  uint32_t RESERVED8[9];
   __IO uint32_t MMCRGUFCR;
-  uint32_t RESERVED7[334];
+  uint32_t RESERVED9[334];
   __IO uint32_t PTPTSCR;
   __IO uint32_t PTPSSIR;
   __IO uint32_t PTPTSHR;
@@ -1285,7 +1292,7 @@ typedef struct
   __IO uint32_t PTPTSAR;
   __IO uint32_t PTPTTHR;
   __IO uint32_t PTPTTLR;
-  uint32_t RESERVED8[567];
+  uint32_t RESERVED10[567];
   __IO uint32_t DMABMR;
   __IO uint32_t DMATPDR;
   __IO uint32_t DMARPDR;
@@ -1295,7 +1302,7 @@ typedef struct
   __IO uint32_t DMAOMR;
   __IO uint32_t DMAIER;
   __IO uint32_t DMAMFBOCR;
-  uint32_t RESERVED9[9];
+  uint32_t RESERVED11[9];
   __IO uint32_t DMACHTDR;
   __IO uint32_t DMACHRDR;
   __IO uint32_t DMACHTBAR;
@@ -1702,6 +1709,7 @@ typedef struct
 
 #define FLASH_CFGR0_BASE      ((uint32_t)0x4002202C)
 #define SYS_CFGR0_BASE        ((uint32_t)0x5003C000)  
+#define SYS_CFGR4_BASE        ((uint32_t)0x5003C010)  
 
 /* Peripheral declaration */
 #define TIM2                  ((TIM_TypeDef *) TIM2_BASE)
@@ -9021,131 +9029,256 @@ typedef struct
 /******************************************************************************/
 /*                                  SDMMC                                       */
 /******************************************************************************/
-/*******************  Bit definition for EMMC_ARGUMENT register  *******************/
-#define  EMMC_ARGUMENT                               ((uint32_t)0xFFFFFFFF)
+/*******************  Bit definition for SDMMC_ARGUMENT register  *******************/
+#define  SDMMC_ARGUMENT                              ((uint32_t)0xFFFFFFFF)
 
-/*******************  Bit definition for EMMC_CMD_SET register  *******************/
-#define  EMMC_CMDIDX_MASK                            ((uint16_t)0x003F)
-#define  EMMC_RPTY_MASK                              ((uint16_t)0x0300)
-#define  EMMC_CKCRC                                  ((uint16_t)0x0400)
-#define  EMMC_CKIDX                                  ((uint16_t)0x0800)
+/*******************  Bit definition for SDMMC_CMD_SET register  *******************/
+#define  SDMMC_CMDIDX_MASK                           ((uint16_t)0x003F)
+#define  SDMMC_RPTY_MASK                             ((uint16_t)0x0300)
+#define  SDMMC_CKCRC                                 ((uint16_t)0x0400)
+#define  SDMMC_CKIDX                                 ((uint16_t)0x0800)
 
-/*******************  Bit definition for EMMC_RESPONSE0 register  *******************/
-#define  EMMC_RESPONSE0                              ((uint32_t)0xFFFFFFFF)
+/*******************  Bit definition for SDMMC_RESPONSE0 register  *******************/
+#define  SDMMC_RESPONSE0                             ((uint32_t)0xFFFFFFFF)
 
-/*******************  Bit definition for EMMC_RESPONSE1 register  *******************/
-#define  EMMC_RESPONSE1                              ((uint32_t)0xFFFFFFFF)
+/*******************  Bit definition for SDMMC_RESPONSE1 register  *******************/
+#define  SDMMC_RESPONSE1                             ((uint32_t)0xFFFFFFFF)
 
-/*******************  Bit definition for EMMC_RESPONSE2 register  *******************/
-#define  EMMC_RESPONSE2                              ((uint32_t)0xFFFFFFFF)
+/*******************  Bit definition for SDMMC_RESPONSE2 register  *******************/
+#define  SDMMC_RESPONSE2                             ((uint32_t)0xFFFFFFFF)
 
-/*******************  Bit definition for EMMC_RESPONSE3 register  *******************/
-#define  EMMC_RESPONSE3                              ((uint32_t)0xFFFFFFFF)
+/*******************  Bit definition for SDMMC_RESPONSE3 register  *******************/
+#define  SDMMC_RESPONSE3                             ((uint32_t)0xFFFFFFFF)
 
-/*******************  Bit definition for EMMC_WRITE_CONT register  *******************/
-#define  EMMC_WRITE_CONT                             ((uint32_t)0xFFFFFFFF)
+/*******************  Bit definition for SDMMC_WRITE_CONT register  *******************/
+#define  SDMMC_WRITE_CONT                            ((uint32_t)0xFFFFFFFF)
 
-/*******************  Bit definition for EMMC_CONTROL register  *******************/
-#define  EMMC_LW_MASK                                ((uint16_t)0x0003)
-#define  EMMC_LW_MASK_0                              ((uint16_t)0x0001)
-#define  EMMC_LW_MASK_1                              ((uint16_t)0x0002)
+/*******************  Bit definition for SDMMC_CONTROL register  *******************/
+#define  SDMMC_LW_MASK                               ((uint16_t)0x0003)
+#define  SDMMC_LW_MASK_0                             ((uint16_t)0x0001)
+#define  SDMMC_LW_MASK_1                             ((uint16_t)0x0002)
 
-#define  EMMC_ALL_CLR                                ((uint16_t)0x0004)
-#define  EMMC_DMAEN                                  ((uint16_t)0x0008)
-#define  EMMC_RST_LGC                                ((uint16_t)0x0010)
-#define  EMMC_NEGSMP                                 ((uint16_t)0x0020)
-#define  EMMC_SLV_MODE                               ((uint16_t)0x0100)
-#define  EMMC_SLV_FORCE_ERR                          ((uint16_t)000200)
+#define  SDMMC_ALL_CLR                               ((uint16_t)0x0004)
+#define  SDMMC_DMAEN                                 ((uint16_t)0x0008)
+#define  SDMMC_RST_LGC                               ((uint16_t)0x0010)
+#define  SDMMC_NEGSMP                                ((uint16_t)0x0020)
+#define  SDMMC_SLV_MODE                              ((uint16_t)0x0100)
+#define  SDMMC_SLV_FORCE_ERR                         ((uint16_t)000200)
 
-/*******************  Bit definition for EMMC_TIMEOUT register  *******************/
-#define  EMMC_TOCNT_MASK                             ((uint8_t)0x0F)
+/*******************  Bit definition for SDMMC_TIMEOUT register  *******************/
+#define  SDMMC_TOCNT_MASK                            ((uint8_t)0x0F)
 
-/*******************  Bit definition for EMMC_STATUS register  *******************/
-#define  EMMC_MASK_BLOCK_NUM                         ((uint16_t)0xFFFF)
-#define  EMMC_CMDSTA                                 ((uint32_t)0x00010000)
-#define  EMMC_DAT0STA                                ((uint32_t)0x00020000)
+/*******************  Bit definition for SDMMC_STATUS register  *******************/
+#define  SDMMC_MASK_BLOCK_NUM                        ((uint16_t)0xFFFF)
+#define  SDMMC_CMDSTA                                ((uint32_t)0x00010000)
+#define  SDMMC_DAT0STA                               ((uint32_t)0x00020000)
 
-/*******************  Bit definition for EMMC_INT_FG register  *******************/
-#define  EMMC_IF_RE_TMOUT                            ((uint16_t)0x0001)
-#define  EMMC_IF_RECRC_WR                            ((uint16_t)0x0002)
-#define  EMMC_IF_REIDX_ER                            ((uint16_t)0x0004)
-#define  EMMC_IF_CMDDONE                             ((uint16_t)0x0008)
-#define  EMMC_IF_DATTMO                              ((uint16_t)0x0010)
-#define  EMMC_IF_TRANERR                             ((uint16_t)0x0020)
-#define  EMMC_IF_TRANDONE                            ((uint16_t)0x0040)
-#define  EMMC_IF_BKGAP                               ((uint16_t)0x0080)
-#define  EMMC_IF_FIFO_OV                             ((uint16_t)0x0100)
-#define  EMMC_IF_SDIOINT                             ((uint16_t)0x0200)
-#define  EMMC_SIF_SLV_BUF_RELEAS                     ((uint16_t)0x0400)
+/*******************  Bit definition for SDMMC_INT_FG register  *******************/
+#define  SDMMC_IF_RE_TMOUT                           ((uint16_t)0x0001)
+#define  SDMMC_IF_RECRC_WR                           ((uint16_t)0x0002)
+#define  SDMMC_IF_REIDX_ER                           ((uint16_t)0x0004)
+#define  SDMMC_IF_CMDDONE                            ((uint16_t)0x0008)
+#define  SDMMC_IF_DATTMO                             ((uint16_t)0x0010)
+#define  SDMMC_IF_TRANERR                            ((uint16_t)0x0020)
+#define  SDMMC_IF_TRANDONE                           ((uint16_t)0x0040)
+#define  SDMMC_IF_BKGAP                              ((uint16_t)0x0080)
+#define  SDMMC_IF_FIFO_OV                            ((uint16_t)0x0100)
+#define  SDMMC_IF_SDIOINT                            ((uint16_t)0x0200)
+#define  SDMMC_SIF_SLV_BUF_RELEAS                    ((uint16_t)0x0400)
 
-/*******************  Bit definition for EMMC_INT_EN register  *******************/
-#define  EMMC_IE_RE_TMOUT                            ((uint16_t)0x0001)
-#define  EMMC_IE_RECRC_WR                            ((uint16_t)0x0002)
-#define  EMMC_IE_REIDX_ER                            ((uint16_t)0x0004)
-#define  EMMC_IE_CMDDONE                             ((uint16_t)0x0008)
-#define  EMMC_IE_DATTMO                              ((uint16_t)0x0010)
-#define  EMMC_IE_TRANERR                             ((uint16_t)0x0020)
-#define  EMMC_IE_TRANDONE                            ((uint16_t)0x0040)
-#define  EMMC_IE_FIFO_OV                             ((uint16_t)0x0080)
-#define  EMMC_IE_SDIOINT                             ((uint16_t)0x0100)
+/*******************  Bit definition for SDMMC_INT_EN register  *******************/
+#define  SDMMC_IE_RE_TMOUT                           ((uint16_t)0x0001)
+#define  SDMMC_IE_RECRC_WR                           ((uint16_t)0x0002)
+#define  SDMMC_IE_REIDX_ER                           ((uint16_t)0x0004)
+#define  SDMMC_IE_CMDDONE                            ((uint16_t)0x0008)
+#define  SDMMC_IE_DATTMO                             ((uint16_t)0x0010)
+#define  SDMMC_IE_TRANERR                            ((uint16_t)0x0020)
+#define  SDMMC_IE_TRANDONE                           ((uint16_t)0x0040)
+#define  SDMMC_IE_FIFO_OV                            ((uint16_t)0x0080)
+#define  SDMMC_IE_SDIOINT                            ((uint16_t)0x0100)
 
-/*******************  Bit definition for EMMC_DMA_BEG1 register  *******************/
-#define  EMMC_DMAAD1_MASK                            ((uint32_t)0xFFFFFFFF)
+/*******************  Bit definition for SDMMC_DMA_BEG1 register  *******************/
+#define  SDMMC_DMAAD1_MASK                           ((uint32_t)0xFFFFFFFF)
 
-/*******************  Bit definition for EMMC_BLOCK_CFG register  *******************/
-#define  EMMC_BKNUM_MASK                             ((uint32_t)0x0000FFFF)
-#define  EMMC_BKSIZE_MASK                            ((uint32_t)0x0FFF0000)
+/*******************  Bit definition for SDMMC_BLOCK_CFG register  *******************/
+#define  SDMMC_BKNUM_MASK                            ((uint32_t)0x0000FFFF)
+#define  SDMMC_BKSIZE_MASK                           ((uint32_t)0x0FFF0000)
 
-/*******************  Bit definition for EMMC_TRAN_MODE register  *******************/
-#define  EMMC_DMA_DIR                                ((uint32_t)0x00000001)
-#define  EMMC_GAP_STOP                               ((uint32_t)0x00000002)
-#define  EMMC_MODE_BOOT                              ((uint32_t)0x00000004)
-#define  EMMC_AUTOGAPSTOP                            ((uint32_t)0x00000010)
+/*******************  Bit definition for SDMMC_TRAN_MODE register  *******************/
+#define  SDMMC_DMA_DIR                               ((uint32_t)0x00000001)
+#define  SDMMC_GAP_STOP                              ((uint32_t)0x00000002)
+#define  SDMMC_MODE_BOOT                             ((uint32_t)0x00000004)
+#define  SDMMC_AUTOGAPSTOP                           ((uint32_t)0x00000010)
 
-#define  EMMC_DMATN_CNT                              ((uint32_t)0x00007F00)
+#define  SDMMC_DMATN_CNT                             ((uint32_t)0x00007F00)
 
-#define  EMMC_DULEDMA_EN                             ((uint32_t)0x00010000)
-#define  EMMC_DDR_MODE                               ((uint32_t)0x00020000)
-#define  EMMC_CARE_NEG                               ((uint32_t)0x00040000)
+#define  SDMMC_DULEDMA_EN                            ((uint32_t)0x00010000)
+#define  SDMMC_DDR_MODE                              ((uint32_t)0x00020000)
+#define  SDMMC_CARE_NEG                              ((uint32_t)0x00040000)
 
-#define  EMMC_SW                                     ((uint32_t)0x00180000)
-#define  EMMC_SW_0                                   ((uint32_t)0x00080000)
-#define  EMMC_SW_1                                   ((uint32_t)0x00100000)
+#define  SDMMC_SW                                    ((uint32_t)0x00180000)
+#define  SDMMC_SW_0                                  ((uint32_t)0x00080000)
+#define  SDMMC_SW_1                                  ((uint32_t)0x00100000)
 
-/*******************  Bit definition for EMMC_CLK_DIV register  *******************/
-#define  EMMC_DIV_MASK                               ((uint32_t)0x0000001F)
-#define  EMMC_CLKOE                                  ((uint32_t)0x00000100)
-#define  EMMC_CLKMode                                ((uint32_t)0x00000200)
-#define  EMMC_PHASEINV                               ((uint32_t)0x00000400)
+/*******************  Bit definition for SDMMC_CLK_DIV register  *******************/
+#define  SDMMC_DIV_MASK                              ((uint32_t)0x0000001F)
+#define  SDMMC_CLKOE                                 ((uint32_t)0x00000100)
+#define  SDMMC_CLKMode                               ((uint32_t)0x00000200)
+#define  SDMMC_PHASEINV                              ((uint32_t)0x00000400)
 
-/*******************  Bit definition for EMMC_DMA_BEG2 register  *******************/
-#define  EMMC_DMAAD2_MASK                            ((uint32_t)0xFFFFFFFF)
+/*******************  Bit definition for SDMMC_DMA_BEG2 register  *******************/
+#define  SDMMC_DMAAD2_MASK                           ((uint32_t)0xFFFFFFFF)
 
-/*******************  Bit definition for EMMC_TUNE_DATO register  *******************/
-#define  EMMC_TUNNE_DAT0_O                           ((uint32_t)0x0000000F)
-#define  EMMC_TUNNE_DAT1_O                           ((uint32_t)0x000000F0)
-#define  EMMC_TUNNE_DAT2_O                           ((uint32_t)0x00000F00)
-#define  EMMC_TUNNE_DAT3_O                           ((uint32_t)0x0000F000)
-#define  EMMC_TUNNE_DAT4_O                           ((uint32_t)0x000F0000)
-#define  EMMC_TUNNE_DAT5_O                           ((uint32_t)0x00F00000)
-#define  EMMC_TUNNE_DAT6_O                           ((uint32_t)0x0F000000)
-#define  EMMC_TUNNE_DAT7_O                           ((uint32_t)0xF0000000)
+/*******************  Bit definition for SDMMC_TUNE_DATO register  *******************/
+#define  SDMMC_TUNNE_DAT0_O                          ((uint32_t)0x0000000F)
+#define  SDMMC_TUNNE_DAT1_O                          ((uint32_t)0x000000F0)
+#define  SDMMC_TUNNE_DAT2_O                          ((uint32_t)0x00000F00)
+#define  SDMMC_TUNNE_DAT3_O                          ((uint32_t)0x0000F000)
+#define  SDMMC_TUNNE_DAT4_O                          ((uint32_t)0x000F0000)
+#define  SDMMC_TUNNE_DAT5_O                          ((uint32_t)0x00F00000)
+#define  SDMMC_TUNNE_DAT6_O                          ((uint32_t)0x0F000000)
+#define  SDMMC_TUNNE_DAT7_O                          ((uint32_t)0xF0000000)
 
-/*******************  Bit definition for EMMC_TUNE_DATI register  *******************/
-#define  EMMC_TUNNE_DAT0_I                           ((uint32_t)0x0000000F)
-#define  EMMC_TUNNE_DAT1_I                           ((uint32_t)0x000000F0)
-#define  EMMC_TUNNE_DAT2_I                           ((uint32_t)0x00000F00)
-#define  EMMC_TUNNE_DAT3_I                           ((uint32_t)0x0000F000)
-#define  EMMC_TUNNE_DAT4_I                           ((uint32_t)0x000F0000)
-#define  EMMC_TUNNE_DAT5_I                           ((uint32_t)0x00F00000)
-#define  EMMC_TUNNE_DAT6_I                           ((uint32_t)0x0F000000)
-#define  EMMC_TUNNE_DAT7_I                           ((uint32_t)0xF0000000)
+/*******************  Bit definition for SDMMC_TUNE_DATI register  *******************/
+#define  SDMMC_TUNNE_DAT0_I                          ((uint32_t)0x0000000F)
+#define  SDMMC_TUNNE_DAT1_I                          ((uint32_t)0x000000F0)
+#define  SDMMC_TUNNE_DAT2_I                          ((uint32_t)0x00000F00)
+#define  SDMMC_TUNNE_DAT3_I                          ((uint32_t)0x0000F000)
+#define  SDMMC_TUNNE_DAT4_I                          ((uint32_t)0x000F0000)
+#define  SDMMC_TUNNE_DAT5_I                          ((uint32_t)0x00F00000)
+#define  SDMMC_TUNNE_DAT6_I                          ((uint32_t)0x0F000000)
+#define  SDMMC_TUNNE_DAT7_I                          ((uint32_t)0xF0000000)
 
-/*******************  Bit definition for EMMC_TUNE_CLK_CMD register  *******************/
-#define  EMMC_TUNNE_CLK_O                            ((uint32_t)0x0000000F)
-#define  EMMC_TUNNE_CLK_I                            ((uint32_t)0x000000F0)
-#define  EMMC_TUNNE_CMD_O                            ((uint32_t)0x000F0000)
-#define  EMMC_TUNNE_CMD_I                            ((uint32_t)0x00F00000)
+/*******************  Bit definition for SDMMC_TUNE_CLK_CMD register  *******************/
+#define  SDMMC_TUNNE_CLK_O                           ((uint32_t)0x0000000F)
+#define  SDMMC_TUNNE_CLK_I                           ((uint32_t)0x000000F0)
+#define  SDMMC_TUNNE_CMD_O                           ((uint32_t)0x000F0000)
+#define  SDMMC_TUNNE_CMD_I                           ((uint32_t)0x00F00000)
+
+/*******************  Bit definition for SDMMC_ARGUMENT register  *******************/
+#define  EMMC_ARGUMENT                               SDMMC_ARGUMENT
+/*******************  Bit definition for SDMMC_CMD_SET register  *******************/
+#define  EMMC_CMDIDX_MASK                            SDMMC_CMDIDX_MASK
+#define  EMMC_RPTY_MASK                              SDMMC_RPTY_MASK
+#define  EMMC_CKCRC                                  SDMMC_CKCRC
+#define  EMMC_CKIDX                                  SDMMC_CKIDX
+
+/*******************  Bit definition for SDMMC_RESPONSE0 register  *******************/
+#define  EMMC_RESPONSE0                              SDMMC_RESPONSE0
+
+/*******************  Bit definition for SDMMC_RESPONSE1 register  *******************/
+#define  EMMC_RESPONSE1                              SDMMC_RESPONSE1
+
+/*******************  Bit definition for SDMMC_RESPONSE2 register  *******************/
+#define  EMMC_RESPONSE2                              SDMMC_RESPONSE2  
+
+/*******************  Bit definition for SDMMC_RESPONSE3 register  *******************/
+#define  EMMC_RESPONSE3                              SDMMC_RESPONSE3 
+
+/*******************  Bit definition for SDMMC_WRITE_CONT register  *******************/
+#define  EMMC_WRITE_CONT                             SDMMC_WRITE_CONT
+
+/*******************  Bit definition for SDMMC_CONTROL register  *******************/
+#define  EMMC_LW_MASK                                SDMMC_LW_MASK 
+#define  EMMC_LW_MASK_0                              SDMMC_LW_MASK_0 
+#define  EMMC_LW_MASK_1                              SDMMC_LW_MASK_1 
+
+#define  EMMC_ALL_CLR                                SDMMC_ALL_CLR   
+#define  EMMC_DMAEN                                  SDMMC_DMAEN  
+#define  EMMC_RST_LGC                                SDMMC_RST_LGC   
+#define  EMMC_NEGSMP                                 SDMMC_NEGSMP
+#define  EMMC_SLV_MODE                               SDMMC_SLV_MODE 
+#define  EMMC_SLV_FORCE_ERR                          SDMMC_SLV_FORCE_ERR
+
+/*******************  Bit definition for SDMMC_TIMEOUT register  *******************/
+#define  EMMC_TOCNT_MASK                             SDMMC_TOCNT_MASK 
+
+/*******************  Bit definition for SDMMC_STATUS register  *******************/
+#define  EMMC_MASK_BLOCK_NUM                         SDMMC_MASK_BLOCK_NUM 
+#define  EMMC_CMDSTA                                 SDMMC_CMDSTA 
+#define  EMMC_DAT0STA                                SDMMC_DAT0STA  
+
+/*******************  Bit definition for SDMMC_INT_FG register  *******************/
+#define  EMMC_IF_RE_TMOUT                            SDMMC_IF_RE_TMOUT
+#define  EMMC_IF_RECRC_WR                            SDMMC_IF_RECRC_WR 
+#define  EMMC_IF_REIDX_ER                            SDMMC_IF_REIDX_ER   
+#define  EMMC_IF_CMDDONE                             SDMMC_IF_CMDDONE 
+#define  EMMC_IF_DATTMO                              SDMMC_IF_DATTMO  
+#define  EMMC_IF_TRANERR                             SDMMC_IF_TRANERR
+#define  EMMC_IF_TRANDONE                            SDMMC_IF_TRANDONE
+#define  EMMC_IF_BKGAP                               SDMMC_IF_BKGAP
+#define  EMMC_IF_FIFO_OV                             SDMMC_IF_FIFO_OV
+#define  EMMC_IF_SDIOINT                             SDMMC_IF_SDIOINT
+#define  EMMC_SIF_SLV_BUF_RELEAS                     SDMMC_SIF_SLV_BUF_RELEAS
+
+/*******************  Bit definition for SDMMC_INT_EN register  *******************/
+#define  EMMC_IE_RE_TMOUT                            SDMMC_IE_RE_TMOUT
+#define  EMMC_IE_RECRC_WR                            SDMMC_IE_RECRC_WR
+#define  EMMC_IE_REIDX_ER                            SDMMC_IE_REIDX_ER 
+#define  EMMC_IE_CMDDONE                             SDMMC_IE_CMDDONE 
+#define  EMMC_IE_DATTMO                              SDMMC_IE_DATTMO
+#define  EMMC_IE_TRANERR                             SDMMC_IE_TRANERR
+#define  EMMC_IE_TRANDONE                            SDMMC_IE_TRANDONE
+#define  EMMC_IE_FIFO_OV                             SDMMC_IE_FIFO_OV
+#define  EMMC_IE_SDIOINT                             SDMMC_IE_SDIOINT
+
+/*******************  Bit definition for SDMMC_DMA_BEG1 register  *******************/
+#define  EMMC_DMAAD1_MASK                            SDMMC_DMAAD1_MASK
+
+/*******************  Bit definition for SDMMC_BLOCK_CFG register  *******************/
+#define  EMMC_BKNUM_MASK                             SDMMC_BKNUM_MASK
+#define  EMMC_BKSIZE_MASK                            SDMMC_BKSIZE_MASK
+
+/*******************  Bit definition for SDMMC_TRAN_MODE register  *******************/
+#define  EMMC_DMA_DIR                                SDMMC_DMA_DIR
+#define  EMMC_GAP_STOP                               SDMMC_GAP_STOP
+#define  EMMC_MODE_BOOT                              SDMMC_MODE_BOOT
+#define  EMMC_AUTOGAPSTOP                            SDMMC_AUTOGAPSTOP
+
+#define  EMMC_DMATN_CNT                              SDMMC_DMATN_CNT
+
+#define  EMMC_DULEDMA_EN                             SDMMC_DULEDMA_EN
+#define  EMMC_DDR_MODE                               SDMMC_DDR_MODE
+#define  EMMC_CARE_NEG                               SDMMC_CARE_NEG
+
+#define  EMMC_SW                                     SDMMC_SW
+#define  EMMC_SW_0                                   SDMMC_SW_0
+#define  EMMC_SW_1                                   SDMMC_SW_1
+
+/*******************  Bit definition for SDMMC_CLK_DIV register  *******************/
+#define  EMMC_DIV_MASK                               SDMMC_DIV_MASK
+#define  EMMC_CLKOE                                  SDMMC_CLKOE
+#define  EMMC_CLKMode                                SDMMC_CLKMode
+#define  EMMC_PHASEINV                               SDMMC_PHASEINV
+
+/*******************  Bit definition for SDMMC_DMA_BEG2 register  *******************/
+#define  EMMC_DMAAD2_MASK                            SDMMC_DMAAD2_MASK
+
+/*******************  Bit definition for SDMMC_TUNE_DATO register  *******************/
+#define  EMMC_TUNNE_DAT0_O                           SDMMC_TUNNE_DAT0_O
+#define  EMMC_TUNNE_DAT1_O                           SDMMC_TUNNE_DAT1_O
+#define  EMMC_TUNNE_DAT2_O                           SDMMC_TUNNE_DAT2_O
+#define  EMMC_TUNNE_DAT3_O                           SDMMC_TUNNE_DAT3_O
+#define  EMMC_TUNNE_DAT4_O                           SDMMC_TUNNE_DAT4_O
+#define  EMMC_TUNNE_DAT5_O                           SDMMC_TUNNE_DAT5_O
+#define  EMMC_TUNNE_DAT6_O                           SDMMC_TUNNE_DAT6_O
+#define  EMMC_TUNNE_DAT7_O                           SDMMC_TUNNE_DAT7_O
+
+/*******************  Bit definition for SDMMC_TUNE_DATI register  *******************/
+#define  EMMC_TUNNE_DAT0_I                           SDMMC_TUNNE_DAT0_I
+#define  EMMC_TUNNE_DAT1_I                           SDMMC_TUNNE_DAT1_I
+#define  EMMC_TUNNE_DAT2_I                           SDMMC_TUNNE_DAT2_I
+#define  EMMC_TUNNE_DAT3_I                           SDMMC_TUNNE_DAT3_I
+#define  EMMC_TUNNE_DAT4_I                           SDMMC_TUNNE_DAT4_I
+#define  EMMC_TUNNE_DAT5_I                           SDMMC_TUNNE_DAT5_I
+#define  EMMC_TUNNE_DAT6_I                           SDMMC_TUNNE_DAT6_I
+#define  EMMC_TUNNE_DAT7_I                           SDMMC_TUNNE_DAT7_I
+
+/*******************  Bit definition for SDMMC_TUNE_CLK_CMD register  *******************/
+#define  EMMC_TUNNE_CLK_O                            SDMMC_TUNNE_CLK_O
+#define  EMMC_TUNNE_CLK_I                            SDMMC_TUNNE_CLK_I
+#define  EMMC_TUNNE_CMD_O                            SDMMC_TUNNE_CMD_O
+#define  EMMC_TUNNE_CMD_I                            SDMMC_TUNNE_CMD_I
 
 /******************************************************************************/
 /*                                  SAI                                       */
@@ -10754,6 +10887,8 @@ typedef struct
 #define  QSPI_SR_FLEVEL_3                            ((uint32_t)0x00000800)
 #define  QSPI_SR_FLEVEL_4                            ((uint32_t)0x00001000)
 #define  QSPI_SR_FLEVEL_5                            ((uint32_t)0x00002000)
+
+#define  QSPI_SR_IDLEF                               ((uint32_t)0x00010000)
 
 /*******************  Bit definition for QSPI_FCR register  *******************/
 #define  QSPI_FCR_CTEF                               ((uint32_t)0x00000001)

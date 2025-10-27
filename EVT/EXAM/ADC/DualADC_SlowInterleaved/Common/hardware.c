@@ -47,7 +47,6 @@ void ADC_Function_Init(void)
     ADC_Init(ADC1, &ADC_InitStructure);
     ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 1, ADC_SampleTime_CyclesMode1 );
 
-    ADC_ITConfig( ADC1, ADC_IT_EOC, ENABLE);
     ADC_DMACmd(ADC1, ENABLE);
     ADC_Cmd(ADC1, ENABLE);
 

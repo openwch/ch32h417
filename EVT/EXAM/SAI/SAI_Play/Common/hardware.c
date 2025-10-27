@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/20
 * Description        : This file provides some functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -98,7 +98,6 @@ void SAI_Config(uint32_t SampleRate)
     SAI_InitStructure.SAI_FirstBit      = SAI_FirstBit_MSB;
     SAI_InitStructure.SAI_ClockStrobing = SAI_ClockStrobing_RisingEdge;
     SAI_InitStructure.SAI_Synchro       = SAI_Asynchronous;
-    SAI_InitStructure.SAI_OutDRIV       = SAI_OutputDrive_Enabled;
     SAI_InitStructure.SAI_FIFOThreshold = SAI_Threshold_FIFOEmpty;
 
     SAI_Init(SAI_Block_A, &SAI_InitStructure);

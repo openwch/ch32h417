@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_can.h
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/16
+* Version            : V1.0.2
+* Date               : 2025/10/20
 * Description        : This file contains all the functions prototypes for the 
 *                      CAN firmware library.
 *********************************************************************************
@@ -342,7 +342,7 @@ void        CAN_DeInit(CAN_TypeDef *CANx);
 uint8_t     CAN_Init(CAN_TypeDef *CANx, CAN_InitTypeDef *CAN_InitStruct);
 void        CAN_FilterInit(CAN_FilterInitTypeDef* CAN_FilterInitStruct);
 void        CAN_StructInit(CAN_InitTypeDef *CAN_InitStruct);
-void        CAN_SlaveStartBank(CAN_TypeDef* CANx, uint8_t CAN_BankNumber);
+void        CAN_SlaveStartBank(uint8_t CAN2_BankNumber, uint8_t CAN3_BankNumber);
 void        CAN_DBGFreeze(CAN_TypeDef *CANx, FunctionalState NewState);
 void        CAN_TTComModeCmd(CAN_TypeDef *CANx, FunctionalState NewState);
 uint8_t     CAN_Transmit(CAN_TypeDef *CANx, CanTxMsg *TxMessage);

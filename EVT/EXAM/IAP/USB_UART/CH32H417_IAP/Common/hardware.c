@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/24
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -15,7 +15,7 @@
  * and you can choose the command method or the IO method to jump to the APP .
  * Key  parameters: CalAddr - address in flash (same in APP), note that this address needs to be unused.
  *                  CheckNum - The value of 'CalAddr' that needs to be modified.
- * Tips :the routine need IAP software version 1.50.
+ * Tips :the routine need IAP software version 1.50 or later.
  */
 
 #include "hardware.h"
@@ -23,7 +23,7 @@
 #include "ch32h417_usbhs_device.h"
 #include "ch32h417_gpio.h"
 #include "iap.h"
-extern u8 End_Flag;
+extern vu8 End_Flag;
 
 #define UPGRADE_MODE_COMMAND   0
 #define UPGRADE_MODE_IO        1
@@ -70,9 +70,9 @@ void IAP_2_APP(void)
 void Hardware(void)
 {
 #if UPGRADE_MODE == UPGRADE_MODE_COMMAND
-    if(*(uint32_t*)FLASH_Base  != 0xe339e339 )
+    if(*(vu32*)FLASH_Base  != 0xe339e339 )
     {
-        if(*(uint32_t*)CalAddr != CheckNum)
+        if(*(vu32*)CalAddr != CheckNum)
         {
             IAP_2_APP();
             while(1);

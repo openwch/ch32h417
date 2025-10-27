@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_sai.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/20
 * Description        : This file contains all the functions prototypes for the
 *                      SAI firmware library.
 *********************************************************************************
@@ -143,10 +143,6 @@ typedef struct
 /* SAI_Block_Synchronization */
 #define SAI_Asynchronous                ((uint32_t)0x00000000)
 #define SAI_Synchronous                 ((uint32_t)SAI_CFGR1_SYNCEN_0)
-
-/* SAI_Block_Output_Drive */
-#define SAI_OutputDrive_Disabled        ((uint32_t)0x00000000)
-#define SAI_OutputDrive_Enabled         ((uint32_t)SAI_CFGR1_OUTDRIV)
 
 /* SAI_Block_NoDivider */
 #define SAI_MasterDivider_Enabled       ((uint32_t)0x00000000)

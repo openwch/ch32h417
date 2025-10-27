@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/12
+* Version            : V1.0.2
+* Date               : 2025/10/22
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -56,7 +56,10 @@ void Hardware(void)
 {
 	 int i=0;
 	u32 Sector_Nums;
-
+	
+	RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR, ENABLE);
+    PWR_VIO18ModeCfg(PWR_VIO18CFGMODE_SW);
+    PWR_VIO18LevelCfg(PWR_VIO18Level_MODE1); 
 	while(eMMC_Init())
     {
         printf("eMMC Card Error!\r\n");

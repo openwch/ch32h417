@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_gpio.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/21
 * Description        : This file contains all the functions prototypes for the 
 *                      GPIO firmware library.
 *********************************************************************************
@@ -81,10 +81,10 @@ typedef enum
 
 /* GPIO_Remap_define */
 #define GPIO_Remap_PD0PD1                  ((uint32_t)0x00000001)  /* PD0 and PD1 Alternate Function mapping */
-#define GPIO_Remap_ADC1_ETRGINJ            ((uint32_t)0x00000002)  /* ADC1 external trigger injection conversion mapping */
-#define GPIO_Remap_ADC1_ETRGREG            ((uint32_t)0x00000004)  /* ADC1 external trigger regular conversion mapping */
-#define GPIO_Remap_ADC2_ETRGINJ            ((uint32_t)0x00000008)  /* ADC1 external trigger injection conversion mapping */
-#define GPIO_Remap_ADC2_ETRGREG            ((uint32_t)0x00000010)  /* ADC1 external trigger regular conversion mapping */
+#define GPIO_Remap_ADC1_ETRGREG            ((uint32_t)0x00000002)  /* ADC1 external trigger regular conversion mapping */
+#define GPIO_Remap_ADC1_ETRGINJ            ((uint32_t)0x00000004)  /* ADC1 external trigger injection conversion mapping */
+#define GPIO_Remap_ADC2_ETRGREG            ((uint32_t)0x00000008)  /* ADC2 external trigger regular conversion mapping */
+#define GPIO_Remap_ADC2_ETRGINJ            ((uint32_t)0x00000010)  /* ADC2 external trigger injection conversion mapping */
 #define GPIO_PartialRemap_UHSIF_CLK        ((uint32_t)0x00160040)  /* UHSIF CLK Partial Alternate Function mapping */
 #define GPIO_PartialRemap1_UHSIF_CLK       ((uint32_t)0x00160080)  /* UHSIF CLK Partial1 Alternate Function mapping */
 #define GPIO_FullRemap_UHSIF_CLK           ((uint32_t)0x001600C0)  /* UHSIF CLK Full Alternate Function mapping */

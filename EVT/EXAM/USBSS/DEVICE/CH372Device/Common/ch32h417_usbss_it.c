@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_it.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/05/23
+* Version            : V1.0.1
+* Date               : 2025/10/23
 * Description        : USBSS functions Interrupt Service Routines.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -246,7 +246,7 @@ void USBSS_IRQHandler( void )
                         case USB_DESCR_TYP_BOS:
                             /* USB 2.00 DO NOT support BOS descriptor */
                             pUSBSS_Descr = MyBOSDesc_SS;
-                            len = DEF_USBSSD_SN_DESC_LEN;
+                            len = DEF_USBSSD_BOS_DESC_LEN;
                             break;
 
                         default :
@@ -440,8 +440,8 @@ void USBSS_IRQHandler( void )
                         {
                             USBSS_EP0_Buf[ 0 ] = 0x02;
                         }
+                        USBSS_EP0_Buf[ 0 ] |= ( USBSS_Dev_Info.u2_enable << 3 ) | ( USBSS_Dev_Info.u1_enable << 2 );
                     }
-                    USBSS_EP0_Buf[ 0 ] |= ( USBSS_Dev_Info.u2_enable << 3 ) | ( USBSS_Dev_Info.u1_enable << 2 );
                     if ( USBSS_SetupReqLen > 2 )
                     {
                         USBSS_SetupReqLen = 2;

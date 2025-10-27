@@ -1,10 +1,10 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : ch32h417_lptim.h
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2025/10/21
  * Description        : This file contains all the functions prototypes for the
- *                      TIM firmware library.
+ *                      LPTIM firmware library.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 

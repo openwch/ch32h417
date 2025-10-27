@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : sdmmc_emmc.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/12
+* Version            : V1.0.2
+* Date               : 2025/10/22
 * Description        : This file contains the headers of the SDMMC.
 *********************************************************************************
 * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -102,21 +102,21 @@ void eMMC_GPIO_Init()
     SWPMI->OR|=(1<<0); 
     }
     RCC_HBPeriphClockCmd(RCC_HBPeriph_SDMMC|RCC_HBPeriph_DMA1, ENABLE);
-    //Data4、Data5
+    //Data4,Data5
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOA|RCC_HB2Periph_AFIO,ENABLE);
     GPIO_Initure.GPIO_Pin=GPIO_Pin_14|GPIO_Pin_15; 
     GPIO_Initure.GPIO_Mode=GPIO_Mode_AF_PP;
     GPIO_Initure.GPIO_Speed=GPIO_Speed_Very_High;
     GPIO_Init(GPIOA,&GPIO_Initure); 
     
-    //Data0、Data1、Data2、Data3、Data6、Data7、clk
+    //Data0,Data1,Data2,Data3,Data6,Data7,clk
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOC|RCC_HB2Periph_AFIO,ENABLE);
     GPIO_Initure.GPIO_Pin=GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12; 
     GPIO_Initure.GPIO_Mode=GPIO_Mode_AF_PP;
     GPIO_Initure.GPIO_Speed=GPIO_Speed_Very_High;
     GPIO_Init(GPIOC,&GPIO_Initure); 
 
-    //CMD、STR
+    //CMD,STR
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOD|RCC_HB2Periph_AFIO,ENABLE);
     GPIO_Initure.GPIO_Pin=GPIO_Pin_2|GPIO_Pin_3; 
     GPIO_Initure.GPIO_Mode=GPIO_Mode_AF_PP;
@@ -201,7 +201,7 @@ SD_Error eMMC_Init()
 
       if( errorstatus == SD_OK )
     {
-        SDMMC_SetClockSpeed(SDMMC_ClockSpeed_High,3);
+        SDMMC_SetClockSpeed(SDMMC_ClockSpeed_High,2);
     }
 
     return errorstatus;
@@ -270,7 +270,7 @@ SD_Error SD_PowerON()
 /*********************************************************************
  * @fn      SD_EnableWideBusOperation
  *
- * @brief   Enable SDIO Wide bus
+ * @brief   Enable EMMC Wide bus
  *
  * @param   wmode: 0-1bit 1-4bit 2-8bit
  *              
@@ -780,14 +780,14 @@ SD_Error SD_WriteBlock( uint8_t *buf, long long addr,  uint16_t blksize )
     SDMMC_TranModeStructure.TranMode_Boot = DISABLE;
     SDMMC_TranModeStructure.TranMode_Direction = SDMMC_TranDir_Send;
     SDMMC_TranMode_Init( &SDMMC_TranModeStructure );
+	SDMMC_BlockConfig( blksize, 1 );
     SDMMC_SetDMAAddr1( (uint32_t)buf );
-    SDMMC_BlockConfig( blksize, 1 );
 
     return DataTransErr( );
 }
 
 /*********************************************************************
- * @fn       SD_WriteBlock
+ * @fn       SD_WriteMultiBlocks
  *
  * @brief   Write multiple block
  *
@@ -831,9 +831,9 @@ SD_Error SD_WriteMultiBlocks( uint8_t *buf, long long addr,
     SDMMC_TranModeStructure.TranMode_Boot = DISABLE;
     SDMMC_TranModeStructure.TranMode_Direction = SDMMC_TranDir_Send;
     SDMMC_TranMode_Init( &SDMMC_TranModeStructure );
+	SDMMC_BlockConfig( blksize, nblks );
     SDMMC_SetDMAAddr1( (uint32_t)buf );
-    SDMMC_BlockConfig( blksize, nblks );
-
+    
     while( SDMMC_GetBlockNumSuccess( ) );
 
     while( nblks > SDMMC_GetBlockNumSuccess( ) )
@@ -944,9 +944,9 @@ SD_Error SD_ReadMultiBlocks( uint8_t *buf, long long addr,
     SDMMC_TranModeStructure.TranMode_Boot = DISABLE;
     SDMMC_TranModeStructure.TranMode_Direction = SDMMC_TranDir_Receive;
     SDMMC_TranMode_Init( &SDMMC_TranModeStructure );
+	SDMMC_BlockConfig( blksize, nblks );
     SDMMC_SetDMAAddr1( (uint32_t)buf );
-    SDMMC_BlockConfig( blksize, nblks );
-
+    
     errorstatus = SDMMC_SetCommand( SD_CMD_READ_MULT_BLOCK, addr,
                                     SDMMC_Resp_48 );
     if( errorstatus != SD_OK )
