@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_rcc.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/04
+* Version            : V1.0.2
+* Date               : 2025/10/21
 * Description        : This file provides all the RCC firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -33,6 +33,7 @@
 
 static __I uint8_t PLLMULTable[32] = {4,6,7,8,17,9,19,10,21,11,23,12,25,13,14,15,16,17,18,19,20,22,24,26,28,30,32,34,36,38,40,59};
 static __I uint8_t HBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+static __I uint8_t SERDESPLLMULTable[16] = {25, 28, 30, 32, 35, 38, 40, 45, 50, 56, 60, 64, 70, 76, 80, 90};
 static __I uint8_t FPRETable[4] = {0, 1, 2, 2};
 static __I uint8_t PPRE2Table[8] = {0, 0, 0, 0, 1, 2, 3, 4};
 static __I uint8_t ADCPRETable[4] = {2, 4, 6, 8};
@@ -588,9 +589,13 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef *RCC_Clocks)
                     pllsource = RCC->PLLCFGR & RCC_PLLSRC;
                     presc = (((RCC->PLLCFGR & RCC_PLL_SRC_DIV) >> 8) + 1);
 
-                    if((pllsource == 0xE0) || (pllsource == 0xA0))
+                    if(pllsource == 0xA0)
                     {
                         tmp1 = 500000000 / presc;
+                    }
+                    else if(pllsource == 0xE0)
+                    {
+                        tmp1 = HSE_VALUE*SERDESPLLMULTable[RCC->PLLCFGR2>>16]/2/presc;
                     }
                     else if(pllsource == 0x80)
                     {
@@ -627,8 +632,9 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef *RCC_Clocks)
                     RCC_Clocks->SYSCLK_Frequency = 500000000;
                     break;
 
-                case RCC_SYSPLL_SERDES:
-                    RCC_Clocks->SYSCLK_Frequency = 500000000;
+                case RCC_SYSPLL_SERDES:                  
+                    tmp1 = RCC->PLLCFGR2>>16;
+                    RCC_Clocks->SYSCLK_Frequency = HSE_VALUE*SERDESPLLMULTable[tmp1]/2;
                     break;
 
                 case RCC_SYSPLL_USBSS:
@@ -649,9 +655,8 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef *RCC_Clocks)
     tmp = (RCC->CFGR0 & CFGR0_HPRE_Set_Mask) >> 4;
     presc1 = HBPrescTable[tmp];
 
-       tmp3 = RCC_Clocks->SYSCLK_Frequency >> presc1;
+    tmp3 = RCC_Clocks->SYSCLK_Frequency >> presc1;
   
-    
     tmp = (RCC->CFGR0 & RCC_FPRE) >> 16;
     presc1 = FPRETable[tmp];
     RCC_Clocks->HCLK_Frequency = tmp3 >> presc1;
@@ -1598,8 +1603,8 @@ void RCC_USBHSPLLClockSourceDivConfig(uint32_t RCC_USBHSPLL_IN_Div)
 void RCC_SERDESPLLMulConfig(uint32_t RCC_SERDESPLLMul)
 {
     RCC->PLLCFGR2 &= ~RCC_SERDESPLL_MUL;
-    RCC->PLLCFGR2 |= (RCC_SERDESPLLMul << 16);
-}
+    RCC->PLLCFGR2 |= (RCC_SERDESPLLMul);
+} 
 
 /*********************************************************************
  * @fn      RCC_ADCCLKDutyCycleConfig

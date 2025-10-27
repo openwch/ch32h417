@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_eth.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2021/06/06
+* Version            : V1.0.1
+* Date               : 2025/10/23
 * Description        : This file provides all the ETH firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -2516,6 +2516,7 @@ void RGMII_TXC_Delay(uint8_t clock_polarity, uint8_t delay_time)
     }
     if(delay_time <= 7)
     {
+        ETH->MACCR &= ~(uint32_t)(7 << 29);
         ETH->MACCR |= (uint32_t)(delay_time << 29);
     }
 }

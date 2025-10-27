@@ -24,16 +24,16 @@
 				"location": "../../../../SRC/Debug"
 			},
 			{
-				"name": "Ld",
-				"location": "../../../../SRC/Ld"
+				"name": "Startup",
+				"location": "../../../../SRC/Startup"
 			},
 			{
 				"name": "Peripheral",
 				"location": "../../../../SRC/Peripheral"
 			},
 			{
-				"name": "Startup",
-				"location": "../../../../SRC/Startup"
+				"name": "Ld",
+				"location": "../../../../SRC/Ld"
 			},
 			{
 				"name": "Common",
@@ -47,7 +47,7 @@
 				"name": "*.wvproj"
 			}
 		],
-		"projectName": "CH372Device_V5F",
+		"projectName": "SimulateCDC-HID_V5F",
 		"architecture": "RISC-V",
 		"projectType": "c",
 		"kernel": {
@@ -372,7 +372,7 @@
 	"flashConfig": {
 		"mcutype": "CH32H417",
 		"address": "0x08000000",
-		"target_path": "obj\\Merge.Bin",
+		"target_path": "obj/Merge.Bin",
 		"clkSpeed": "High",
 		"debug_interface_mode": "1-wire serial",
 		"erase": true,
@@ -459,8 +459,10 @@
 			"ATTR_BUILD_BEFORE_LAUNCH_ATTR": 2,
 			"GdbServerAllocateConsole": true,
 			"GdbServerAllocateTelnetConsole": false,
+			"SkipDownloadBeforeDebug": false,
 			"StartGdbCLient": true,
-			"UPDATE_THREADLIST_ON_SUSPEND": false
+			"UPDATE_THREADLIST_ON_SUSPEND": false,
+			"DebugInRam": false
 		}
 	}
 }

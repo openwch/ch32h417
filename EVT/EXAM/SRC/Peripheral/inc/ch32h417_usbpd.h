@@ -1,10 +1,10 @@
 /********************************** (C) COPYRIGHT  *******************************
- * File Name          : ch32l103_can.h
+ * File Name          : ch32h417_usbpd.h
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2023/07/08
+ * Version            : V1.0.1
+ * Date               : 2025/10/21
  * Description        : This file contains all the functions prototypes for the
- *                      CAN firmware library.
+ *                      USBPD firmware library.
  *********************************************************************************
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  * Attention: This software (modified or not) and binary are used for

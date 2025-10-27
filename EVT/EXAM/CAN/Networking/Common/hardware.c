@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : hardware.c
  * Author             : WCH
- * Version            : V1.0.1
- * Date               : 2025/09/16
+ * Version            : V1.0.2
+ * Date               : 2025/10/20
  * Description        : This document demonstrates how to implement inter - chip connection using CAN.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -30,7 +30,7 @@
 /* Receive can data in interrupt */
 // #define USE_INTERRUPT_TO_REC
 
-#define USE_SOFT_FILTER
+// #define USE_SOFT_FILTER
 
 #ifndef USE_SOFT_FILTER
 #warning "The chips of version-A are not support hardware filter."
@@ -469,6 +469,7 @@ void Hardware(void)
 #ifdef USE_SOFT_FILTER
     CAN_SoftFilterInit(&CAN_FilterInitSturcture);
 #else
+    CAN_SlaveStartBank(1, 2);
     CAN_FilterInit(&CAN_FilterInitSturcture);
 #endif
     while (1)
@@ -480,7 +481,11 @@ void Hardware(void)
             TxBuff[i] = (i + Circle_CNT) % 256;
             printf("%#04x ", TxBuff[i]);
         }
+#if (Frame_Format==Extended_Frame)
         if (!CAN_Send_Msg(CAN1, CAN_Id_Extended, 0x12124567, (uint8_t *)TxBuff, 7))
+#else
+        if (!CAN_Send_Msg(CAN1, CAN_Id_Standard, 0x317, (uint8_t *)TxBuff, 7))
+#endif
         {
             printf("\033[32m\nSuccessful\033[0m\n");
         }

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : system_ch32h417.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/16
 * Description        : CH32H417 Device Peripheral Access Layer System Source File.
 *                      For HSE = 25Mhz
 *********************************************************************************
@@ -17,19 +17,20 @@
 * reset the HSI is used as SYSCLK source).
 * If none of the define below is enabled, the HSI is used as System clock source. 
 */
-#define SYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE    600000000
+#define SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE    400000000
 // #define SYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE    480000000
 // #define SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSI    400000000
 // #define SYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSI    480000000
 
+/*Only suitable for commercial applications, with a temperature not exceeding 70 ℃ and good heat dissipation*/
 /* // #define SYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSE    480000000
 // #define SYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSI    480000000 */
 
 /* Clock Definitions */
 uint32_t HCLKClock;
-#ifdef SYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE
-uint32_t SystemClock = SYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE;         /* System Clock Frequency */
-uint32_t SystemCoreClock = 150000000;
+#ifdef SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE
+uint32_t SystemClock = SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE;         /* System Clock Frequency */
+uint32_t SystemCoreClock = 100000000;
 #elif defined SYSCLK_480_CoreCLK_V5F_240M_V3F_120M_HSE
 uint32_t SystemClock = SYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE;        /* System Clock Frequency */
 uint32_t SystemCoreClock = 120000000;
@@ -49,7 +50,6 @@ uint32_t SystemClock = SYSCLK_480M_CoreCLK_V5F_480M_V3F_120M_HSI;         /* Sys
 uint32_t SystemCoreClock = 120000000;
 
 
-
 #else
 
 uint32_t SystemClock = HSI_VALUE;       /* System Clock Frequency */
@@ -58,14 +58,16 @@ uint32_t SystemCoreClock = HSI_VALUE;
 
 static __I uint8_t PLLMULTB[32] = {4,6,7,8,17,9,19,10,21,11,23,12,25,13,14,15,16,17,18,19,20,22,24,26,28,30,32,34,36,38,40,59};
 static __I uint8_t HBPrescTB[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+static __I uint8_t SERDESPLLMULTB[16] = {25, 28, 30, 32, 35, 38, 40, 45, 50, 56, 60, 64, 70, 76, 80, 90};
 static __I uint8_t FPRETB[4] = {0, 1, 2, 2};
+
 
 
 /* system_private_function_proto_types */
 static void SetSysClock(void);
 
-#ifdef SYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE
-static void SetSYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE( void );
+#ifdef SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE
+static void SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE( void );
 #elif defined SYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE
 static void SetSYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE( void );
 #elif defined SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSI
@@ -126,8 +128,8 @@ void SystemInit (void)
 static void SetSysClock(void)
 {
      GPIO_IPD_Unused();
-#ifdef SYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE
-    SetSYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE();
+#ifdef SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE
+    SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE();
 #elif defined SYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE
     SetSYSCLK_480M_CoreCLK_V5F_240M_V3F_120M_HSE();
 #elif defined SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSI
@@ -179,10 +181,15 @@ void SystemAndCoreClockUpdate (void)
                     pllsource = RCC->PLLCFGR & RCC_PLLSRC;
                     presc = (((RCC->PLLCFGR & RCC_PLL_SRC_DIV) >> 8) + 1);
 
-                    if((pllsource == 0xE0) || (pllsource == 0xA0))
+                    if(pllsource == 0xA0)
                     {
                         tmp1 = 500000000 / presc;
                     }
+                    else if(pllsource == 0xE0)
+                    {
+                        tmp1 = HSE_VALUE*SERDESPLLMULTB[RCC->PLLCFGR2>>16]/2/presc;
+                    }
+
                     else if(pllsource == 0x80)
                     {
                         tmp1 = 480000000 / presc;
@@ -208,6 +215,7 @@ void SystemAndCoreClockUpdate (void)
                     {
                         SystemClock = tmp1 * PLLMULTB[pllmull];
                     }
+
                     break;
 
                 case RCC_SYSPLL_USBHS:
@@ -219,7 +227,7 @@ void SystemAndCoreClockUpdate (void)
                     break;
 
                 case RCC_SYSPLL_SERDES:
-                    SystemClock = 500000000;
+                    SystemClock = HSE_VALUE*SERDESPLLMULTB[RCC->PLLCFGR2>>16]/2;
                     break;
 
                 case RCC_SYSPLL_USBSS:
@@ -256,19 +264,19 @@ void SystemAndCoreClockUpdate (void)
     }
 }
 
-#ifdef SYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE
+#ifdef SYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE
 
 /*********************************************************************
- * @fn      SetSYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE
+ * @fn      SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE
  *
- * @brief   Sets System clock frequency to 600MHz.
- *          Sets V5F Core clock frequency to 300MHz.
- *          Sets V3F Core clock frequency to 150MHz.
+ * @brief   Sets System clock frequency to 400MHz.
+ *          Sets V5F Core clock frequency to 400MHz.
+ *          Sets V3F Core clock frequency to 100MHz.
  *          configure HCLK prescalers.
  *
  * @return  none
  */
-static void SetSYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE(void)
+static void SetSYSCLK_400M_CoreCLK_V5F_400M_V3F_100M_HSE(void)
 {
   __IO uint32_t StartUpCounter = 0, HSEStatus = 0, FLASH_Temp = 0;
    
@@ -294,7 +302,7 @@ static void SetSYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE(void)
   {
     /* configure PLL Clock */  
     RCC->PLLCFGR &= (uint32_t)((uint32_t)~(RCC_PLLMUL)); 
-    RCC->PLLCFGR |= (uint32_t)RCC_PLLMUL24;   
+    RCC->PLLCFGR |= (uint32_t)RCC_PLLMUL16;   
     RCC->PLLCFGR &= (uint32_t)((uint32_t)~(RCC_PLL_SRC_DIV)); 
     RCC->PLLCFGR |= (uint32_t)RCC_PLL_SRC_DIV1;
     RCC->PLLCFGR &= (uint32_t)((uint32_t)~(RCC_PLLSRC)); 
@@ -324,11 +332,11 @@ static void SetSYSCLK_600M_CoreCLK_V5F_300M_V3F_150M_HSE(void)
 
     /* V5F core clock = SYSCLK */
     RCC->CFGR0 &= (uint32_t)((uint32_t)~(RCC_HPRE));
-    RCC->CFGR0 |= (uint32_t)RCC_HPRE_DIV2; 
+    RCC->CFGR0 |= (uint32_t)RCC_HPRE_DIV1; 
 
     /* V3F core clock = HCLK = SYSCLK/4 */
     RCC->CFGR0 &= (uint32_t)((uint32_t)~(RCC_FPRE));
-    RCC->CFGR0 |= (uint32_t)RCC_FPRE_DIV2;  
+    RCC->CFGR0 |= (uint32_t)RCC_FPRE_DIV4;  
 
     /* Select FLASH clock frequency*/
     FLASH_Temp = FLASH->ACTLR;

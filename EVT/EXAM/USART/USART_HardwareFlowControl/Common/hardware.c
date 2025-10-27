@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/20
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -69,19 +69,32 @@ void USART1_ReCFG(void)
     USART_InitTypeDef USART_InitStructure = {0};
 
     RCC_HB2PeriphClockCmd(RCC_HB2Periph_GPIOA | RCC_HB2Periph_USART1, ENABLE);
+    RCC_HB2PeriphClockCmd(RCC_HB2Periph_AFIO, ENABLE);
 
-    /* USART1 TX-->A.9   RX-->A.10 */
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_Very_High;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12; /* RTS-->A.12 */
+    // RX PA10(AF7)
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF7);
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_10;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    // TX PA9(AF7)
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF7);
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_High;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11; /* CTS-->A.11 */
+
+    // RTS PA12(AF7)
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource12, GPIO_AF7);
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_12;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_High;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    // CTS PA11(AF7)
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource11, GPIO_AF7);
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_11;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IPU;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
     USART_InitStructure.USART_BaudRate = 115200;

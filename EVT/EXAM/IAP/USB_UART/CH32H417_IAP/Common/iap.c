@@ -17,20 +17,20 @@
 /******************************************************************************/
 
 iapfun jump2app;
-u32 Program_addr = FLASH_Base;
-u32 Verify_addr = FLASH_Base;
-u32 User_APP_Addr_offset = 0x6000;
-u8 Verify_Star_flag = 0;
-u8 Fast_Program_Buf[1024*10];
-u32 CodeLen = 0;
-u8 End_Flag = 0;
+vu32 Program_addr = FLASH_Base;
+vu32 Verify_addr = FLASH_Base;
+vu32 User_APP_Addr_offset = 0x6000;
+vu8 Verify_Star_flag = 0;
+vu8 Fast_Program_Buf[1024*10];
+vu32 CodeLen = 0;
+vu8 End_Flag = 0;
 u8 EP2_Rx_Buffer[USBD_DATA_SIZE+4];
 #define  isp_cmd_t   ((isp_cmd  *)EP2_Rx_Buffer)
 #define  Size_256B         0x100
 #define  Size_4KB          0x1000
 #define  Size_8KB          0x2000
 
-uint32_t Flash_Erase_Page_Size = Size_8KB;
+vu32 Flash_Erase_Page_Size = Size_8KB;
 /*********************************************************************
  * @fn      RecData_Deal
  *
@@ -43,7 +43,7 @@ uint32_t Flash_Erase_Page_Size = Size_8KB;
 u8 RecData_Deal(void)
 {
     uint32_t  i, s, Lenth,temp;
-    u8 *PBuf = NULL;
+    vu8 *PBuf = NULL;
     Lenth = isp_cmd_t->other.buf[1];
 
     switch ( isp_cmd_t->other.buf[0]) {
@@ -161,7 +161,7 @@ u8 RecData_Deal(void)
 u8 UART_RecData_Deal(void)
 {
     uint32_t  i, s, Lenth,temp;
-    u8 *PBuf = NULL;
+    vu8 *PBuf = NULL;
 
     Lenth = isp_cmd_t->UART.Len;
     switch ( isp_cmd_t->UART.Cmd) {

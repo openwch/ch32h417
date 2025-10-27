@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  ******************************
 * File Name          : ch32h417_sdmmc.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/12
+* Version            : V1.0.2
+* Date               : 2025/10/23
 * Description        : This file provides all the SDMMC firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -12,7 +12,7 @@
 #include "ch32h417_sdmmc.h"
 #include "ch32h417.h"
 
-#define SDMMC_BusWidth_MASK   ((uint8_t)EMMC_LW_MASK)
+#define SDMMC_BusWidth_MASK   ((uint8_t)SDMMC_LW_MASK)
 
 /*********************************************************************
  * @fn      SDMMC_DeInit
@@ -54,7 +54,7 @@ void SDMMC_Init(SDMMC_InitTypeDef *SDMMC_InitStruct)
     SDMMC->CLK_DIV = 0;
     tmpreg = (SDMMC_InitStruct->SDMMC_PhaseInv & SDMMC_Phase_Inverse) |
             (SDMMC_InitStruct->SDMMC_ClockSpeed & SDMMC_ClockSpeed_High) |
-            (uint16_t)(SDMMC_InitStruct->SDMMC_ClockDiv & EMMC_DIV_MASK) |
+            (uint16_t)(SDMMC_InitStruct->SDMMC_ClockDiv & SDMMC_DIV_MASK) |
             ((uint16_t)SDMMC_InitStruct->SDMMC_Clock_OE << 8);
     SDMMC->CLK_DIV = tmpreg;
 
@@ -72,7 +72,7 @@ void SDMMC_Init(SDMMC_InitTypeDef *SDMMC_InitStruct)
  */
 void SDMMC_InternalLogicReset(void)
 {
-    SDMMC->CONTROL = (uint16_t)(EMMC_RST_LGC | EMMC_ALL_CLR);
+    SDMMC->CONTROL = (uint16_t)(SDMMC_RST_LGC | SDMMC_ALL_CLR);
 }
 
 /*********************************************************************
@@ -108,8 +108,8 @@ void SDMMC_SetBusWidth(uint8_t BusWidth)
  */
 void SDMMC_SetClockSpeed(uint16_t ClockMode, uint16_t ClockDIV)
 {
-    SDMMC->CLK_DIV &= ~(EMMC_CLKOE | EMMC_DIV_MASK);
-    SDMMC->CLK_DIV |= ClockMode | ClockDIV | EMMC_CLKOE;
+    SDMMC->CLK_DIV &= ~(SDMMC_CLKOE | SDMMC_DIV_MASK);
+    SDMMC->CLK_DIV |= ClockMode | ClockDIV | SDMMC_CLKOE;
 }
 
 /*********************************************************************
@@ -126,11 +126,11 @@ void SDMMC_ClockCmd(FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
-        SDMMC->CLK_DIV |= (uint16_t)EMMC_CLKOE;
+        SDMMC->CLK_DIV |= (uint16_t)SDMMC_CLKOE;
     }
     else
     {
-        SDMMC->CLK_DIV &= (uint16_t)~EMMC_CLKOE;
+        SDMMC->CLK_DIV &= (uint16_t)~SDMMC_CLKOE;
     }
 }
 
@@ -149,8 +149,8 @@ void SDMMC_CommandConfig(SDMMC_CMDInitTypeDef *SDMMC_CMDInitStruct)
     SDMMC->ARGUMENT = SDMMC_CMDInitStruct->SDMMC_Argument;
     SDMMC->CMD_SET = ((uint16_t)SDMMC_CMDInitStruct->SDMMC_CheckCRC << 10) | 
                      ((uint16_t)SDMMC_CMDInitStruct->SDMMC_CheckIdx << 11)  | 
-                     (uint16_t)(SDMMC_CMDInitStruct->SDMMC_CMDIdx & EMMC_CMDIDX_MASK) |
-                     (SDMMC_CMDInitStruct->SDMMC_RespExpect & EMMC_RPTY_MASK);
+                     (uint16_t)(SDMMC_CMDInitStruct->SDMMC_CMDIdx & SDMMC_CMDIDX_MASK) |
+                     (SDMMC_CMDInitStruct->SDMMC_RespExpect & SDMMC_RPTY_MASK);
 }
 
 /*********************************************************************
@@ -194,7 +194,7 @@ FlagStatus SDMMC_GetStatus_LineData0(void)
 {
     FlagStatus bitstatus = RESET;
 
-    if((SDMMC->STATUS & EMMC_DAT0STA) != (uint32_t)RESET)
+    if((SDMMC->STATUS & SDMMC_DAT0STA) != (uint32_t)RESET)
     {
         bitstatus = SET;
     }
@@ -217,7 +217,7 @@ FlagStatus SDMMC_GetStatus_LineCMD(void)
 {
     FlagStatus bitstatus = RESET;
 
-    if((SDMMC->STATUS & EMMC_CMDSTA) != (uint32_t)RESET)
+    if((SDMMC->STATUS & SDMMC_CMDSTA) != (uint32_t)RESET)
     {
         bitstatus = SET;
     }
@@ -238,7 +238,7 @@ FlagStatus SDMMC_GetStatus_LineCMD(void)
  */
 uint16_t SDMMC_GetBlockNumSuccess(void)
 {
-    return (uint16_t)((uint16_t)SDMMC->STATUS & EMMC_MASK_BLOCK_NUM);
+    return (uint16_t)((uint16_t)SDMMC->STATUS & SDMMC_MASK_BLOCK_NUM);
 }
 
 /*********************************************************************
@@ -435,7 +435,7 @@ void SDMMC_TranMode_Init(SDMMC_TranModeTypeDef *SDMMC_TranModeStruct)
 /*********************************************************************
  * @fn      SDMMC_SetAUTOGAPStop
  *
- * @brief   Get the EMMC_AUTOGAPSTOP bit status.
+ * @brief   Get the SDMMC_AUTOGAPSTOP bit status.
  *
  * @param   NewState - ENABLE or DISABLE.
  *
@@ -445,18 +445,18 @@ void SDMMC_SetAUTOGAPStop(FunctionalState NewState)
 {
     if(NewState != DISABLE)
     {
-        SDMMC->TRAN_MODE |= (uint32_t)EMMC_AUTOGAPSTOP | EMMC_GAP_STOP;
+        SDMMC->TRAN_MODE |= (uint32_t)SDMMC_AUTOGAPSTOP | SDMMC_GAP_STOP;
     }
     else
     {
-        SDMMC->TRAN_MODE &= (uint32_t)~EMMC_AUTOGAPSTOP;
+        SDMMC->TRAN_MODE &= (uint32_t)~SDMMC_AUTOGAPSTOP;
     }
 }
 
 /*********************************************************************
  * @fn      SDMMC_GetGAPStop_Status
  *
- * @brief   Get the EMMC_GAP_STOP bit status.
+ * @brief   Get the SDMMC_GAP_STOP bit status.
  *
  * @param   none.
  *
@@ -466,7 +466,7 @@ FlagStatus SDMMC_GetStatus_GAPStop(void)
 {
     FlagStatus bitstatus = RESET;
 
-    if((SDMMC->TRAN_MODE & EMMC_GAP_STOP) != (uint32_t)RESET)
+    if((SDMMC->TRAN_MODE & SDMMC_GAP_STOP) != (uint32_t)RESET)
     {
         bitstatus = SET;
     }
@@ -481,7 +481,7 @@ FlagStatus SDMMC_GetStatus_GAPStop(void)
 /*********************************************************************
  * @fn      SDMMC_SetGAPStop
  *
- * @brief   Set the RB_EMMC_GAP_STOP bit and stop SDCK output after
+ * @brief   Set the RB_SDMMC_GAP_STOP bit and stop SDCK output after
  *          1 data block transfered.
  *
  * @param   none.
@@ -490,13 +490,13 @@ FlagStatus SDMMC_GetStatus_GAPStop(void)
  */
 void SDMMC_SetGAPStop(void)
 {
-    SDMMC->TRAN_MODE |= EMMC_GAP_STOP;
+    SDMMC->TRAN_MODE |= SDMMC_GAP_STOP;
 }
 
 /*********************************************************************
  * @fn      SDMMC_ClearGAPStop
  *
- * @brief   Clear the RB_EMMC_GAP_STOP bit and re-start SDCK output.
+ * @brief   Clear the RB_SDMMC_GAP_STOP bit and re-start SDCK output.
  *
  * @param   none.
  *
@@ -504,7 +504,7 @@ void SDMMC_SetGAPStop(void)
  */
 void SDMMC_ClearGAPStop(void)
 {
-    SDMMC->TRAN_MODE &= ~EMMC_GAP_STOP;
+    SDMMC->TRAN_MODE &= ~SDMMC_GAP_STOP;
 }
 
 /*********************************************************************
@@ -542,26 +542,26 @@ void SDMMC_SetDMAAddr2(uint32_t Address)
  * @brief   Initializes the SDMMC peripheral DDR mode GPIO input delay according to the specified
  *        parameters in the SDMMC_IOInputDelayDDRTypeDef.
  *
- * @param   SSDMMC_IOInputDelayDDRStruct - pointer to a SSDMMC_IOInputDelayDDRStruct structure
+ * @param   SDMMC_IOInputDelayDDRStruct - pointer to a SDMMC_IOInputDelayDDRStruct structure
  *        that contains the configuration information for the SDMMC peripheral.
  *
  * @return  none
  */
-void SDMMC_IOInputDelayDDRInit(SDMMC_IOInputDelayDDRTypeDef *SSDMMC_IOInputDelayDDRStruct)
+void SDMMC_IOInputDelayDDRInit(SDMMC_IOInputDelayDDRTypeDef *SDMMC_IOInputDelayDDRStruct)
 {
-    SDMMC->TUNE_CLK_CMD &= ~(EMMC_TUNNE_CMD_I | EMMC_TUNNE_CLK_I);
+    SDMMC->TUNE_CLK_CMD &= ~(SDMMC_TUNNE_CMD_I | SDMMC_TUNNE_CLK_I);
     SDMMC->TUNE_DATI = 0;
 
-    SDMMC->TUNE_CLK_CMD |= ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_CLK_IN_Delay << 4) |
-                        ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_CMD_IN_Delay << 20);
-    SDMMC->TUNE_DATI |= ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_DATA0_IN_Delay) |
-                     ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_DATA1_IN_Delay << 4) |
-                     ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_DATA2_IN_Delay << 8) |
-                     ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_DATA3_IN_Delay << 12) |
-                     ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_DATA4_IN_Delay << 16) |
-                     ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_DATA5_IN_Delay << 20) |
-                     ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_DATA6_IN_Delay << 24) |
-                     ((uint32_t)SSDMMC_IOInputDelayDDRStruct->SDMMC_DATA7_IN_Delay << 28);
+    SDMMC->TUNE_CLK_CMD |= ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_CLK_IN_Delay << 4) |
+                        ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_CMD_IN_Delay << 20);
+    SDMMC->TUNE_DATI |= ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_DATA0_IN_Delay) |
+                     ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_DATA1_IN_Delay << 4) |
+                     ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_DATA2_IN_Delay << 8) |
+                     ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_DATA3_IN_Delay << 12) |
+                     ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_DATA4_IN_Delay << 16) |
+                     ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_DATA5_IN_Delay << 20) |
+                     ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_DATA6_IN_Delay << 24) |
+                     ((uint32_t)SDMMC_IOInputDelayDDRStruct->SDMMC_DATA7_IN_Delay << 28);
 }
 
 /*********************************************************************
@@ -570,24 +570,24 @@ void SDMMC_IOInputDelayDDRInit(SDMMC_IOInputDelayDDRTypeDef *SSDMMC_IOInputDelay
  * @brief   Initializes the SDMMC peripheral DDR mode GPIO output delay according to the specified
  *        parameters in the SDMMC_IOInputDelayDDRTypeDef.
  *
- * @param   SSDMMC_IOOutputDelayDDRStruct - pointer to a SSDMMC_IOOutputDelayDDRStruct structure
+ * @param   SDMMC_IOOutputDelayDDRStruct - pointer to a SDMMC_IOOutputDelayDDRStruct structure
  *        that contains the configuration information for the SDMMC peripheral.
  *
  * @return  none
  */
-void SDMMC_IOOutputDelayDDRInit(SDMMC_IOOutputDelayDDRTypeDef *SSDMMC_IOOutputDelayDDRStruct)
+void SDMMC_IOOutputDelayDDRInit(SDMMC_IOOutputDelayDDRTypeDef *SDMMC_IOOutputDelayDDRStruct)
 {
-    SDMMC->TUNE_CLK_CMD &= ~(EMMC_TUNNE_CMD_O | EMMC_TUNNE_CLK_O);
+    SDMMC->TUNE_CLK_CMD &= ~(SDMMC_TUNNE_CMD_O | SDMMC_TUNNE_CLK_O);
     SDMMC->TUNE_DATO = 0;
 
-    SDMMC->TUNE_CLK_CMD |= ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_CLK_OUT_Delay) |
-                        ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_CMD_OUT_Delay << 16);
-    SDMMC->TUNE_DATO |= ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_DATA0_OUT_Delay) |
-                     ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_DATA1_OUT_Delay << 4) |
-                     ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_DATA2_OUT_Delay << 8) |
-                     ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_DATA3_OUT_Delay << 12) |
-                     ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_DATA4_OUT_Delay << 16) |
-                     ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_DATA5_OUT_Delay << 20) |
-                     ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_DATA6_OUT_Delay << 24) |
-                     ((uint32_t)SSDMMC_IOOutputDelayDDRStruct->SDMMC_DATA7_OUT_Delay << 28);
+    SDMMC->TUNE_CLK_CMD |= ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_CLK_OUT_Delay) |
+                        ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_CMD_OUT_Delay << 16);
+    SDMMC->TUNE_DATO |= ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_DATA0_OUT_Delay) |
+                     ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_DATA1_OUT_Delay << 4) |
+                     ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_DATA2_OUT_Delay << 8) |
+                     ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_DATA3_OUT_Delay << 12) |
+                     ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_DATA4_OUT_Delay << 16) |
+                     ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_DATA5_OUT_Delay << 20) |
+                     ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_DATA6_OUT_Delay << 24) |
+                     ((uint32_t)SDMMC_IOOutputDelayDDRStruct->SDMMC_DATA7_OUT_Delay << 28);
 }

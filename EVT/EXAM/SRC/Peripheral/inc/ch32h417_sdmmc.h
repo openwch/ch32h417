@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  ******************************
 * File Name          : ch32h417_sdmmc.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/23
 * Description        : This file contains all the functions prototypes for the
 *                      SDMMC firmware library.
 *********************************************************************************
@@ -178,15 +178,15 @@ typedef struct
 
 /* SDMMC_Mode */
 #define SDMMC_Mode_Host                             ((uint16_t)0x00000000)
-#define SDMMC_Mode_Slave                            ((uint16_t)EMMC_SLV_MODE)
+#define SDMMC_Mode_Slave                            ((uint16_t)SDMMC_SLV_MODE)
 
 /* SDMMC_PhaseInv */
 #define SDMMC_Phase_No_Inverse                      ((uint16_t)0x00000000)
-#define SDMMC_Phase_Inverse                         ((uint16_t)EMMC_PHASEINV)
+#define SDMMC_Phase_Inverse                         ((uint16_t)SDMMC_PHASEINV)
 
 /* SDMMC_ClockSpeed */
 #define SDMMC_ClockSpeed_Low                        ((uint16_t)0x00000000)
-#define SDMMC_ClockSpeed_High                       ((uint16_t)(EMMC_CLKMode))
+#define SDMMC_ClockSpeed_High                       ((uint16_t)(SDMMC_CLKMode))
 
 /* SDMMC_BusWidth */
 #define SDMMC_BusWidth_1                            ((uint32_t)0x00000000)
@@ -195,7 +195,7 @@ typedef struct
 
 /* SDMMC_ClockEdge */
 #define SDMMC_SampleClock_Rising                    ((uint8_t)0x00000000)
-#define SDMMC_SampleClock_Falling                   ((uint8_t)EMMC_NEGSMP)
+#define SDMMC_SampleClock_Falling                   ((uint8_t)SDMMC_NEGSMP)
 
 /* SDMMC_RespExpect */
 #define SDMMC_Resp_NONE                             ((uint16_t)0x0000)
@@ -205,7 +205,7 @@ typedef struct
 
 /* TranMode_Direction */
 #define SDMMC_TranDir_Receive                       ((uint32_t)0x00000000)
-#define SDMMC_TranDir_Send                          ((uint32_t)EMMC_DMA_DIR)
+#define SDMMC_TranDir_Send                          ((uint32_t)SDMMC_DMA_DIR)
 
 /* DDR_ClockSW_Mode */
 #define SDMMC_DDR_ClockSW_Mode_In                   ((uint32_t)0x00000000)
@@ -271,8 +271,8 @@ void SDMMC_SetGAPStop(void);
 void SDMMC_ClearGAPStop(void);
 void SDMMC_SetDMAAddr1(uint32_t Address);
 void SDMMC_SetDMAAddr2(uint32_t Address);
-void SDMMC_IOInputDelayDDRInit(SDMMC_IOInputDelayDDRTypeDef *SSDMMC_IOInputDelayDDRStruct);
-void SDMMC_IOOutputDelayDDRInit(SDMMC_IOOutputDelayDDRTypeDef *SSDMMC_IOOutputDelayDDRStruct);
+void SDMMC_IOInputDelayDDRInit(SDMMC_IOInputDelayDDRTypeDef *SDMMC_IOInputDelayDDRStruct);
+void SDMMC_IOOutputDelayDDRInit(SDMMC_IOOutputDelayDDRTypeDef *SDMMC_IOOutputDelayDDRStruct);
 
 #ifdef __cplusplus
 }

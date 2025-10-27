@@ -1,22 +1,14 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2025/10/24
  * Description        : Main program body.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
  * Attention: This software (modified or not) and binary are used for
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-
-/*
- *@Note
- *External interrupt line routine:
- *EXTI_Line0(PB0)
- *PB0 is set as a pull-up input, and the falling edge triggers an interrupt.
- *
- */
 
 #include "debug.h"
 #include "hardware.h"
@@ -49,8 +41,6 @@ int main(void)
 
 #elif (Run_Core == Run_Core_V5F)
     
-  Hardware();
-
 #endif
 
 

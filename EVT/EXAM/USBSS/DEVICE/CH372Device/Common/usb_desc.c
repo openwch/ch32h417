@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : usb_desc.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/05/26
+ * Version            : V1.0.1
+ * Date               : 2025/10/24
  * Description        : usb device descriptor,configuration descriptor,
  *                      string descriptors and other descriptors.
 *********************************************************************************
@@ -204,7 +204,7 @@ const uint8_t SS_DeviceDescriptor[ ] =
 {
     0x12,                                                   // bLength
     0x01,                                                   // bDescriptorType
-    0x20, 0x03,                                             // bcdUSB
+    0x00, 0x03,                                             // bcdUSB
     0xff,                                                   // bDeviceClass
     0x80,                                                   // bDeviceSubClass
     0x55,                                                   // bDeviceProtocol

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_qspi.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/23
 * Description        : This file contains all the functions prototypes for the
 *                      QSPI firmware library.
 *********************************************************************************
@@ -163,6 +163,7 @@ typedef struct
 #define QSPI_FLAG_TC                          QSPI_SR_TCF
 #define QSPI_FLAG_TE                          QSPI_SR_TEF
 #define QSPI_FLAG_BUSY                        QSPI_SR_BUSY
+#define QSPI_FLAG_IDLE                        QSPI_SR_IDLEF
 
 /* QSPI_Polling_Match_Mode */
 #define QSPI_PMM_AND                          ((uint32_t)0x00000000)

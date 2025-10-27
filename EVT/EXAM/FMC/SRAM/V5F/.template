@@ -21,5 +21,5 @@ Verify=true
 Reset=true
 SDIPrintf=false
 Disable Power Output=false
-Clear CodeFlash=true
+Clear CodeFlash=false
 Disable Code-Protect=false

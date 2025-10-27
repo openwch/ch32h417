@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_can.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/16
+* Version            : V1.0.2
+* Date               : 2025/10/21
 * Description        : This file provides all the CAN firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -92,7 +92,10 @@ uint8_t CAN_Init(CAN_TypeDef* CANx, CAN_InitTypeDef* CAN_InitStruct)
 {
 	uint8_t InitStatus = CAN_InitStatus_Failed;
 	uint32_t wait_ack = 0x00000000;
+	uint32_t chip = DBGMCU_GetCHIPID();
 
+	if((chip & 0x000000F0) == 0)
+	{
 		if(CAN1 == CANx)
         {
             (*(__IO uint32_t *)(0x40021014)) |= 0x02000000;
@@ -145,7 +148,7 @@ uint8_t CAN_Init(CAN_TypeDef* CANx, CAN_InitTypeDef* CAN_InitStruct)
         (*(__IO uint32_t *)(0x40006654)) = 0x0;
         (*(__IO uint32_t *)(0x4000661C)) |= 0xFFFFFFF;	
 		(*(__IO uint32_t *)(0x40006620)) |= 0x3FF;	
-		(*(__IO uint32_t *)(0x40006600)) |= 0x291D00;
+		(*(__IO uint32_t *)(0x40006600)) = 0x2A010101;
         (*(__IO uint32_t *)(0x40006600)) &= ~0x1; 	
         if(CAN1 == CANx)
         {
@@ -180,9 +183,12 @@ uint8_t CAN_Init(CAN_TypeDef* CANx, CAN_InitTypeDef* CAN_InitStruct)
         (*(__IO uint32_t *)(0x40006600)) |= 0x1; 	
         (*(__IO uint32_t *)(0x4000660C)) |= 0xFFFFFFF;	
         (*(__IO uint32_t *)(0x4000661C)) |= 0xFFFFFFF;	
-		(*(__IO uint32_t *)(0x40006600)) |= 0x291D00;
-        (*(__IO uint32_t *)(0x40006600)) &= ~0x1; 	
+        (*(__IO uint32_t *)(0x40006600)) &= ~0x1;
+		(*(__IO uint32_t *)(0x40006600)) |= 0x1; 	
+		(*(__IO uint32_t *)(0x40006600)) = 0x2A010101;
+		(*(__IO uint32_t *)(0x40006600)) &= ~0x1;
         wait_ack = 0;
+	}
 
 	CANx->CTLR &= (~(uint32_t)CAN_CTLR_SLEEP);
 	CANx->CTLR |= CAN_CTLR_INRQ ;
@@ -415,6 +421,24 @@ void CAN_StructInit(CAN_InitTypeDef* CAN_InitStruct)
 	CAN_InitStruct->CAN_BS1 = CAN_BS1_4tq;
 	CAN_InitStruct->CAN_BS2 = CAN_BS2_3tq;
 	CAN_InitStruct->CAN_Prescaler = 1;
+}
+
+/*********************************************************************
+ * @fn      CAN_SlaveStartBank
+ *
+ * @brief   This function applies only to CH32 Connectivity line devices.
+ *
+ * @param   CAN2_BankNumber - Select the start slave bank filter from 1..41.
+ *			CAN3_BankNumber - Select the start slave bank filter from CAN2_BankNumber..42.
+ *			
+ * @return  none
+ */
+void CAN_SlaveStartBank(uint8_t CAN2_BankNumber, uint8_t CAN3_BankNumber)
+{
+    CAN1->FCTLR |= FCTLR_FINIT;
+	CAN1->FCTLR &= (uint32_t)0xFFC0C0F1;
+	CAN1->FCTLR |= (CAN2_BankNumber << 8) | ((CAN3_BankNumber - 1) << 16);
+    CAN1->FCTLR &= ~FCTLR_FINIT;
 }
 
 /*********************************************************************

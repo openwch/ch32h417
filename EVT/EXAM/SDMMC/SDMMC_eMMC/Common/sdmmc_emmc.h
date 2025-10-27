@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : sdmmc_emmc.h
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/12
+* Version            : V1.0.2
+* Date               : 2025/10/22
 * Description        : This file contains the headers of the sdmmc_emmc.
 *********************************************************************************
 * Copyright (c) 2024 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -36,8 +36,7 @@
 #define SDMMC_TOCNT_MAX                            ((uint32_t)0x0000000F)
 /* SDMMC_DIV */
 #define RB_SDMMC_DIV_MASK                          ((uint32_t)0x0000001F)      
-/* SDMMC_CMD */
-#define SDMMC_CMDIDX_MASK                          ((uint32_t)0x0000003F)
+
 /*eMMC¡ª¡ªCSD*/
 typedef struct
 {

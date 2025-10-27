@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_usbss_device.c
 * Author             : WCH
-* Version            : V1.0
-* Date               : 2025/05/23
+* Version            : V1.0.1
+* Date               : 2025/10/23
 * Description        : This file provides all the USBSS firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -59,7 +59,10 @@ void USBSS_Device_Init( FunctionalState sta )
         USBSS_CFG_MOD( );
         USBSSD->LINK_CFG = LINK_RX_EQ_EN | LINK_TX_DEEMPH_MASK | LINK_PHY_RESET;   
         USBSSD->LINK_CTRL = LINK_P2_MODE | LINK_GO_DISABLED;                        
-        USBSSD->LINK_CFG = LINK_RX_EQ_EN | LINK_TX_DEEMPH_MASK | LINK_LTSSM_MODE | LINK_TOUT_MODE | LINK_U1_PING_EN;
+        USBSSD->LINK_CFG = LINK_RX_EQ_EN | LINK_TX_DEEMPH_MASK | LINK_LTSSM_MODE | LINK_TOUT_MODE;
+#ifdef DEF_UP_U1_EN         /* disable U1 */
+        USBSSD->LINK_CFG |= LINK_U1_PING_EN;
+#endif
         USBSSD->LINK_LPM_CR |= LINK_LPM_EN;                            
         USBSSD->LINK_CFG |= LINK_RX_TERM_EN;                                     
         USBSSD->LINK_INT_CTRL =  LINK_IE_TX_LMP | LINK_IE_RX_LMP | LINK_IE_RX_LMP_TOUT | LINK_IE_STATE_CHG

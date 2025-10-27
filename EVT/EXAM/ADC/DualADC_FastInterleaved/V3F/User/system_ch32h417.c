@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : system_ch32h417.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/16
 * Description        : CH32H417 Device Peripheral Access Layer System Source File.
 *                      For HSE = 25Mhz
 *********************************************************************************
@@ -59,7 +59,9 @@ uint32_t SystemCoreClock = HSI_VALUE;
 
 static __I uint8_t PLLMULTB[32] = {4,6,7,8,17,9,19,10,21,11,23,12,25,13,14,15,16,17,18,19,20,22,24,26,28,30,32,34,36,38,40,59};
 static __I uint8_t HBPrescTB[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
+static __I uint8_t SERDESPLLMULTB[16] = {25, 28, 30, 32, 35, 38, 40, 45, 50, 56, 60, 64, 70, 76, 80, 90};
 static __I uint8_t FPRETB[4] = {0, 1, 2, 2};
+
 
 
 /* system_private_function_proto_types */
@@ -180,10 +182,15 @@ void SystemAndCoreClockUpdate (void)
                     pllsource = RCC->PLLCFGR & RCC_PLLSRC;
                     presc = (((RCC->PLLCFGR & RCC_PLL_SRC_DIV) >> 8) + 1);
 
-                    if((pllsource == 0xE0) || (pllsource == 0xA0))
+                    if(pllsource == 0xA0)
                     {
                         tmp1 = 500000000 / presc;
                     }
+                    else if(pllsource == 0xE0)
+                    {
+                        tmp1 = HSE_VALUE*SERDESPLLMULTB[RCC->PLLCFGR2>>16]/2/presc;
+                    }
+
                     else if(pllsource == 0x80)
                     {
                         tmp1 = 480000000 / presc;
@@ -209,6 +216,7 @@ void SystemAndCoreClockUpdate (void)
                     {
                         SystemClock = tmp1 * PLLMULTB[pllmull];
                     }
+
                     break;
 
                 case RCC_SYSPLL_USBHS:
@@ -220,7 +228,7 @@ void SystemAndCoreClockUpdate (void)
                     break;
 
                 case RCC_SYSPLL_SERDES:
-                    SystemClock = 500000000;
+                    SystemClock = HSE_VALUE*SERDESPLLMULTB[RCC->PLLCFGR2>>16]/2;
                     break;
 
                 case RCC_SYSPLL_USBSS:

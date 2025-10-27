@@ -24,16 +24,16 @@
 				"location": "../../../../SRC/Debug"
 			},
 			{
-				"name": "Ld",
-				"location": "../../../../SRC/Ld"
+				"name": "Startup",
+				"location": "../../../../SRC/Startup"
 			},
 			{
 				"name": "Peripheral",
 				"location": "../../../../SRC/Peripheral"
 			},
 			{
-				"name": "Startup",
-				"location": "../../../../SRC/Startup"
+				"name": "Ld",
+				"location": "../../../../SRC/Ld"
 			},
 			{
 				"name": "Common",
@@ -47,7 +47,7 @@
 				"name": "*.wvproj"
 			}
 		],
-		"projectName": "CH372Device_V5F",
+		"projectName": "CompatibilityHID_V5F",
 		"architecture": "RISC-V",
 		"projectType": "c",
 		"kernel": {
@@ -91,8 +91,8 @@
 				"post_script": "",
 				"post_script_description": "",
 				"excludeResources": [
-					"${project}/Ld/V3F",
-					"${project}/Startup/startup_ch32h417_v3f.S"
+					"${project}/Startup/startup_ch32h417_v3f.S",
+					"${project}/Ld/V3F"
 				],
 				"optimization": {
 					"level": "size",
@@ -452,15 +452,17 @@
 			"showDebugOutputTimestamps": true
 		},
 		"reserve": {
-			"PROGRAM_NAME": "obj/CH372Device_V5F.elf",
-			"PROJECT_ATTR": "CH372Device_V5F",
+			"PROGRAM_NAME": "obj/CompatibilityHID_V5F.elf",
+			"PROJECT_ATTR": "CompatibilityHID_V5F",
 			"PROJECT_BUILD_CONFIG_AUTO_ATTR": true,
 			"PROJECT_BUILD_CONFIG_ID_ATTR": "",
 			"ATTR_BUILD_BEFORE_LAUNCH_ATTR": 2,
 			"GdbServerAllocateConsole": true,
 			"GdbServerAllocateTelnetConsole": false,
+			"SkipDownloadBeforeDebug": false,
 			"StartGdbCLient": true,
-			"UPDATE_THREADLIST_ON_SUSPEND": false
+			"UPDATE_THREADLIST_ON_SUSPEND": false,
+			"DebugInRam": false
 		}
 	}
 }

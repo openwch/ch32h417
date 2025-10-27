@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2025/10/24
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -15,7 +15,7 @@
  * and you can choose the command method to jump to the IAP .
  * Key  parameters: CalAddr - address in flash(same in IAP), note that this address needs to be unused.
  *                  CheckNum - The value of 'CalAddr' that needs to be modified.
- * Tips :the routine need IAP software version 1.50.
+ * Tips :the routine need IAP software version 1.50 or later.
  */
 
 #include "hardware.h"
@@ -24,7 +24,10 @@
 #include "ch32h417_usbhs_device.h"
 #include "ch32h417_gpio.h"
 #include "iap.h"
-
+extern vu32 Flash_Erase_Page_Size;
+#define Size_256B                  0x100
+#define Size_4KB                   0x1000
+#define Size_8KB                   0x2000
 /*********************************************************************
  * @fn      APP_2_IAP
  *
@@ -77,6 +80,14 @@ void USART1_IRQHandler(void)
 void Hardware(void)
 {
 	printf("Run in APP\r\n");
+    if(((*(vu32*)FLASH_CFGR0_BASE) & (1<<28)) != 0)
+    {
+        Flash_Erase_Page_Size = Size_8KB;
+    }
+    else 
+    {
+        Flash_Erase_Page_Size = Size_4KB;
+    }
     //enable usart and usb device
     USART1_CFG(460800);
     /* USB20 device init */
@@ -95,7 +106,7 @@ void Hardware(void)
             }
 #endif
 
-        if(*(uint32_t*)CalAddr == CheckNum)
+        if(*(vu32*)CalAddr == CheckNum)
         {
              Delay_Ms(10);
              APP_2_IAP();
