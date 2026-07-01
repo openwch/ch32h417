@@ -15,6 +15,12 @@
 static uint16_t  p_us = 0;
 static uint32_t p_ms = 0;
 
+/* SDI Printf debug data registers (memory-mapped debug module DATA0/DATA1).
+ * Address = 0xE0000000 + hartinfo.dataaddr. On CH32H417 hartinfo=0x212340,
+ * so dataaddr=0x340 (V-series parts use 0x380). */
+#define DEBUG_DATA0_ADDRESS  ((volatile uint32_t*)0xE0000340)
+#define DEBUG_DATA1_ADDRESS  ((volatile uint32_t*)0xE0000344)
+
 /*********************************************************************
  * @fn      Delay_Init
  *
@@ -188,6 +194,37 @@ __attribute__((used)) int _write(int fd, char *buf, int size)
 {
     int i = 0;
 
+#if (SDI_PRINT == SDI_PR_OPEN)
+    int writeSize = size;
+
+    do
+    {
+        /**
+         * data0  data1 8 bytes
+         * data0 The lowest byte storage length, the maximum is 7
+         */
+        while( (*(DEBUG_DATA0_ADDRESS) != 0u) )
+        {
+        }
+
+        if(writeSize > 7)
+        {
+            *(DEBUG_DATA1_ADDRESS) = (*(buf+i+3)) | (*(buf+i+4)<<8) | (*(buf+i+5)<<16) | (*(buf+i+6)<<24);
+            *(DEBUG_DATA0_ADDRESS) = (7u) | (*(buf+i)<<8) | (*(buf+i+1)<<16) | (*(buf+i+2)<<24);
+
+            i += 7;
+            writeSize -= 7;
+        }
+        else
+        {
+            *(DEBUG_DATA1_ADDRESS) = (*(buf+i+3)) | (*(buf+i+4)<<8) | (*(buf+i+5)<<16) | (*(buf+i+6)<<24);
+            *(DEBUG_DATA0_ADDRESS) = (writeSize) | (*(buf+i)<<8) | (*(buf+i+1)<<16) | (*(buf+i+2)<<24);
+
+            writeSize = 0;
+        }
+    } while(writeSize);
+
+#else
     for(i = 0; i < size; i++)
     {
 #if(DEBUG == DEBUG_UART1)
@@ -201,8 +238,23 @@ __attribute__((used)) int _write(int fd, char *buf, int size)
         USART_SendData(USART6, *buf++);
 #endif
     }
+#endif
 
     return size;
+}
+
+/*********************************************************************
+ * @fn      SDI_Printf_Enable
+ *
+ * @brief   Initializes the SDI printf Function.
+ *
+ * @return  none
+ */
+void SDI_Printf_Enable(void)
+{
+    *(DEBUG_DATA0_ADDRESS) = 0;
+    Delay_Init();
+    Delay_Ms(1);
 }
 
 /*********************************************************************
