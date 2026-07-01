@@ -25,6 +25,14 @@
 #define DEBUG_UART8    2
 #define DEBUG_UART6    3
 
+/* SDI Printf Definition */
+#define SDI_PR_CLOSE   0
+#define SDI_PR_OPEN    1
+
+#ifndef SDI_PRINT
+#define SDI_PRINT   SDI_PR_CLOSE
+#endif
+
 /* DEBUG UATR Definition */
 #ifndef DEBUG
 
@@ -75,6 +83,7 @@ void Delay_Init(void);
 void Delay_Us (uint32_t n);
 void Delay_Ms (uint32_t n);
 void USART_Printf_Init(uint32_t baudrate);
+void SDI_Printf_Enable(void);
 
 #ifdef __cplusplus
 }
