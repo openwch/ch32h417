@@ -76,7 +76,11 @@ void USBSSH_Init( )
     USBSSH->LINK_CFG = LINK_RX_EQ_EN | LINK_TX_DEEMPH_MASK  | LINK_DOWN_MODE | LINK_U2_RXDET | LINK_LTSSM_MODE;
     USBSSH->LINK_LPM_CR |= LINK_LPM_EN;
 
-    while( USBSSD->LINK_STATUS & LINK_BUSY );                                                               // Wait power mode switch done
+    {   /* bounded: the stock unbounded wait wedges the CPU if this init runs
+         * from the LINK ISR (warm-reset path) while the PHY never settles. */
+        uint32_t _bt = 0;
+        while( (USBSSD->LINK_STATUS & LINK_BUSY) && ++_bt < 1000000 );          // Wait power mode switch done
+    }
 
     USBSSH->LINK_CFG |= LINK_RX_TERM_EN;                                                                    // Term enable
     USBSSH->LINK_INT_CTRL =  LINK_IE_TX_LMP | LINK_IE_RX_LMP | LINK_IE_RX_LMP_TOUT | LINK_IE_STATE_CHG
@@ -114,7 +118,37 @@ void USBSS_LINK_Handle( USBSSH_TypeDef *USBSSHx ,uint8_t port_num )
     uint32_t link_state;
 
     link_state = USBSSHx->LINK_STATUS & LINK_STATE_MASK;
-    
+
+    /* Handle the training-critical Polling hand-offs FIRST, before the STATE_CHG
+     * else-if chain: STATE_CHG fires on every RXDET<->POLLING transition and
+     * would otherwise starve these. Two steps the stock handler was missing, so
+     * a link whose partner keeps its Rx terminations up (e.g. an app-mode device
+     * re-training after a warm reset, without a fresh cold attach) oscillated
+     * RXDET<->POLLING and never reached U0:
+     *   TERM_PRES : partner terminations present -> arm Polling (LINK_POLLING_EN)
+     *   TXEQ      : Polling.RxEQ done -> wait Rx.Detect clears -> switch PHY to P0
+     * Without the P2->P0 switch at TXEQ the LTSSM cannot advance to U0. */
+    if( USBSSHx->LINK_INT_FLAG & LINK_IF_TXEQ )
+    {
+        USBSSHx->LINK_INT_FLAG = LINK_IF_TXEQ;
+        if( USBSSHx->LINK_STATUS & LINK_RX_TERM_PRES )
+        {
+            uint32_t g = 0;
+            while( (USBSSHx->LINK_STATUS & LINK_RX_DETECT) && ++g < 200000 );
+            USBSSHx->LINK_CTRL = (USBSSHx->LINK_CTRL & ~LINK_PD_MODE_MASK) | LINK_P0_MODE;
+            g = 0;
+            while( (USBSSHx->LINK_STATUS & LINK_BUSY) && ++g < 200000 );
+        }
+        return;
+    }
+    if( (USBSSHx->LINK_INT_FLAG & LINK_IF_TERM_PRES) &&
+        (USBSSHx->LINK_STATUS & LINK_RX_TERM_PRES) )
+    {
+        USBSSHx->LINK_INT_FLAG = LINK_IF_TERM_PRES;
+        USBSSHx->LINK_CTRL |= LINK_POLLING_EN;
+        return;
+    }
+
     if( USBSSHx->LINK_INT_FLAG & LINK_IF_STATE_CHG )
     {
         USBSSHx->LINK_INT_FLAG = LINK_IF_STATE_CHG;
@@ -207,8 +241,10 @@ void USBSS_LINK_Handle( USBSSH_TypeDef *USBSSHx ,uint8_t port_num )
         USBSSHx->LINK_INT_FLAG = LINK_IF_WARM_RST;
         if( USBSSHx->LINK_STATUS & LINK_RX_WARM_RST )
         {
-            USBSSH_Init();
-            printf("port%d Rx warm-reset begin! \n\n", port_num );
+            /* Do NOT call USBSSH_Init() (busy-waits) or printf() from the
+             * fast link ISR - flag the disconnect and let the main loop re-arm. */
+            gDeviceConnectstatus = USB_INT_DISCONNECT;
+            gDeviceUsbType = 0;
         }
     }
 }
