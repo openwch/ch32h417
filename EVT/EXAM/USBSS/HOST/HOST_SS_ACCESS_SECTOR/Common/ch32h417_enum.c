@@ -44,7 +44,7 @@ uint8_t UsbDevEndp0Size = 8;
  */
 uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		// ReqBuf points to an 8-byte request code, and DatBuf is the send and receive buffer
 {
-	uint16_t total, wait_erdy, temp;
+	uint16_t total, temp;
 	uint32_t timeout;
 
 	memcpy( USBSS_EP0_Tx_Buf, ReqBuf, 8 );
@@ -53,7 +53,6 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
     USBSSH->HOST_TX_NUMP = 1;
     USBSSH->UH_TX_CTRL = UH_TX_SETUP | UH_RTX_VALID | (1<<24) | 8; 					// Tx SETUP
 	timeout = 0;
-	wait_erdy = 0;
 
 	/* Setup Stage */
 	while(1)
@@ -64,46 +63,55 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 			if( (USBSSH->USB_STATUS & USB_TX_RES_MASK) == TX_RES_ACK )
 			{
 				USBSSH->UH_TX_CTRL = 0x0;
-				if( (((USBSSH->USB_STATUS) >>16) & 0x1f) == 0 )						// Wait for the USB device ERDY
-				{					
-					wait_erdy = 1;
+				if( (((USBSSH->USB_STATUS) >>16) & 0x1f) != 0 )
+				{
+					break;													// Normal. Exit directly
 				}
-				else{
-					break;															// Normal. Exit directly
-				}
+				/* NumP == 0: the device has no EP0 credit yet - keep spinning until
+				 * it sends ERDY (handled below). */
 			}
 		    else if( (USBSSH->USB_STATUS & USB_TX_RES_MASK) == TX_RES_FAILED )
             {
                 USBSSH->UH_TX_CTRL = UH_TX_SETUP | UH_RTX_VALID | (1<<24) | 8; 		// Tx SETUP
             }
 		}		
-		if( USBSSH->USB_STATUS & USB_ERDY_FLAG )									// Wait until the host receives ERDY and exits
-		{									
-			wait_erdy = 0;
-			if( !(USBSSH->UH_TX_CTRL & UH_RTX_VALID ) )
-			{		
-				USBSSH->UH_TX_CTRL |=  UH_RTX_VALID;
-			}
-			USBSSH->USB_STATUS = USB_ERDY_FLAG;
+		if( USBSSH->USB_STATUS & USB_ERDY_FLAG )									// The device has granted EP0 credit
+		{
+			/* Do NOT clear USB_ERDY_FLAG here. Clearing the grant before the DATA
+			 * stage is armed drops the credit again: the NumP=0 flow-control latch
+			 * re-engages and the DATA DP is never launched. The DATA stage below
+			 * arms first and clears the flag afterwards (re-arm, then clear). */
 			break;
 		}
 		timeout++;
 		if( timeout > 0xfffffff )	return USB_CH417USBTIMEOUT;
 	}	
 
+	/* USBSSH_Init() programs UEP_TX_EN = USBSS_UH_TX_EN (0x02), i.e. it enables the
+	 * transmitter for ep1 only - ep0 is never enabled, so a control transfer with
+	 * an OUT DATA stage can never launch its data packet. Enable ep0 here; the
+	 * write is idempotent. */
+	USBSSH->UEP_TX_EN |= 0x01;
+	Delay_Ms(1);
+
 	/* Data Stage */
 	total = *( ReqBuf + 6 );
 	if( total && DatBuf ) 
 	{
 		timeout = 0;
-		wait_erdy = 0;
 		if( *ReqBuf & 0x80 ) 														// Read data
 		{  	
+			USBSSH->USB_STATUS = USB_ACT_FLAG;										// Clear the SETUP-stage ACT before arming the IN
 			USBSSH->HOST_RX_NUMP = 1;												// Setup  A packet of data
 			USBSSH->UH_RX_CTRL = 0 << 16 | UH_RTX_VALID | 1<<24 | 0 <<12; 			// 0<<16 Synchronization flag£¬1<<24 Sudden number of brust£¬0 <<12 Endpoint number
 
 			while(1)
 			{
+				if( ++timeout > 0x3fffff )											// Was unbounded: a device that never answers wedged the CPU here
+				{
+					USBSSH->UH_RX_CTRL = 0x0;
+					return USB_CH417USBTIMEOUT;
+				}
 				if( gDeviceConnectstatus == USB_INT_DISCONNECT )	return USB_INT_DISCONNECT;
 
 				if(USBSSH->UH_RX_CTRL & UH_INT_FLAG)
@@ -144,59 +152,57 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 		{					
 			if( total )
 			{
-				wait_erdy =0;
-				timeout=0;
-				memcpy( USBSS_EP0_Tx_Buf, DatBuf, *RetLen );	
-				
+				timeout = 0;
+				memcpy( USBSS_EP0_Tx_Buf, DatBuf, total );
+
+				/* RM 27.2.1.2: the SETUP stage is acknowledged with an ACK-TP carrying
+				 * NumP = 0, which latches RB_HOST_ACK_NUMP (USB_STATUS[20:16]) to zero
+				 * and hard-gates the EP0 OUT DATA packet. That field is writable -
+				 * inject one packet of credit before arming, otherwise the DATA DP is
+				 * never launched and the transfer times out (or the device STALLs). */
+				USBSSH->USB_STATUS = 0x00010000;
+
+				USBSSH->UH_TX_DMA = (uint32_t)USBSS_EP0_Tx_Buf;
 				USBSSH->HOST_TX_NUMP = 1;
-    			USBSSH->UH_TX_CTRL = 0 <<16 | UH_RTX_VALID | 1<<24 | 0 <<12 | *RetLen;										// Seq_num --- 0 £¬Burst_nump -- 1£¬Endp -- 0
+				USBSSH->UH_TX_CTRL = 0 <<16 | UH_RTX_VALID | 1<<24 | 0 <<12 | total;		// Seq_num 0, Burst_nump 1, Endp 0
+				/* Only now, with the DP armed, acknowledge the SETUP-stage grant. */
+				USBSSH->USB_STATUS = USB_ERDY_FLAG;
 				while(1)
 				{
+					uint32_t txc, res;
 					if( gDeviceConnectstatus == USB_INT_DISCONNECT )	return USB_INT_DISCONNECT;
-					if( USBSSH->UH_TX_CTRL & UH_INT_FLAG ) 
+					txc = USBSSH->UH_TX_CTRL;
+					if( txc & UH_INT_FLAG )
 					{
-						if( (USBSSH->USB_STATUS & USB_TX_RES_MASK) == TX_RES_ACK )
+						res = USBSSH->USB_STATUS & USB_TX_RES_MASK;
+						/* Clear the completion flag only. Writing UH_TX_CTRL = 0 after a
+						 * launched transfer leaves the transmit engine in a state where
+						 * the next USBSS register access stalls the AHB bus. */
+						USBSSH->UH_TX_CTRL = txc & ~UH_INT_FLAG;
+						if( res == TX_RES_ACK )
 						{
-							USBSSH->UH_TX_CTRL = 0x0;
-							{
-								break;
-							}
-						}
-						else if( (USBSSH->USB_STATUS & USB_RX_RES_MASK) == TX_RES_NRDY )
-						{
-							USBSSH->UH_TX_CTRL = 0x0;
-							USBSSH->USB_STATUS = USB_ACT_FLAG;
-						}
-						else if( (USBSSH->USB_STATUS & USB_TX_RES_MASK) == TX_RES_STALL )
-						{
-							USBSSH->UH_TX_CTRL = 0x0;
-							return USB_INT_DISK_ERR;
-						}
-						else if( (USBSSH->USB_STATUS & USB_TX_RES_MASK) == TX_RES_FAILED )
-						{
-							USBSSH->UH_TX_CTRL = USBSSH->UH_TX_CTRL = 0 <<16 | UH_RTX_VALID | 1<<24 | 0 <<12 | *RetLen;		// Seq_num --- 0 , Burst_nump -- 1, endp -- 0
-						}
-						else
-						{
-							USBSSH->UH_TX_CTRL = 0x0;
-							return USB_INT_DISK_ERR;
-						}
-					}
-					else if( (USBSSH->USB_STATUS & USB_ERDY_FLAG)  )
-					{
-						if( !(USBSSH->UH_TX_CTRL & UH_RTX_VALID ))
-						{
-							USBSSH->UH_TX_CTRL = USBSSH->UH_TX_CTRL = 0 <<16 | UH_RTX_VALID | 1<<24 | 0 <<12 | *RetLen;
-						}
-						USBSSH->USB_STATUS = USB_ERDY_FLAG;
-					}
-					if( wait_erdy ){			
-						if( USBSSH->USB_STATUS & USB_ERDY_FLAG )
-						{															// Wait until the host receives ERDY and exits
-							wait_erdy = 0;
-							USBSSH->USB_STATUS = USB_ERDY_FLAG;
 							break;
 						}
+						else if( res == TX_RES_STALL )
+						{
+							return USB_INT_DISK_ERR;
+						}
+						else if( res == TX_RES_FAILED )
+						{
+							USBSSH->UH_TX_CTRL |= UH_RTX_VALID;						// Re-send the same DP
+						}
+						/* TX_RES_NRDY: the device is momentarily busy and has dropped the
+						 * credit; wait for its ERDY below and re-arm there. Note that the
+						 * stock code tested this transmit result against USB_RX_RES_MASK. */
+					}
+					else if( USBSSH->USB_STATUS & USB_ERDY_FLAG )
+					{
+						/* Re-arm first, clear the grant second - the reverse order drops
+						 * the credit the device has just given back. */
+						USBSSH->UH_TX_DMA = (uint32_t)USBSS_EP0_Tx_Buf;
+						USBSSH->HOST_TX_NUMP = 1;
+						USBSSH->UH_TX_CTRL = 0 <<16 | UH_RTX_VALID | 1<<24 | 0 <<12 | total;
+						USBSSH->USB_STATUS = USB_ERDY_FLAG;
 					}
 					if( gDeviceConnectstatus == USB_INT_DISCONNECT )	return USB_INT_DISCONNECT;
 					timeout++;
@@ -208,6 +214,7 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 	Delay_Ms(1);																											// This delay function is required£¬otherwise the STATUS package cannot be transmitted 
 	timeout = 0;
     USBSSH->HOST_TX_NUMP = 1;
+    USBSSH->UH_TX_DMA = (uint32_t)USBSS_EP0_Tx_Buf;                                                  // The DATA stage may have re-pointed it
     USBSSH->UH_TX_CTRL = UH_TX_STATUS | UH_RTX_VALID;																		// Tx status-TP
 	while( 1 ) 																												// Wait STATUS-TP complete
 	{
@@ -223,7 +230,12 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 			else if( (USBSSH->USB_STATUS & USB_TX_RES_MASK) == TX_RES_NRDY )
 			{
 				USBSSH->UH_TX_CTRL = 0x0;
-                while( !(USBSSH->USB_STATUS & USB_ERDY_FLAG) );
+                {   uint32_t _bt = 0;                                                       // Was unbounded: a device that
+                    while( !(USBSSH->USB_STATUS & USB_ERDY_FLAG) )                          // never sends ERDY wedged
+                    {                                                                       // the CPU here
+                        if( ++_bt > 0x3fffff )	return USB_CH417USBTIMEOUT;
+                    }
+                }
                 USBSSH->USB_STATUS = USB_ERDY_FLAG;
                 USBSSH->UH_TX_CTRL = UH_TX_STATUS | UH_RTX_VALID;															// Tx status-TP
 			}
