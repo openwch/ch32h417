@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/12/05
+* Version            : V1.0.2
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -19,6 +19,7 @@ __IO  uint8_t  stat = 0;                // Receive status
 __IO  uint8_t  rep_cnt = 0;             // Received duplicate code count
 __IO  uint8_t  rec_flag = 0;            // Received a frame of data flag
 __IO  uint32_t RecData = 0;             // Received data
+__IO  uint8_t  errcode = 0;
 
 #define     VRIF_ADD_ERR    0x1FF       // error code for Verify address error
 #define     VRIF_VAL_ERR    0X2FF       // error code for Verify value error
@@ -52,7 +53,6 @@ __attribute__((aligned(16)))  const unsigned char PIOC_CODE[] =
     0xBD,0x60};	
 
 #if Func_Run_V3F
-
 /*********************************************************************
  * @fn      PIOC_IRQHandler
  *
@@ -85,7 +85,7 @@ void PIOC_IRQHandler( void )
                     break;
                 }
             default:                    // Error code
-                printf("error.\r\n");
+                errcode = 1;
                 break;
         }
         stat = 0;
@@ -207,6 +207,11 @@ void Hardware(void)
             }
             else
                 printf("key value :%d\r\n",key_value);
+        }
+        if(errcode)
+        {
+            errcode = 0;
+            printf("error code\r\n");
         }
 	}
 

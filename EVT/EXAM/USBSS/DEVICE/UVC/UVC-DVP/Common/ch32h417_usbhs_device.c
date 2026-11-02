@@ -13,6 +13,7 @@
 #include "ch32h417_usbss_device.h"
 #include "usb_desc.h"
 #include "ov2640.h"
+#include "camera.h"
 #include "uvclib.h"
 
 /******************************************************************************/
@@ -49,13 +50,13 @@ volatile uint8_t USBHS_DevSleepStatus;
 volatile uint8_t USBHS_DevEnumStatus;
 
 /* Endpoint Buffer */
-__attribute__((aligned(4))) uint8_t USBHS_EP0_Buf[DEF_USBD_UEP0_SIZE];
-__attribute__((aligned(4))) uint8_t USBHS_EP1_Tx_Buf[DEF_USB_EP1_HS_SIZE];
+__attribute__((aligned(4), section(".sram_buf"))) uint8_t USBHS_EP0_Buf[DEF_USBD_UEP0_SIZE];
+__attribute__((aligned(4), section(".sram_buf"))) uint8_t USBHS_EP1_Tx_Buf[DEF_USB_EP1_HS_SIZE];
 
 
 /* Ring buffer */
 RING_BUFF_COMM RingBuffer_Comm;
-__attribute__((aligned(4))) uint8_t Data_Buffer[DEF_RING_BUFFER_SIZE];
+__attribute__((aligned(4), section(".sram_buf"))) uint8_t Data_Buffer[DEF_RING_BUFFER_SIZE];
 
 /* Interrupt Service Routine Declaration*/
 void USBHS_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
@@ -116,28 +117,31 @@ void USB_TestMode_Deal(void)
  */
 void USBHS_Device_Endp_Init(void)
 {
-
     USBHSD->UEP_TX_EN = USBHS_UEP0_T_EN | USBHS_UEP1_T_EN | USBHS_UEP4_T_EN;
     USBHSD->UEP_RX_EN = USBHS_UEP0_R_EN | USBHS_UEP1_R_EN;
 
     USBHSD->UEP0_MAX_LEN = DEF_USBD_UEP0_SIZE;
-    USBHSD->UEP1_MAX_LEN = DEF_USB_EP1_HS_SIZE;
+    USBHSD->UEP1_MAX_LEN = 1024;
 
     USBHSD->UEP0_DMA = (uint32_t)(uint8_t *)USBHS_EP0_Buf;
     USBHSD->UEP1_RX_DMA = (uint32_t)(uint8_t *)Data_Buffer;
     USBHSD->UEP1_TX_DMA = (uint32_t)(uint8_t *)Data_Buffer;
 
+    Data_Buffer[0] = UVC_HEADERSIZE;
+    Data_Buffer[1] = 0x80;                      /* EOH: isoch IN stays valid before streaming */
     USBHSD->UEP_TX_ISO |= USBHS_UEP1_T_ISO_EN;
+    USBHSD->UEP_TX_BURST |= USBHS_UEP1_T_EN;
+    USBHSD->UEP_TX_BURST_MODE |= USBHS_UEP1_T_EN;
+    USBHSD->UEP_TX_TOG_AUTO |= USBHS_UEP1_T_EN;
+
     USBHSD->UEP0_TX_LEN = 0;
     USBHSD->UEP0_TX_CTRL = USBHS_UEP_T_RES_NAK;
     USBHSD->UEP0_RX_CTRL = USBHS_UEP_R_RES_ACK;
 
     USBHSD->UEP1_RX_CTRL = USBHS_UEP_R_RES_ACK;
 
-    USBHSD->UEP1_TX_LEN = 0;
-    USBHSD->UEP1_TX_CTRL = USBHS_UEP_T_RES_NAK;
-
-
+    USBHSD->UEP1_TX_LEN = UVC_HEADERSIZE;
+    USBHSD->UEP1_TX_CTRL = USBHS_UEP_T_RES_ACK | USBHS_UEP_T_TOG_DATA0;
 }
 
 /*********************************************************************
@@ -194,6 +198,7 @@ void USBHS_Device_Init(FunctionalState sta)
         USBHS_Device_Endp_Init();
         USBHSD->BASE_MODE = USBHS_UD_SPEED_HIGH;
         USBHSD->CONTROL = USBHS_UD_DEV_EN | USBHS_UD_DMA_EN | USBHS_UD_LPM_EN | USBHS_UD_PHY_SUSPENDM;
+        NVIC_SetPriority(USBHS_IRQn, 0x20);   /* DVP priority 0 must preempt USB */
         NVIC_EnableIRQ(USBHS_IRQn);
     }
     else
@@ -216,8 +221,6 @@ void USBHS_IRQHandler(void)
     uint8_t intflag, intst, errflag;
     uint16_t len;
     uint8_t endp_num;
-    static UINT8 format = 0;
-    static UINT8 frame = 0;
 
     intflag = USBHSD->INT_FG;
     intst = USBHSD->INT_ST;
@@ -231,7 +234,7 @@ void USBHS_IRQHandler(void)
             {
             case DEF_UEP0:
                 USBHSD->UEP0_RX_CTRL &= ~USBHS_UEP_R_DONE;
-                if(USBHSD->UEP0_RX_CTRL & USBHS_UEP_R_SETUP_IS)
+                if((USBHSD->UEP0_RX_CTRL & USBHS_UEP_R_SETUP_IS) && !(USBHSD->UEP0_RX_CTRL & USBHS_UEP_R_DONE))
                 {
                     /* Store All Setup Values */
                     USBHS_SetupReqType = pUSBHS_SetupReqPak->bRequestType;
@@ -303,7 +306,7 @@ void USBHS_IRQHandler(void)
                                 if(USBHS_DevSpeed == USBHS_SPEED_HIGH)
                                 {
                                     /* High speed mode */
-                                    pUSBHS_Descr = MyCfgDescr_HS;
+                                    pUSBHS_Descr = pMyCfgDescr_HS;
                                     len = DEF_USBD_CONFIG_HS_DESC_LEN;
                                 }
                                 else
@@ -372,7 +375,7 @@ void USBHS_IRQHandler(void)
                                 else if(USBHS_DevSpeed == USBHS_SPEED_FULL)
                                 {
                                     /* Full speed mode */
-                                    memcpy(&TAB_USB_FS_OSC_DESC[ 2 ], &MyCfgDescr_HS[ 2 ], DEF_USBD_CONFIG_HS_DESC_LEN - 2 );
+                                    memcpy(&TAB_USB_FS_OSC_DESC[ 2 ], &pMyCfgDescr_HS[ 2 ], DEF_USBD_CONFIG_HS_DESC_LEN - 2 );
                                     pUSBHS_Descr = (uint8_t *)&TAB_USB_FS_OSC_DESC[ 0 ];
                                     len = DEF_USBD_CONFIG_HS_DESC_LEN;
                                 }
@@ -494,7 +497,7 @@ void USBHS_IRQHandler(void)
                                 /* Set Device Feature */
                                 if((uint8_t)(USBHS_SetupReqValue & 0xFF) == USB_REQ_FEAT_REMOTE_WAKEUP)
                                 {
-                                    if(((USBHS_DevSpeed == USBHS_SPEED_HIGH) && (MyCfgDescr_HS[7] & 0x20)) ||
+                                    if(((USBHS_DevSpeed == USBHS_SPEED_HIGH) && (pMyCfgDescr_HS[7] & 0x20)) ||
                                        ((USBHS_DevSpeed == USBHS_SPEED_FULL) && (MyCfgDescr_FS[7] & 0x20)))
                                     {
                                         /* Set Wake-up flag, device prepare to sleep */
@@ -565,6 +568,10 @@ void USBHS_IRQHandler(void)
                                         break;
                                     }
                                 }
+                                else
+                                {
+                                    errflag = 0xFF;
+                                }
                             }
                             break;
 
@@ -594,6 +601,7 @@ void USBHS_IRQHandler(void)
                                     {
                                         USBHS_EP0_Buf[0] = 0x01;
                                     }
+                                    break;
 
                                 case(DEF_UEP1 | DEF_UEP_IN):
                                     if(((USBHSD->UEP1_TX_CTRL) & USBHS_UEP_T_RES_MASK) == USBHS_UEP_T_RES_STALL)
@@ -719,16 +727,14 @@ void USBHS_IRQHandler(void)
                         }
                         if( len == DEF_UVC10_VEDIO_CTL )
                         {
-                            if( (format != *(UINT8 *)(USBHS_EP0_Buf+2)) || (frame != *(UINT8 *)(USBHS_EP0_Buf+3)))
-                            {
-                                format = *(UINT8 *)(USBHS_EP0_Buf+2);
-                                frame = *(UINT8 *)(USBHS_EP0_Buf+3);
-                                Get_Curr[2] = format;
-                                Get_Curr[3] = frame;
-                                Formatchange_flag = *(UINT8 *)(USBHS_EP0_Buf+2);
-                                OV2640_Format_Mode(Formatchange_flag);
-                                OV2640_Change_Resolution(format,frame);
-                            }
+                            UVC_ControlSel = (uint8_t)(USBHS_SetupReqValue >> 8);
+                            UVC_Ctrl_SetData(USBHS_EP0_Buf);
+                        }
+                        else if( len )
+                        {
+                            UVC_Control_SetData((uint8_t)(USBHS_SetupReqIndex >> 8),
+                                                (uint8_t)(USBHS_SetupReqValue >> 8),
+                                                USBHS_EP0_Buf, len);
                         }
                     }
                     else

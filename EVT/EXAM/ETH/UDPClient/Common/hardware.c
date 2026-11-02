@@ -9,6 +9,13 @@
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
+/*
+ *@Note
+UDP Client example, demonstrating that UDP Client receives data and sends back.
+For details on the selection of engineering chips,
+please refer to the "CH32V30x Evaluation Board Manual" under the CH32V307EVT\EVT\PUB folder.
+ */
+
 #include "string.h"
 #include "eth_driver.h"
 
@@ -84,9 +91,13 @@ void WCHNET_CreateUdpSocket(void)
     TmpSocketInf.ProtoType = PROTO_TYPE_UDP;
     TmpSocketInf.RecvBufLen = UDP_RECE_BUF_LEN;
     i = WCHNET_SocketCreat(&SocketId, &TmpSocketInf);
+    mStopIfError(i);
+    if ((i != WCHNET_ERR_SUCCESS) || (SocketId >= WCHNET_MAX_SOCKET_NUM)) {
+        printf("socket not created\r\n");
+        return;
+    }
     printf("SocketId %d\r\n", SocketId);
     WCHNET_ModifyRecvBuf(SocketId, (u32) SocketRecvBuf[SocketId], UDP_RECE_BUF_LEN);
-    mStopIfError(i);
 }
 
 /*********************************************************************
@@ -117,10 +128,10 @@ void WCHNET_DataLoopback(u8 id)
     }
 #else
     u32 len, totallen;
-    u8 *p = MyBuf;
+    u8 *p = MyBuf, TransCnt = 255;
 
     len = WCHNET_SocketRecvLen(id, NULL);                                //query length
-    printf("Receive Len = %02x\n", len);
+    printf("Receive Len = %lu\r\n", (unsigned long) len);
     totallen = len;
     WCHNET_SocketRecv(id, MyBuf, &len);                                  //Read the data of the receive buffer into MyBuf
     while(1){
@@ -128,7 +139,8 @@ void WCHNET_DataLoopback(u8 id)
         WCHNET_SocketSend(id, p, &len);                                  //Send the data
         totallen -= len;                                                 //Subtract the sent length from the total length
         p += len;                                                        //offset buffer pointer
-        if(totallen)continue;                                            //If the data is not sent, continue to send
+        if( !--TransCnt )  break;                                        //Timeout exit
+        if(totallen) continue;                                           //If the data is not sent, continue to send
         break;                                                           //After sending, exit
     }
 #endif
@@ -192,8 +204,8 @@ void WCHNET_HandleGlobalInt(void)
         if (i & PHY_Linked_Status)
             printf("PHY Link Success\r\n");
     }
-    if (intstat & GINT_STAT_SOCKET) {
-        for (i = 0; i < WCHNET_MAX_SOCKET_NUM; i++) {         //socket related interrupt
+    if (intstat & GINT_STAT_SOCKET) {                           //socket related interrupt
+        for (i = 0; i < WCHNET_MAX_SOCKET_NUM; i++) {
             socketint = WCHNET_GetSocketInt(i);
             if (socketint)
                 WCHNET_HandleSockInt(i, socketint);
@@ -212,21 +224,26 @@ void Hardware(void)
 {
     u8 i;
     printf("UDPClient Test\r\n");
-    printf("SystemClk:%d\r\n", SystemCoreClock);
-    printf("net version:%x\n", WCHNET_GetVer());
+    printf("SystemClk:%lu\r\n", (unsigned long)SystemCoreClock);
+    printf("net version:%x\r\n",(unsigned)WCHNET_GetVer());
     if (WCHNET_LIB_VER != WCHNET_GetVer()) {
-        printf("version error.\n");
+        printf("version error.\r\n");
     }
     WCHNET_GetMacAddr(MACAddr);                                 //get the chip MAC address
     printf("mac addr:");
     for(i = 0; i < 6; i++)
-        printf("%x ", MACAddr[i]);
-    printf("\n");
+        printf("%x ", (unsigned)MACAddr[i]);
+    printf("\r\n");
     TIM2_Init();
-    i = ETH_LibInit(IPAddr, GWIPAddr, IPMask, MACAddr);         //Ethernet library initialize
+    i = ETH_LibInit(IPAddr, GWIPAddr, IPMask, MACAddr);        //Ethernet library initialize
     mStopIfError(i);
-    if (i == WCHNET_ERR_SUCCESS)
+    if (i == WCHNET_ERR_SUCCESS) {
         printf("WCHNET_LibInit Success\r\n");
+    }
+    else {
+        printf("WCHNET_LibInit failed, halted\r\n");
+        while(1);
+    }
     for (i = 0; i < WCHNET_MAX_SOCKET_NUM; i++)
         WCHNET_CreateUdpSocket();                              //Create UDP Socket
 
@@ -243,3 +260,4 @@ void Hardware(void)
         }
     }
 }
+

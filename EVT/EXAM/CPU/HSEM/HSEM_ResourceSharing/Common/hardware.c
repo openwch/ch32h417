@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -43,7 +43,7 @@ void GPIO_Toggle_INIT(void)
  */
 void Hardware(void)
 {
-	printf("HSEM_CoreSync TEST\r\n");
+	printf("HSEM_ResourceSharing TEST\r\n");
 
 #ifdef Core_V3F
     vu8 i=0;

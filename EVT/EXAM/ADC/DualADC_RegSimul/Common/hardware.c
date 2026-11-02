@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.3
-* Date               : 2026/03/17
+* Version            : V1.0.4
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -10,8 +10,8 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-u16 Adc_Val[4];
-u32 TxBuf[1];
+vu16 Adc_Val[4];
+vu32 TxBuf[1];
 /*********************************************************************
  * @fn      ADC_Function_Init
  *

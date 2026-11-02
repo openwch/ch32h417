@@ -40,7 +40,7 @@ u32 LastQueryPhyTime = 0;
 void WCHNET_GetMacAddr( uint8_t *p )
 {
     uint8_t i;
-    uint8_t *macaddr=(uint8_t *)(ROM_CFG_USERADR_ID+5);
+    uint8_t *macaddr = (uint8_t *)(ROM_CFG_USERADR_ID+5);
 
     for(i=0;i<6;i++)
     {
@@ -306,7 +306,7 @@ void ETH_PHYLink( void )
             ETH->MACCR &= ~(ETH_Speed_100M|ETH_Speed_1000M);
             ETH->MACCR |= ETH_Speed_1000M;
             /* Configure the polarity and delay of TXC */
-            RGMII_TXC_Delay(1, 4);    //TODO
+            RGMII_TXC_Delay(1, 4);   
             printf("1000M\r\n");
         }
         ETH_Start( );
@@ -346,7 +346,6 @@ void ETH_SetClock(void)
  */
 uint32_t ETH_RegInit( ETH_InitTypeDef* ETH_InitStruct, uint16_t PHYAddress )
 {
-    uint16_t tmpreg = 0;
     /* Set the SMI interface clock, set as the main frequency divided by 42  */
     ETH->MACMIIAR = (uint32_t)ETH_MACMIIAR_CR_Div42;
 
@@ -384,9 +383,7 @@ uint32_t ETH_RegInit( ETH_InitTypeDef* ETH_InitStruct, uint16_t PHYAddress )
                     ETH_InitStruct->ETH_ForwardUndersizedGoodFrames);
 
     /* Reset the physical layer */
-    tmpreg = ETH_ReadPHYRegister(PHYAddress, PHY_BCR);
-    tmpreg |= PHY_Reset;
-    ETH_WritePHYRegister(PHYAddress, PHY_BCR, tmpreg);
+    ETH_WritePHYRegister(PHYAddress, PHY_BCR, PHY_Reset);
     return ETH_SUCCESS;
 }
 

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/05/24
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides all the CRC firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -107,6 +107,7 @@ void Hardware(void)
 			case 9:LCD_Clear(GRAY);break;
 			case 10:LCD_Clear(LGRAY);break;
 			case 11:LCD_Clear(BROWN);break;
+			default:break;
 		}
 		POINT_COLOR=RED;	  
 		LCD_ShowString(30,40,210,24,24,"CH32H417");

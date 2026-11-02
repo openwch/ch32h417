@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : iap.h
  * Author             : WCH
- * Version            : V1.0.1
- * Date               : 2025/01/09
+ * Version            : V1.0.2
+ * Date               : 2026/10/16
  * Description        : IAP
 *********************************************************************************
 * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -65,7 +65,6 @@ struct{
 
 } isp_cmd;
 
-typedef void (*iapfun)(void);
 
 extern u8 IAP_Deal_Buf[USBD_DATA_SIZE+4];
 

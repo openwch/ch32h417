@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_qspi.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/18
 * Description        : This file provides all the QSPI firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -38,13 +38,13 @@ void QSPI_DeInit(QSPI_TypeDef *QSPIx)
 {
     if (QSPIx == QSPI1)
     {
-        RCC_HB2PeriphResetCmd(RCC_HB1Periph_QSPI1, ENABLE);
-        RCC_HB2PeriphResetCmd(RCC_HB1Periph_QSPI1, DISABLE);
+        RCC_HB1PeriphResetCmd(RCC_HB1Periph_QSPI1, ENABLE);
+        RCC_HB1PeriphResetCmd(RCC_HB1Periph_QSPI1, DISABLE);
     }
     else if (QSPIx == QSPI2)
     {
-        RCC_HB2PeriphResetCmd(RCC_HB1Periph_QSPI2, ENABLE);
-        RCC_HB2PeriphResetCmd(RCC_HB1Periph_QSPI2, DISABLE);
+        RCC_HB1PeriphResetCmd(RCC_HB1Periph_QSPI2, ENABLE);
+        RCC_HB1PeriphResetCmd(RCC_HB1Periph_QSPI2, DISABLE);
     }
 }
 

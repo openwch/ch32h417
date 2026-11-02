@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2026/10/14
  * Description        : Main program body.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -33,7 +33,7 @@ int main(void)
 	SystemAndCoreClockUpdate();
 	Delay_Init();
 	USART_Printf_Init(115200);
-	printf("V5F SystemCoreClk:%d\r\n", SystemCoreClock);
+	printf("V5F SystemCoreClk:%u\r\n", SystemCoreClock);
 	Delay_Ms(500);
 
 #if (Run_Core == Run_Core_V3FandV5F)

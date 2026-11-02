@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT  *******************************
-* File Name          : ch32h417_crc.c
+* File Name          : hardware.c
 * Author             : WCH
 * Version            : V1.0.1
 * Date               : 2025/09/17
-* Description        : This file provides all the CRC firmware functions.
+* Description        : This file provides the device initialization.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 
@@ -11,6 +11,8 @@
 *******************************************************************************/
 #include "hardware.h"
 #include "dvp.h"
+#include "camera.h"
+#include "usb_desc.h"
 #include "ch32h417_dvp.h"
 #include "ch32h417_swpmi.h"
 #include "ch32h417_usbss_device.h"
@@ -19,9 +21,7 @@
  /*********************************************************************
  * @fn      Hardware
  *
- * @brief   Resets the CRC Data register (DR).
- *
- * @param   none
+ * @brief   Camera, DVP and USB device initialization.
  *
  * @return  none
  */
@@ -34,18 +34,17 @@ void Hardware(void)
 
     /* Disable SWD */
     GPIO_PinRemapConfig( GPIO_Remap_SWJ_Disable, ENABLE );
-    
-	/*Initialize camera OV2640 */
-	while( OV2640_Init( ) )
+
+	while( Camera_Init( ) )
 	{
 		printf("Camera model Err\r\n");
 		Delay_Ms(500);
 	}
 
-    /* Initialize DVP */
+    USB_Descr_Select(g_camera_model);
+
 	dvp_Init();
 
-    /* Initialize USB */
     USB_Timer_Init( );
     USBSS_Device_Init( ENABLE );
     

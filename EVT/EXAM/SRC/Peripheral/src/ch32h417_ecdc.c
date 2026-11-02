@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : ch32h417_ecdc.c
  * Author             : WCH
- * Version            : V1.0.2
- * Date               : 2026/09/08
+ * Version            : V1.0.3
+ * Date               : 2026/10/18
  * Description        : This file provides all the ECDC firmware functions.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -278,7 +278,7 @@ void ECDC_ITConfig(uint32_t ECDC_IT, FunctionalState NewState)
     }
     else
     {
-        ECDC->CTRL &= (uint8_t)~ECDC_IT;
+        ECDC->CTRL &= (uint32_t)~ECDC_IT;
     }
 }
 

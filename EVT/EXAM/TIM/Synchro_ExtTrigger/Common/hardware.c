@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -67,7 +67,7 @@ void TIM1_Synchro_ExtTrigger_Init( u16 arr, u16 psc )
 	TIM_SelectSlaveMode( TIM1, TIM_SlaveMode_Gated );
 
 #elif (SLAVE_MODE == TRIGGER__MODE)
-	TIM_SelectMasterSlaveMode( TIM1, TIM_SlaveMode_Trigger );
+	TIM_SelectSlaveMode( TIM1, TIM_SlaveMode_Trigger );
 
 #endif
 

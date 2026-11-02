@@ -126,7 +126,6 @@ extern __attribute__ ((aligned(4))) uint8_t USBHS_EP1_Tx_Buf[ ];
 
 extern void USBHS_Device_Endp_Init ( void );
 extern void USBHS_Device_Init ( FunctionalState sta );
-extern void USBHS_Device_SetAddress( uint32_t address );
 extern void USBHS_IRQHandler( void );
 
 

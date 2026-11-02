@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/10/20
+* Version            : V1.0.2
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -134,7 +134,7 @@ void Hardware(void)
             RxBuffer[RxCnt] = USART_ReceiveData(USART1);
             USART_SendData(USART1, RxBuffer[RxCnt++]); /* send it when receive a byte */
         }
-    } while((RxBuffer[RxCnt - 1] != '\r') && (RxCnt != TxSize));
+    } while((RxCnt == 0) || ((RxBuffer[RxCnt - 1] != '\r') && (RxCnt != TxSize)));
 
 
 	while (1)

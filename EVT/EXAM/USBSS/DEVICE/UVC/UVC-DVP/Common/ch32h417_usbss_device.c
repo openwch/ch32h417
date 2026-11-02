@@ -17,6 +17,9 @@ USBSS_Dev_Info_t USBSS_Dev_Info;
 volatile uint8_t  USB_Enum_Status = UNINIT;
 volatile uint32_t Chip = 0;
 
+/* 12-byte UVC payload header sent on EP1 before streaming starts */
+static uint8_t USBSS_EP1_Empty_Buf[12] __attribute__((aligned(4), section(".sram_buf")));
+
 /*********************************************************************
  * @fn      USBSS_RCC_Init
  *
@@ -94,6 +97,9 @@ void USBSS_Device_Init( FunctionalState sta )
 #endif
         USBSS_CFG_MOD( );
         USBSS_Device_Endp_Init ( );
+        /* DVP keeps priority 0 so it can preempt the USB ISRs. */
+        NVIC_SetPriority( USBSS_IRQn, 0x20 );
+        NVIC_SetPriority( USBSS_LINK_IRQn, 0x20 );
         NVIC_EnableIRQ( USBSS_IRQn );
         NVIC_EnableIRQ( USBSS_LINK_IRQn );
     }
@@ -143,9 +149,11 @@ void USBSS_Device_Endp_Init( )
     USBSSD->UEP0_TX_DMA = (uint32_t)&USBSS_EP0_Buf;
     USBSSD->UEP0_RX_DMA = (uint32_t)&USBSS_EP0_Buf;
     
-    USBSSD->EP1_TX.UEP_TX_DMA = (uint32_t)&USBSS_EP1_Tx_Buf;
-    USBSSD->EP1_TX.UEP_TX_CHAIN_LEN = DEF_USB_EP1_SS_SIZE;
-    // USBSSD->EP1_TX.UEP_TX_CHAIN_EXP_NUMP = DEF_ENDP1_IN_BURST_LEVEL;
+    USBSS_EP1_Empty_Buf[0] = 12;
+    USBSS_EP1_Empty_Buf[1] = 0x80;                  /* EOH */
+    USBSSD->EP1_TX.UEP_TX_DMA = (uint32_t)&USBSS_EP1_Empty_Buf;
+    USBSSD->EP1_TX.UEP_TX_CHAIN_LEN = 12;
+    USBSSD->EP1_TX.UEP_TX_CHAIN_EXP_NUMP = 1;
 
     USBSSD->EP1_TX.UEP_TX_CFG |= USBSS_EP_TX_ISO_MODE;
 
@@ -236,9 +244,9 @@ void USB_Timer_Start( FunctionalState sta )
 }
 
 /*********************************************************************
- * @fn      TIM12_IRQHandler
+ * @fn      TIM4_IRQHandler
  *
- * @brief   This function handles TIM12 exception.
+ * @brief   This function handles TIM4 exception.
  *
  * @return  none
  */

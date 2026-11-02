@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2026/03/17
+* Version            : V1.0.2
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -51,7 +51,7 @@ void ADC_Function_Init(void)
 	ADC_InitTypeDef ADC_InitStructure={0};
 	GPIO_InitTypeDef GPIO_InitStructure={0};
 
-    RCC_HB2PeriphClockCmd(RCC_HB2Periph_ADC2|RCC_HB2Periph_GPIOA, ENABLE );
+    RCC_HB2PeriphClockCmd(RCC_HB2Periph_ADC2|RCC_HB2Periph_GPIOA|RCC_HB2Periph_GPIOB, ENABLE );
     RCC_ADCCLKConfig(RCC_ADCCLKSource_HCLK);
     RCC_ADCHCLKCLKAsSourceConfig(RCC_PPRE2_DIV2,RCC_HCLK_ADCPRE_DIV8);
 
@@ -126,7 +126,7 @@ void DFSDM_Function_Init(void)
 	DFSDM_JcInitStructure.DFSDM_JcTriggerSignal = DFSDM_JC_Trigger_TIM2;
     DFSDM_JcInit(DFSDM_FLT0, &DFSDM_JcInitStructure);
  
-    /* enable DFSDM channel 0 */
+    /* enable DFSDM channel 1 */
     DFSDM_ChannelCmd(DFSDM_Channel1, ENABLE);
     /* enable DFSDM filter 0 */
     DFSDM_FilterCmd(DFSDM_FLT0, ENABLE);

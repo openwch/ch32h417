@@ -16,7 +16,6 @@
 
 #include <stdint.h>
 
-
 /* The following values are fixed and cannot be changed */
 
 #define DEFAULT_MAX_CONNECT_NUM					(7UL)    	/*The maximum number of supported connections is 7*/
@@ -338,8 +337,8 @@ void WCHIOCHUB_GetCurrentCfg(IOCHUB_CONFIG* pCfg);
  * @param localPort 
  * @param deviceID 
  * @param deviceSecret
- * @param deviceLockFlag(Equipment lock)： 0x00:Not locked, 0x01: Locked, default 0x00
- * @param commMode(Communication mode)：1: Automatic, 2: Manual, default: 1
+ * @param deviceLockFlag(Equipment lock): 0x00:Not locked, 0x01: Locked, default 0x00
+ * @param commMode(Communication mode): 1: Automatic, 2: Manual, default: 1
  * @param pRegCB        Connect the status callback function in the authentication stage
  *
  * output parameters
@@ -574,7 +573,7 @@ uint8_t WCHIOCHUB_GetDeviceSerState(void);
  *
  * @param       modeType	Access mode (1 byte, default 0)
  * 							0:Public access only requires DevID to establish a session connection.;
- * 							1：Restricted access. A DevID and session key are required to establish a session connection;
+ * 							1: Restricted access. A DevID and session key are required to establish a session connection;
  * 							2:Private. Requests for establishing session connections are not accepted;
  *
  * @param       sessionKey[8]	Session key (default all 0)

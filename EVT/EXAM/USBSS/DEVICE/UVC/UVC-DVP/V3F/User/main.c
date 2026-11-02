@@ -11,12 +11,12 @@
  *******************************************************************************/
 /*
  *@Note
-  Example routine to emulate a custom USB device (CH372 device).
-  This routine demonstrates the use of a USBSS Device to emulate a custom device, the CH372,
-  with endpoints 1/2 downlinking data and uploading via endpoints 2/1 respectively
-  Endpoints 3 and 4 upload and download data separately respectively.
-  The device can be operated using Bushund or other upper computer software.
-  Note: This routine needs to be demonstrated in conjunction with the host software.
+  Example routine for a UVC camera device (DVP interface, YUY2).
+  This routine captures image data from an OV2640/OV5640 sensor through DVP and
+  streams it to the host as a UVC video device over USBSS or USBHS.
+  The OV2640/OV5640 model is detected at power-up and the matching configuration
+  descriptors are selected before USB initialization.
+  The device can be previewed and its resolutions switched with CameraTestTool.
 
   If the USB is set to high-speed, an external crystal oscillator is recommended for the clock source.
 */
@@ -55,25 +55,13 @@ int main(void)
 	printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
     printf("UVC_DVP Device Running On USBSS Controller\n");
 
-#if (Run_Core == Run_Core_V3FandV5F)
-
-    NVIC_WakeUp_V5F(Core_V5F_StartAddr);//wake up V5
-    HSEM_ITConfig(HSEM_ID0, ENABLE);
-    NVIC->SCTLR |= 1<<4;
-	RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR,ENABLE);
-	PWR_EnterSTOPMode(PWR_Regulator_ON, PWR_STOPEntry_WFE);
-	HSEM_ClearFlag(HSEM_ID0);
-    printf("V3F wake up\r\n");
-
-    Hardware();
+#if (Run_Core == Run_Core_V3FandV5F) || (Run_Core == Run_Core_V5F)
+    NVIC_WakeUp_V5F(Core_V5F_StartAddr);
+    PWR_EnterSTOPMode(PWR_Regulator_ON, PWR_STOPEntry_WFE);
 
 #elif (Run_Core == Run_Core_V3F)
     Hardware();
 
-#elif (Run_Core == Run_Core_V5F)
-    NVIC_WakeUp_V5F(Core_V5F_StartAddr);//wake up V5
-    PWR_EnterSTOPMode(PWR_Regulator_ON, PWR_STOPEntry_WFE);
-    printf("V3F wake up\r\n");
 #endif
 
     while(1)

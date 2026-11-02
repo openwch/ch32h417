@@ -12,7 +12,7 @@
 /*
   @Note
   (1),Example routine to emulate a simulate USB-CDC Device, USART4(PF3[RX]/PF4[TX])
-  Please note: This code uses the default serial port 1 for debugging,
+  Please note: This code uses the default serial port 4 for debugging,
   if you need to modify the debugging serial port, please do not use USART2
   (2),Merged HID devices, using endpoint 4 data downlink to fetch reverse upload;
 

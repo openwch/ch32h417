@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -13,8 +13,6 @@
 
 /*********************************************************************
  * @fn      Hardware
- *
- * @brief   Resets the CRC Data register (DR).
  *
  * @return  none
  */
@@ -30,7 +28,7 @@ void Hardware(void)
         {
         }
         random=RNG_GetRandomNumber();
-        printf("random:0x%08x\r\n",random);\
+        printf("random:0x%08x\r\n",random);
         Delay_Ms(500);
     }
 }

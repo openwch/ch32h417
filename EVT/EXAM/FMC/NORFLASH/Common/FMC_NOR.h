@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : FMC_NOR.h
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/09/17
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file contains the headers of the FMC_NOR.
 *********************************************************************************
 * Copyright (c) 2024 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -46,7 +46,7 @@ void NOR_Read_ID_DMA();
 NOR_Status NOR_ReturnToReadMode(void);
 NOR_Status NOR_EraseBlock(uint32_t BlockAddr);
 NOR_Status NOR_EraseChip(void);
-void Fill_Buffer(uint16_t *pBuffer, uint16_t BufferLenght, uint32_t Offset);
+void Fill_Buffer(uint16_t *pBuffer, uint16_t BufferLength, uint32_t Offset);
 NOR_Status NOR_WriteHalfWord(uint32_t WriteAddr, uint16_t Data);
 NOR_Status NOR_WriteBuffer(uint16_t* pBuffer, uint32_t WriteAddr, uint32_t NumHalfwordToWrite);
 void NOR_ReadBuffer(uint16_t* pBuffer, uint32_t ReadAddr, uint32_t NumHalfwordToRead);

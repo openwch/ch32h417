@@ -15,7 +15,7 @@
   This routine demonstrates the use of a USBSS Device to emulate a custom device, the CH372,
   with endpoints 1/2 downlinking data and uploading via endpoints 2/1 respectively
   Endpoints 3 upload and download data separately respectively.
-  The device can be operated using Bushund or other upper computer software.
+  The device can be operated using BusHound or other upper computer software.
   Note: This routine needs to be demonstrated in conjunction with the host software.
 
   If the USB is set to high-speed, an external crystal oscillator is recommended for the clock source.

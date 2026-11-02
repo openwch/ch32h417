@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2026/10/16
  * Description        : Main program body.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -23,7 +23,7 @@
  *
  * There is no integrated 5.1K pull-down inside the chip,
  * CC_PD is only for status differentiation,
- * bit write 1 means SNK mode, write 0 means SCR mode
+ * bit write 1 means SNK mode, write 0 means SRC mode
  *
  * Modify "PDO_Request( PDO_INDEX_1 )" in pd process.c,to modify the request voltage.
  *
@@ -55,7 +55,6 @@ int main(void)
 #if (Run_Core == Run_Core_V3FandV5F)
 	HSEM_FastTake(HSEM_ID0);
 	HSEM_ReleaseOneSem(HSEM_ID0, 0);
-	Hardware();
 
 #elif (Run_Core == Run_Core_V3F)
 

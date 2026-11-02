@@ -1,5 +1,5 @@
 
-Nanjing Qinheng Microelectronics Co., Ltd. 2026.09
+Nanjing Qinheng Microelectronics Co., Ltd. 2026.10
 
 https://wch-ic.com
 
@@ -33,40 +33,49 @@ Directory
   |      |      |      |      |-- DualADC_RegSimul: dual ADC regular simultaneous sampling routine
   |      |      |      |      |-- DualADC_SlowInterleaved: dual ADC slow interleaved sampling routine  
   |      |      |      |      |-- TIM_Trigger:TIM trigger ADC conversion routine 
-  |      |      |      |      |-- Internal_Temperature：Internal temperature sensor routine 
-  |      |      |      |      |-- DualDAC_Triangle：Dual DAC output triangular wave routine
+  |      |      |      |      |-- Internal_Temperature: Internal temperature sensor routine 
   |      |      |      |-- APPLICATION
   |      |      |      |      |-- SoftUART: I/O port simulation serial port routine 
   |      |      |      |      |-- LTDC_LVGL: use LTDC driver to display some animations on the LCD
-  |      |      |      |      |-- FATFS_eMMC：Eight-line operation EMMC card porting file read-write system FATFS
-  |      |      |      |      |-- Betaflight：H41x Betaflight Library
+  |      |      |      |      |-- FATFS_eMMC: Eight-line operation EMMC card porting file read-write system FATFS
+  |      |      |      |      |-- Betaflight: H41x Betaflight Library
+  |      |      |      |      |-- CherryUSB: CherryUSB repository address and introduction
+  |      |      |      |      |-- JPEG_decode_LTDC: LTDC static display decoded JPEG
+  |      |      |      |      |-- EEPROM_Emulation: The routine demonstrates flash simulation of EEPROM
+  |      |      |      |      |-- FATFS: 
+  |      |      |      |      |      |-- FATFS_SPI_FLASH: This example demonstrates SPI operation Winbond W25Qxx SPIFLASH with FATFS
+  |      |      |      |      |      |-- FATFS_SDIO_SD: This example demonstrates reading and writing all sectors of the SD card through the SDIO interface with FATFS
+  |      |      |      |      |      |-- FATFS_QSPI_FLASH: This example demonstrates QSPI operation Winbond W25Qxx SPIFLASH with FATFS
+  |      |      |      |      |      |-- FATFS_SDIO_eMMC: This example demonstrates reading and writing all sectors of the eMMC card through the SDIO interface with FATFS
+  |      |      |      |      |      |-- FATFS_SDMMC_SD: This example demonstrates reading and writing all sectors of the SD card through the SDMMC interface with FATFS
+  |      |      |      |      |      |-- FATFS_SMDDC_eMMC: This example demonstrates reading and writing all sectors of the eMMC card--KLM8G1GETF-B041 through the SDMMC interface with fatfs
   |      |      |      |-- CAN
   |      |      |      |      |-- Networking: CAN routine: normal mode, standard frame and expanded frame data transceiver
   |      |      |      |      |-- TestMode: test mode, including silent mode, loopback mode and loopback silent mode
   |      |      |      |      |-- Time-triggered: time triggered communication mode   
   |      |      |      |-- CPU
-  |      |      |      |      |-- CoreMark：CoreMark routine
-  |      |      |      |      |-- FPU：FPU hardware floating point operation routine
-  |      |      |      |      |-- PMP：Physical memory protection routine
+  |      |      |      |      |-- CoreMark: CoreMark routine
+  |      |      |      |      |-- FPU: FPU hardware floating point operation routine
+  |      |      |      |      |-- PMP: Physical memory protection routine
   |      |      |      |      |-- HSEM
-  |      |      |      |      |      |-- HSEM_CoreNotification：HSEM CoreNotication routine
-  |      |      |      |      |      |-- HSEM_CoreSync：core synchronization routine
-  |      |      |      |      |      |-- HSEM_ResourceSharing：HSEM ResourceSharing routine
-  |      |      |      |      |      |-- HSEM_DataSharing：HSEM global variable Sharing routine
-  |      |      |      |      |-- ICache：ICache routine
-  |      |      |      |      |-- IPC：IPC routine
+  |      |      |      |      |      |-- HSEM_CoreNotification: HSEM CoreNotication routine
+  |      |      |      |      |      |-- HSEM_CoreSync: core synchronization routine
+  |      |      |      |      |      |-- HSEM_ResourceSharing: HSEM ResourceSharing routine
+  |      |      |      |      |      |-- HSEM_DataSharing: HSEM global variable Sharing routine
+  |      |      |      |      |-- ICache: ICache routine
+  |      |      |      |      |-- IPC: IPC routine
   |      |      |      |      |-- PFIC
-  |      |      |      |      |      |-- Interrupt_Nest：interrupt nested routine
-  |      |      |      |      |      |-- Interrupt_VTF：VTF IRQ interrupt routine  
-  |      |      |      |      |-- SYSTICK_Interrupt：Systick timer routine
-  |      |      |      |      |-- INT：
-  |      |      |      |      |      |-- Interrupt_Permission：Custom interrupt permission routine
-  |      |      |      |      |      |-- Interrupt_VTF：VTF interrupt routine  
-  |      |      |      |      |-- OS： 
-  |      |      |      |      |      |-- FreeRTOS：FreeRTOS routine 
-  |      |      |      |      |      |-- RT_Thread：RT_Thread routine 
+  |      |      |      |      |      |-- Interrupt_Nest: interrupt nested routine
+  |      |      |      |      |      |-- Interrupt_VTF: VTF IRQ interrupt routine  
+  |      |      |      |      |-- SYSTICK_Interrupt: Systick timer routine
+  |      |      |      |      |-- INT: 
+  |      |      |      |      |      |-- Interrupt_Permission: Custom interrupt permission routine
+  |      |      |      |      |      |-- Interrupt_VTF: VTF interrupt routine  
+  |      |      |      |      |-- OS:  
+  |      |      |      |      |      |-- FreeRTOS: FreeRTOS routine 
+  |      |      |      |      |      |-- RT_Thread: RT_Thread routine 
   |      |      |      |-- CRC
-  |      |      |      |      |-- CRC_Calculation：CRC routine
+  |      |      |      |      |-- CRC_Calculation: CRC routine
   |      |      |      |-- DAC 
   |      |      |      |      |-- DAC_DMA: DAC DMA conversion routine
   |      |      |      |      |-- DAC_Exit_9_Trig: external trigger DAC conversion routine
@@ -75,41 +84,45 @@ Directory
   |      |      |      |      |-- DualDAC_SineWave: dual DAC output sine wave routine
   |      |      |      |      |-- DualDAC_Triangle: dual DAC output triangular wave routine 
   |      |      |      |-- DFSDM
-  |      |      |      |      |-- DFSDM_DualFliter：Double filter conversion routine
-  |      |      |      |      |-- DFSDM_EXTITrigger：EXTI triggers the conversion routine
-  |      |      |      |      |-- DFSDM_I2S_Audio：DFSDM collects PDM stereo audio, and I2S synchronizes the playback routine
-  |      |      |      |      |-- DFSDM_InternalADC：Internal ADC parallel data input conversion routine
-  |      |      |      |      |-- DFSDM_InternalDualMode：Internal parallel input, dual-channel mode conversion routine
-  |      |      |      |      |-- DFSDM_InternalInterleavedMode：Internal parallel input, alternating mode conversion routine
-  |      |      |      |      |-- DFSDM_InternalStandardMode：Internal parallel input, standard mode conversion routine
-  |      |      |      |      |-- DFSDM_SerialSPI：External serial input conversion routine
-  |      |      |      |      |-- DFSDM_Synchronous_Regular：Rule group synchronous conversion routine
-  |      |      |      |      |-- DFSDM_TIMTrigger：Timer triggers the conversion routine
+  |      |      |      |      |-- DFSDM_DualFliter: Double filter conversion routine
+  |      |      |      |      |-- DFSDM_EXTITrigger: EXTI triggers the conversion routine
+  |      |      |      |      |-- DFSDM_I2S_Audio: DFSDM collects PDM stereo audio, and I2S synchronizes the playback routine
+  |      |      |      |      |-- DFSDM_InternalADC: Internal ADC parallel data input conversion routine
+  |      |      |      |      |-- DFSDM_InternalDualMode: Internal parallel input, dual-channel mode conversion routine
+  |      |      |      |      |-- DFSDM_InternalInterleavedMode: Internal parallel input, alternating mode conversion routine
+  |      |      |      |      |-- DFSDM_InternalStandardMode: Internal parallel input, standard mode conversion routine
+  |      |      |      |      |-- DFSDM_SerialSPI: External serial input conversion routine
+  |      |      |      |      |-- DFSDM_Synchronous_Regular: Rule group synchronous conversion routine
+  |      |      |      |      |-- DFSDM_TIMTrigger: Timer triggers the conversion routine
   |      |      |      |      |-- DFSDM_SAI_Audio: The routine demonstrates the use of DFSDM to capture PDM stereo audio, which is synchronously played back by SAI
   |      |      |      |-- ECDC
-  |      |      |      |      |-- RAM_Block：ECDC RAM Block Self-encryption and decryption routine
-  |      |      |      |      |-- Single_Time：ECDC Single encryption and decryption routine
+  |      |      |      |      |-- RAM_Block: ECDC RAM Block Self-encryption and decryption routine
+  |      |      |      |      |-- Single_Time: ECDC Single encryption and decryption routine
   |      |      |      |-- DMA
   |      |      |      |      |-- DMA_MEM2MEM: memory to memory mode routine
   |      |      |      |      |-- DMA_MEM2PERIP: see each peripheral subroutine for memory to peripheral mode and peripheral to memory mode routine
-  |      |      |      |      |-- DoubleBuffer_DMA：Double Buffer mode routine
+  |      |      |      |      |-- DoubleBuffer_DMA: Double Buffer mode routine
   |      |      |      |      |-- TIM_DMA_SLEEP_MODE: DMA routine in sleep mode
   |      |      |      |-- DVP 
   |      |      |      |      |-- DVP_TFTLCD: DVP routine to operate OV2640 and OV5640 camera video mode to display image on LCD
   |      |      |      |      |-- DVP_UART: DVP routine to operate OV2640 camera JPEG mode
-  |      |      |      |      |-- DVP_LTDC：The routine demonstrates the image acquisition by a DVP interface camera and its real-time display on a TFTLCD through LTDC
+  |      |      |      |      |-- DVP_LTDC: The routine demonstrates the image acquisition by a DVP interface camera and its real-time display on a TFTLCD through LTDC
   |      |      |      |-- ETH
+  |      |      |      |      |-- 1_Tool_Doc:ETH routine related documents and tools 
   |      |      |      |      |-- DHCP: DHCP demonstration routine to obtain IP automatically
   |      |      |      |      |-- DNS: DHCP demonstration routine to obtain IP automatically and then request domain name resolution 
-  |      |      |      |      |-- IoCHub：
+  |      |      |      |      |-- ETH_CFG: ETH_CFG routine. Create a UDP Server to communicate with upper computer, to configure WCHNET functions, including configuring various parameters and creating a new communication. 
+  |      |      |      |      |-- ETH_IAP: ETH IAP routine
+  |      |      |      |      |-- ETH_UART: ETH_UART routine, to demonstrate data transparent transfer between Ethernet and UART 
+  |      |      |      |      |-- IoCHub: 
   |      |      |      |      |      |-- IoCHub_Demo: IoCHub basic routines, using AT commands to implement IoCHub's basic function demonstration on MCU
   |      |      |      |      |      |-- IoCHub_UART: IoCHub UART routine, demonstrating data transparent transmission between IoCHub and UART
   |      |      |      |      |      |-- Lib: IoCHub library
   |      |      |      |      |      |-- readme.txt
   |      |      |      |      |-- IPRaw_PING: IP_RAW routine, to demonstrate that the TCP client receives data after connecting to the server and then sends it back
-  |      |      |      |      |-- MAC_RAW：Demo of ETH MAC layer data transmission and reception
+  |      |      |      |      |-- MAC_RAW: Demo of ETH MAC layer data transmission and reception
   |      |      |      |      |-- MQTT: MQTT routine, to demonstrate MQTT protocol communication based on TCP/IP   
-  |      |      |      |      |-- NetLib：ETH Library
+  |      |      |      |      |-- NetLib: ETH Library
   |      |      |      |      |-- TcpClient: demonstration routine that TCP client receives data after connecting to the server and then returns data 
   |      |      |      |      |-- TcpServer: demonstration routine that TCP server receives data after connecting to the client and then returns data
   |      |      |      |      |-- UdpClient: demonstration routine that Udp Client receives data and returns data
@@ -119,22 +132,22 @@ Directory
   |      |      |      |      |-- EXTI0:External Interrupt routine
   |      |      |      |-- FLASH
   |      |      |      |      |-- FLASH_Program:FLASH erase/read/write, and fast programming 
-  |      |      |      |      |-- LoadInFlash：Transfer code in FLASH during startup process
+  |      |      |      |      |-- LoadInFlash: Transfer code in FLASH during startup process
   |      |      |      |-- FMC  
-  |      |      |      |      |-- LCD：FSMC operation TFTLCD routine
-  |      |      |      |      |-- LCD_8bit：8-bit data bus LCD routine
-  |      |      |      |      |-- NAND：FSMC operation NANDFFLASH routine
-  |      |      |      |      |-- NORFLASH：FSMC operation NORFLASH routine
-  |      |      |      |      |-- SDRAM-16bit：FSMC operation 16bit_SDRAM routine  
-  |      |      |      |      |-- SDRAM-16bit_DMA：FSMC operates 16bit_SDRAM routine through DMA 
-  |      |      |      |      |-- SDRAM-32bit：FSMC operation 32bit_SDRAM routine 
-  |      |      |      |      |-- SDRAM-32bit_DMA：FSMC operates 32bit_SDRAM routine through DMA   
-  |      |      |      |      |-- SDRAM：FSMC operates NOR_SRAM routine through DMA
+  |      |      |      |      |-- LCD: FSMC operation TFTLCD routine
+  |      |      |      |      |-- LCD_8bit: 8-bit data bus LCD routine
+  |      |      |      |      |-- NAND: FSMC operation NANDFFLASH routine
+  |      |      |      |      |-- NORFLASH: FSMC operation NORFLASH routine
+  |      |      |      |      |-- SDRAM-16bit: FSMC operation 16bit_SDRAM routine  
+  |      |      |      |      |-- SDRAM-16bit_DMA: FSMC operates 16bit_SDRAM routine through DMA 
+  |      |      |      |      |-- SDRAM-32bit: FSMC operation 32bit_SDRAM routine 
+  |      |      |      |      |-- SDRAM-32bit_DMA: FSMC operates 32bit_SDRAM routine through DMA   
+  |      |      |      |      |-- SDRAM: FSMC operates NOR_SRAM routine through DMA
   |      |      |      |-- GPIO
   |      |      |      |      |-- GPIO_Toggle:GPIO routine 
   |      |      |      |-- GPHA
-  |      |      |      |      |-- GPHA_M2M_WithLCD：The GPHA routine expands the color lookup table image, blends it with a solid color background, and finally displays it on the LCD
-  |      |      |      |      |-- GPHA_R2M：Comparison between GPHA solid color filling and software filling
+  |      |      |      |      |-- GPHA_M2M_WithLCD: The GPHA routine expands the color lookup table image, blends it with a solid color background, and finally displays it on the LCD
+  |      |      |      |      |-- GPHA_R2M: Comparison between GPHA solid color filling and software filling
   |      |      |      |-- HSADC
   |      |      |      |      |-- HSADC:HSADC sampling routine 
   |      |      |      |-- I2C
@@ -143,26 +156,26 @@ Directory
   |      |      |      |      |-- I2C_DMA: I2C DMA, master/slave mode transceiver routine
   |      |      |      |      |-- I2C_EEPROM: I2C interface routine to operate EEPROM peripheral 
   |      |      |      |      |-- I2C_PEC: PEC error check, master/slave mode transceiver routine
-  |      |      |      |      |-- I2C_7bit_Interrupt_Mode：Use interrupt to receive and send routine 
+  |      |      |      |      |-- I2C_7bit_Interrupt_Mode: Use interrupt to receive and send routine 
   |      |      |      |-- I2S 
   |      |      |      |      |-- HostRx_SlaveTx: I2S master receiver slave transmitter routine
   |      |      |      |      |-- I2S_DMA: I2S master transmitter slave receiver DMA routine
-  |      |      |      |      |-- I3C_Controller_Check_ZeroIBI：The I3C controller receives an IBI of 0 bytes routine
+  |      |      |      |      |-- I3C_Controller_Check_ZeroIBI: The I3C controller receives an IBI of 0 bytes routine
   |      |      |      |-- I3C
-  |      |      |      |      |-- I3C_DMA_Controller：I3C master routine
-  |      |      |      |      |-- I3C_DMA_Target：I3C slave routine
-  |      |      |      |-- IAP：IAP upgrade routine-built-in Hex to Bin tool and IAP upgrade tool  
-  |      |      |      |      |-- USB_UART：USB+UART IAP routine  
+  |      |      |      |      |-- I3C_DMA_Controller: I3C master routine
+  |      |      |      |      |-- I3C_DMA_Target: I3C slave routine
+  |      |      |      |-- IAP: IAP upgrade routine-built-in Hex to Bin tool and IAP upgrade tool  
+  |      |      |      |      |-- USB_UART: USB+UART IAP routine  
   |      |      |      |-- IWDG
   |      |      |      |      |-- IWDG:Independent Watchdog routine 
-  |      |      |      |-- LPTIM：low power consumption timer routine
-  |      |      |      |      |--LPTIM_LP_WakeUp：LPTIM sleep，shutdown wakeup routine  
-  |      |      |      |      |--PWM_OnePulse_SingleMode：LPTIM output PWM, single pulse, once set mode waveform routine  
+  |      |      |      |-- LPTIM: low power consumption timer routine
+  |      |      |      |      |-- LPTIM_LP_WakeUp: LPTIM sleep,shutdown wakeup routine  
+  |      |      |      |      |--PWM_OnePulse_SingleMode: LPTIM output PWM, single pulse, once set mode waveform routine  
   |      |      |      |-- LTDC
-  |      |      |      |      |-- LTDC_Display：LTDC display routine 
+  |      |      |      |      |-- LTDC_Display: LTDC display routine 
   |      |      |      |-- OPA
-  |      |      |      |      |-- CMP：CMP routine
-  |      |      |      |      |-- OPA：OPA routine
+  |      |      |      |      |-- CMP: CMP routine
+  |      |      |      |      |-- OPA: OPA routine
   |      |      |      |-- PIOC
   |      |      |      |      |-- 1-Wire
   |      |      |      |      |      |-- 1-Wire: 1 wire operate WS2812 and DS1820
@@ -216,51 +229,54 @@ Directory
   |      |      |      |      |      |      |-- PIOC.PDF: Programmable Protocol I/O Microcontroller PIOC Handbook
   |      |      |      |      |      |      |-- PIOC.PDF-EN: Programmable Protocol I/O Microcontroller PIOC Handbook
   |      |      |      |      |      |      |-- PIOC User Manual.PDF: PIOC User Manual
-  |      |      |      |      |      |      |-- PIOC User Manual-EN.pdf：PIOC User Manual
+  |      |      |      |      |      |      |-- PIOC User Manual-EN.pdf: PIOC User Manual
   |      |      |      |      |      |-- Tool
   |      |      |      |      |      |      |-- BIN_HEX.EXE: BIN to HEX file conversion tool
   |      |      |      |      |      |      |-- WASM53B.EXE: RISC8B microcontroller assembly tool for compiling assembly source programs into instruction code target data
   |      |      |      |-- PWR
   |      |      |      |      |-- Sleep_Mode: low power, sleep mode routine
   |      |      |      |      |-- Stop_Mode: low power, stop mode routine
-  |      |      |      |      |-- PVD_VoltageJudger：PVD voltage Judger routine
-  |      |      |      |      |-- SEL_VIO18：VIO18 software configuration routine
-  |      |      |      |      |-- VDD12_ExternPower：VDD 1.2V external power supply routine
-  |      |      |      |      |-- VDD12_ExternPowerInStopLP：Routine demonstration of STOPLP mode, VDD 1.2v external power supply, current reduction method
+  |      |      |      |      |-- PVD_VoltageJudger: PVD voltage Judger routine
+  |      |      |      |      |-- SEL_VIO18: VIO18 software configuration routine
+  |      |      |      |      |-- VDD12_ExternPower: VDD 1.2V external power supply routine
+  |      |      |      |      |-- VDD12_ExternPowerInStopLP: Routine demonstration of STOPLP mode, VDD 1.2v external power supply, current reduction method
+  |      |      |      |      |-- Stop_Mode_RTC_WakeUp: The example demonstrates the use of the RTC timer to periodically wake up from stop mode
   |      |      |      |-- QSPI
-  |      |      |      |      |-- QSPI_FLASH：QSPI operate Winbond W25Qxx SPI_FLASH routine
-  |      |      |      |      |-- QSPI_FLASH_DMA：QSPI operates the Winbond W25Qxx SPI_FLASH routine through DMA
-  |      |      |      |      |-- QSPI_MemoryMap：This example describes how to use QSPI in memory-map mode and how to perform DMA mode read operations in memory-map mode.
+  |      |      |      |      |-- QSPI_FLASH: QSPI operate Winbond W25Qxx SPI_FLASH routine
+  |      |      |      |      |-- QSPI_FLASH_DMA: QSPI operates the Winbond W25Qxx SPI_FLASH routine through DMA
+  |      |      |      |      |-- QSPI_MemoryMap: This example describes how to use QSPI in memory-map mode and how to perform DMA mode read operations in memory-map mode.
   |      |      |      |-- RCC
   |      |      |      |      |-- Get_CLK:Get system-HCLK-Core-ADCCLK clock routine  
   |      |      |      |      |-- MCO: MCO pin clock output routine
-  |      |      |      |      |-- HSI_Calibration：HSI calibrate routine
+  |      |      |      |      |-- HSI_Calibration: HSI calibrate routine
   |      |      |      |-- RNG   
-  |      |      |      |      |-- RNG：Random number generator routine   
+  |      |      |      |      |-- RNG: Random number generator routine   
   |      |      |      |-- RTC
   |      |      |      |      |-- RTC_Calendar:Calendar routine  
-  |      |      |      |      |-- RTC_Calibration：RTC calibrate routine 
+  |      |      |      |      |-- RTC_Calibration: RTC calibrate routine 
   |      |      |      |-- SAI
-  |      |      |      |      |-- SAI_Play：SAI audio routine
+  |      |      |      |      |-- SAI_Play: SAI audio routine
   |      |      |      |-- SDIO
-  |      |      |      |      |-- SDIO_SD：SDIO routine to operate SD card
-  |      |      |      |      |-- SDIO_eMMC：SDIO routine to operate EMMC card
+  |      |      |      |      |-- SDIO_SD: SDIO routine to operate SD card
+  |      |      |      |      |-- SDIO_eMMC: SDIO routine to operate EMMC card
   |      |      |      |-- SDMMC
-  |      |      |      |      |-- SDMMC-eMMC：SDMMC operate EMMC card routine
-  |      |      |      |      |-- SDMMC_eMMC_DDR：SDMMC operates the eMMC card double-edge read-write routine
-  |      |      |      |      |-- SDMMC_SD：SDMMC operate SD card routine
+  |      |      |      |      |-- SDMMC-eMMC: SDMMC operate EMMC card routine
+  |      |      |      |      |-- SDMMC_eMMC_DDR: SDMMC operates the eMMC card double-edge read-write routine
+  |      |      |      |      |-- SDMMC_SD: SDMMC operate SD card routine
   |      |      |      |-- SerDes
-  |      |      |      |      |-- FullDuxTrans：SerDes full-duplex bidirectional transmission routine
-  |      |      |      |      |-- AcquireConfig：SerDes obtaints configuration routine
+  |      |      |      |      |-- FullDuxTrans: SerDes full-duplex bidirectional transmission routine
+  |      |      |      |      |-- AcquireConfig: SerDes obtaints configuration routine
   |      |      |      |-- SPI
   |      |      |      |      |-- 1Lines_half-duplex: single wire half duplex mode, master/slave mode, data transceiver
   |      |      |      |      |-- 2Lines_FullDuplex: two-wire full duplex mode, master/slave mode, data transceiver
   |      |      |      |      |-- FullDuplex_HardNSS: Hardware NSS mode, master/slave mode, data transceiver
   |      |      |      |      |-- SPI_DMA: SPI uses DMA, master/slave mode transceiver routine
   |      |      |      |      |-- SPI_FLASH: SPI interface operation flash peripheral routine
+  |      |      |      |      |-- SPI_DMA_EXT: SPI Master and Slave use DMA full-duplex transmission and reception routine
+  |      |      |      |      |-- SPI_SDCARD: SPI SD card FatFs routine
   |      |      |      |-- SWPMI
-  |      |      |      |      |-- SWPMI_MultiBUffering：SWPMI Multi-buffer mode routine
-  |      |      |      |      |-- SWPMI_SwpCard：SWP card routine
+  |      |      |      |      |-- SWPMI_MultiBUffering: SWPMI Multi-buffer mode routine
+  |      |      |      |      |-- SWPMI_SwpCard: SWP card routine
   |      |      |      |-- TIM
   |      |      |      |      |-- Clock_Select: clock source selection routine
   |      |      |      |      |-- ComplementaryOutput_DeadTime: complementary output and deadband insertion mode routine
@@ -273,15 +289,15 @@ Directory
   |      |      |      |      |-- TIM_DMA: timer DMA routine
   |      |      |      |      |-- Encode:Timer encoder mode routine
   |      |      |      |      |-- TIM_INT:Timer interput mode routine
-  |      |      |      |      |-- TIM_Continuous：Timer continuous routine
-  |      |      |      |      |-- Bothedge_Capture：Timer Bothedge Capture routine
-  |      |      |      |      |-- Dead_Asymmetry：Timer Asymmetry routine
+  |      |      |      |      |-- TIM_Continuous: Timer continuous routine
+  |      |      |      |      |-- Bothedge_Capture: Timer Bothedge Capture routine
+  |      |      |      |      |-- Dead_Asymmetry: Timer Asymmetry routine
   |      |      |      |-- TKey
   |      |      |      |      |-- TKey:TouchKey Detection routine 
-  |      |      |      |      |-- TKY_8keys：TouchKey 8Keys detection routine 
-  |      |      |      |      |-- TKEYLIB：TouchKey Library
+  |      |      |      |      |-- TKY_8keys: TouchKey 8Keys detection routine 
+  |      |      |      |      |-- TKEYLIB: TouchKey Library
   |      |      |      |-- UHSIF
-  |      |      |      |      |-- UHSIF_SLAVE: UHSIF communication routine。  
+  |      |      |      |      |-- UHSIF_SLAVE: UHSIF communication routine. 
   |      |      |      |-- USART
   |      |      |      |      |-- USART_DMA: USART DMA, master/slave mode transceiver routine
   |      |      |      |      |-- USART_HalfDuplex: single wire half duplex mode, master/slave mode transceiver routine
@@ -290,54 +306,55 @@ Directory
   |      |      |      |      |-- USART_MultiProcessorCommunication: multiprocessor communication mode routine
   |      |      |      |      |-- USART_Polling: polling transceiver mode, master/slave transceiver routine
   |      |      |      |      |-- USART_Printf: USART Print debugging routine
+  |      |      |      |      |-- USART_DMA_EXT: USART send and receive data through DMA routine
   |      |      |      |-- USB
   |      |      |      |      |-- USBFS
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372：Simulate custom USB devices (CH372 devices)
-  |      |      |      |      |      |      |-- Compatibility_HID：Simulate HID devices and transmit data up and down through a serial port.
-  |      |      |      |      |      |      |-- CompositeKM：Simulate keyboard and mouse, use IO to simulate keys, and simulate data that can be uploaded through serial port 4.
-  |      |      |      |      |      |      |-- CompositeKM_LowSpeed：Simulate a low-speed keyboard and mouse composite device. 
+  |      |      |      |      |      |      |-- CH372: Simulate custom USB devices (CH372 devices)
+  |      |      |      |      |      |      |-- Compatibility_HID: Simulate HID devices and transmit data up and down through a serial port.
+  |      |      |      |      |      |      |-- CompositeKM: Simulate keyboard and mouse, use IO to simulate keys, and simulate data that can be uploaded through serial port 4.
+  |      |      |      |      |      |      |-- CompositeKM_LowSpeed: Simulate a low-speed keyboard and mouse composite device. 
   |      |      |      |      |      |      |-- MSC_U-Disk: Simulate a simple USB flash drive, optional use of on-chip Flash or external SPI Flash
   |      |      |      |      |      |      |-- MSC_CD-ROM: Simulating CDROM requires external installation of SPI Flash
-  |      |      |      |      |      |      |-- SimulateCDC：Simulate a CDC serial port and use serial port 4 for transmitting and receiving
-  |      |      |      |      |      |      |-- SimulateCDC-HID：Simulate a CDC serial port, use serial port 4 for transmission and reception, HID interrupt endpoint for data retrieval and reverse upload.
+  |      |      |      |      |      |      |-- SimulateCDC: Simulate a CDC serial port and use serial port 4 for transmitting and receiving
+  |      |      |      |      |      |      |-- SimulateCDC-HID: Simulate a CDC serial port, use serial port 4 for transmission and reception, HID interrupt endpoint for data retrieval and reverse upload.
   |      |      |      |      |      |-- HOST
   |      |      |      |      |      |      |-- HOST_IAP
   |	     |      |      |      |      |      |      |-- APP: The APP used in conjunction with HOST_SAP has modified the starting position of the program. After compilation, the file needs to be converted to a bin file and renamed as APP.bin
   |      |      |      |      |      |      |      |-- HOST_IAP:  A host U-disk IAP routine organized based on the U-disk read file routine, reads a file named APP.bin from the U-disk, writes it to internal flash, and automatically jumps after verification.
   |      |      |      |      |      |      |-- HOST_KM: Host operation keyboard and mouse, retrieve the endpoint data uploaded by the keyboard and mouse, and print it. Supports level 1 hub under USBFS port
-  |      |      |      |      |      |      |-- MTP_FileSystem：List the process from a USB host to a device that supports MTP and PTP protocols, and read its files
-  |      |      |      |      |      |      |-- Host_Udisk：USB host operation USB drive routine
-  |      |      |      |      |      |      |-- Udisk_Lib：USB file system library files  
+  |      |      |      |      |      |      |-- MTP_FileSystem: List the process from a USB host to a device that supports MTP and PTP protocols, and read its files
+  |      |      |      |      |      |      |-- Host_Udisk: USB host operation USB drive routine
+  |      |      |      |      |      |      |-- Udisk_Lib: USB file system library files  
   |      |      |      |      |-- USBHS 
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372：Simulate custom USB devices (CH372 devices)
-  |      |      |      |      |      |      |-- Compatibility_HID：Simulate HID devices and transmit data up and down through a serial port.
-  |      |      |      |      |      |      |-- CompositeKM：Simulate keyboard and mouse, use IO to simulate keys, and simulate data that can be uploaded through serial port 4.
+  |      |      |      |      |      |      |-- CH372: Simulate custom USB devices (CH372 devices)
+  |      |      |      |      |      |      |-- Compatibility_HID: Simulate HID devices and transmit data up and down through a serial port.
+  |      |      |      |      |      |      |-- CompositeKM: Simulate keyboard and mouse, use IO to simulate keys, and simulate data that can be uploaded through serial port 4.
   |      |      |      |      |      |      |-- MSC_U-Disk: Simulate a simple USB flash drive, optional use of on-chip Flash or external SPI Flash
   |      |      |      |      |      |      |-- MSC_CD-ROM: Simulating CDROM requires external installation of SPI Flash
-  |      |      |      |      |      |      |-- SimulateCDC：Simulate a CDC serial port and use serial port 4 for transmission and reception.
-  |      |      |      |      |      |      |-- SimulateCDC-HID：Simulate a CDC serial port, use serial port 4 for transmission and reception, HID interrupt endpoint for data retrieval and reverse upload.  
+  |      |      |      |      |      |      |-- SimulateCDC: Simulate a CDC serial port and use serial port 4 for transmission and reception.
+  |      |      |      |      |      |      |-- SimulateCDC-HID: Simulate a CDC serial port, use serial port 4 for transmission and reception, HID interrupt endpoint for data retrieval and reverse upload.  
   |      |      |      |      |      |-- HOST
   |      |      |      |      |      |      |-- HOST_IAP
   |	     |      |      |      |      |      |      |-- APP: The APP used in conjunction with HOST_SAP has modified the starting position of the program. After compilation, the file needs to be converted to a bin file and renamed as APP.bin
   |      |      |      |      |      |      |      |-- HOST_IAP:  A host U-disk IAP routine organized based on the U-disk read file routine, reads a file named APP.bin from the U-disk, writes it to internal flash, and automatically jumps after verification.
   |      |      |      |      |      |      |-- HOST_KM: Host operation keyboard and mouse, retrieve the endpoint data uploaded by the keyboard and mouse, and print it. Supports level 1 hub under USBFS port
-  |      |      |      |      |      |      |-- MTP_FileSystem：List the process from a USB host to a device that supports MTP and PTP protocols, and read its files
-  |      |      |      |      |      |      |-- Host_Udisk：USB host operation USB drive routine
-  |      |      |      |      |      |      |-- Udisk_Lib：USB file system library files
+  |      |      |      |      |      |      |-- MTP_FileSystem: List the process from a USB host to a device that supports MTP and PTP protocols, and read its files
+  |      |      |      |      |      |      |-- Host_Udisk: USB host operation USB drive routine
+  |      |      |      |      |      |      |-- Udisk_Lib: USB file system library files
   |      |      |      |      |-- USBSS
   |      |      |      |      |      |-- DEVICE
-  |      |      |      |      |      |      |-- CH372Device：Simulate custom USB devices (CH372 devices), with endpoint 1 downloading data and uploading it through endpoint 2, endpoint 2 downloading data and uploading it through endpoint 1, and endpoint 3 independently downloading and uploading data.
+  |      |      |      |      |      |      |-- CH372Device: Simulate custom USB devices (CH372 devices), with endpoint 1 downloading data and uploading it through endpoint 2, endpoint 2 downloading data and uploading it through endpoint 1, and endpoint 3 independently downloading and uploading data.
   |      |      |      |      |      |      |-- UVC
   |	     |      |      |      |      |      |      |-- UVC-DVP: Retrieve data from DVP and upload it via USB, supporting MJPEG format.
   |      |      |      |      |      |-- HOST
   |      |      |      |      |      |      |-- HOST_SS_ACCESS_SECTOR: USBSS scanning routine
   |      |      |      |      |      |      |-- Host_SS_Hub_Access_Sector: This routine demonstrates CH32H417 acting as a USB host, accessing and reading/writing U-disk sectors via an external USB HUB.
-  |      |      |      |      |      |      |-- Host_SS_Hub_Udisk_Exams: This routine demonstrates how the CH32H417 can act as a USB host to control the udisk under the HUB（Support for file system）.
+  |      |      |      |      |      |      |-- Host_SS_Hub_Udisk_Exams: This routine demonstrates how the CH32H417 can act as a USB host to control the udisk under the HUB (Support for file system).
   |      |      |      |-- USBPD
-  |      |      |      |      |-- USBPD_SNK：PD SNK routine
-  |      |      |      |      |-- USBPD_SRC：PD SRC routine   
+  |      |      |      |      |-- USBPD_SNK: PD SNK routine
+  |      |      |      |      |-- USBPD_SRC: PD SRC routine   
   |      |      |      |-- WWDG
   |      |      |      |      |-- WWDG:Window Watchdog routine
 

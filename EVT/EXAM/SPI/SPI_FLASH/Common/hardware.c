@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/15
+* Version            : V1.0.2
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -498,7 +498,7 @@ void SPI_Flash_WAKEUP(void)
  */
 void Hardware(void)
 {
-    u8  datap[SIZE];
+    u8  datap[SIZE + 1] = {0};
     u16 Flash_Model;
 
 

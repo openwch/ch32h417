@@ -1,0 +1,11 @@
+G:\pojx\a26\evt_add_1018\ch32h417\USART_DMA_EXT\USART_DMA_EXT.wvsln:
+BuildOrder=USART_DMA_EXT_V3F,USART_DMA_EXT_V5F
+-arm:${eclipse_home}\toolchain\arm-none-eabi-gcc\bin
+-build:${eclipse_home}\toolchain\Build Tools\bin
+-openocd name:openocd.exe
+-openocd path:${eclipse_home}\toolchain\OpenOCD\bin
+-rv:${eclipse_home}\toolchain\RISC-V Embedded GCC\bin
+G:\pojx\a26\evt_add_1018\ch32h417\USART_DMA_EXT\V3F
+..\V3F
+G:\pojx\a26\evt_add_1018\ch32h417\USART_DMA_EXT\V5F
+..\V5F

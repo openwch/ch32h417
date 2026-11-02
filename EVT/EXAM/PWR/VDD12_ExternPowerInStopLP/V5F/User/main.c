@@ -49,7 +49,7 @@ int main(void)
 	SystemAndCoreClockUpdate();
 	Delay_Init();
 	USART_Printf_Init(115200);
-	printf("V5F SystemCoreClk:%d\r\n", SystemCoreClock);
+	printf("V5F SystemCoreClk:%u\r\n", SystemCoreClock);
 	Delay_Ms(500);
 #if (Run_Core == Run_Core_V3FandV5F)
 	HSEM_FastTake(HSEM_ID0);

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -180,7 +180,7 @@ void Hardware(void)
 			printf("tx %04x rx %04x\n", TxData[t], RxData[t]);
 		}
 
-		value = memcmp( TxData, RxData, Size );
+		value = memcmp( TxData, RxData, Size * sizeof(u16) );
 
 		if( value == 0 )
 		{

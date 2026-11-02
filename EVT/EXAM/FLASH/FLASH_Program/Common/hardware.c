@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2026/05/22
+* Version            : V1.0.2
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -37,7 +37,7 @@ volatile TestStatus MemoryProgramStatus = PASSED;
 volatile TestStatus MemoryEraseStatus = PASSED;
 
 #define Fadr    (0x08032000)
-#define Fsize   ((((2048*4))>>2))
+#define Fsize   (2048)
 u32 buf[Fsize];
 
 /*********************************************************************
@@ -176,13 +176,17 @@ void Hardware(void)
 {
  #ifdef Core_V3F
 	printf("V3 FLASH Program TEST\r\n");
+    __disable_irq();
 	Flash_Test();
 	Flash_Test_Fast();
+    __enable_irq();
 
  #elif defined(Core_V5F)
 	printf("V5 FLASH Program TEST\r\n");
+    __disable_irq();
 	Flash_Test();
 	Flash_Test_Fast();
+    __enable_irq();
 
  #endif
 }

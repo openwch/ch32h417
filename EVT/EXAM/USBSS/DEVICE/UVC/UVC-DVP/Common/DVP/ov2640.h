@@ -14,7 +14,7 @@
 /* Global define */
 #include "ch32h417.h"
 
-/*PA17:RESET  PA23:PWDN*/
+/* PB0: PWDN, PB1: RESET */
 #define OV_RESET_SET    { GPIOB->BSHR = GPIO_Pin_1; }  //Output high
 #define OV_RESET_CLR    { GPIOB->BCR = GPIO_Pin_1; }  //Output low
 #define OV_PWDN_SET     { GPIOB->BSHR = GPIO_Pin_0; }  //Output high
@@ -107,23 +107,13 @@
 #define OV2640_SENSOR_HISTO_HIGH 0x62
 
 /* Function declaration */
+void DVP_GPIO_Init(void);
+uint8_t OV2640_Detect(void);
 uint8_t OV2640_Init(void);
-void OV2640_Resolution_Mode( uint8_t choice );
-void OV2640_Auto_Exposure(uint8_t level);
-void OV2640_Light_Mode(uint8_t mode);
-void OV2640_Color_Saturation(uint8_t sat);
-void OV2640_Brightness(uint8_t bright);
-void OV2640_Contrast(uint8_t contrast);
-void OV2640_Special_Effects(uint8_t eft);
-void OV2640_Color_Bar(uint8_t sw);
-void OV2640_Window_Set(uint16_t sx,uint16_t sy,uint16_t width,uint16_t height);
 uint8_t OV2640_OutSize_Set(uint16_t width,uint16_t height);
-uint8_t OV2640_ImageWin_Set(uint16_t offx,uint16_t offy,uint16_t width,uint16_t height);
-uint8_t OV2640_ImageSize_Set(uint16_t width,uint16_t height);
 void ov2640_speed_ctrl(uint8_t pclkdiv, uint8_t clkdiv);
-void JPEG_Mode_Init(void);
 void OV2640_Change_Resolution( uint8_t formatindex,uint8_t frameindex );
 void OV2640_Format_Mode( uint8_t choice );
 
 
-#endif /* DVP_OV_C_ */
+#endif /* __OV2640_H__ */

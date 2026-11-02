@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : sdio.c
 * Author             : WCH
-* Version            : V1.0.2
-* Date               : 2025/12/05
+* Version            : V1.0.3
+* Date               : 2026/10/16
 * Description        : This file contains the headers of the SDIO.
 *********************************************************************************
 * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -538,7 +538,6 @@ SD_Error SD_EnableWideBusOperation( u32 wmode )
             {
                 SDIO->CLKCR &= ~( 3 << 11 );
                 SDIO->CLKCR |= ( u16 )wmode << 11;
-                SDIO->CLKCR |= 0 << 14;
             }
         }
     }
@@ -1129,7 +1128,6 @@ SD_Error SD_WriteBlock( u8 *buf, long long addr,  u16 blksize )
         }
         if( timeout == 0 )
         {
-            SD_Init();
             return SD_DATA_TIMEOUT;
         }
         timeout = SDIO_DATATIMEOUT;
@@ -1898,7 +1896,7 @@ SD_Error FindSCR( u16 rca, u32 *pscr )
         return errorstatus;
     }
 
-    SDIO_CmdInitStructure.SDIO_Argument = ( uint32_t ) RCA << 16;
+    SDIO_CmdInitStructure.SDIO_Argument = ( uint32_t ) rca << 16;
     SDIO_CmdInitStructure.SDIO_CmdIndex = SD_CMD_APP_CMD;
     SDIO_CmdInitStructure.SDIO_Response = SDIO_Response_Short;
     SDIO_CmdInitStructure.SDIO_Wait = SDIO_Wait_No;

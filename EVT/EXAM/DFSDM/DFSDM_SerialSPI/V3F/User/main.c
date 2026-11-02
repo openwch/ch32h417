@@ -35,8 +35,8 @@ int main(void)
 	Delay_Init();
 	USART_Printf_Init(115200);
 	Delay_Ms(1000);
-	printf("SystemClk:%d\r\n", SystemClock);
-	printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
+	printf("SystemClk:%u\r\n", SystemClock);
+	printf("V3F SystemCoreClk:%u\r\n", SystemCoreClock);
 	Delay_Ms(500);
 
 #if (Run_Core == Run_Core_V3FandV5F)

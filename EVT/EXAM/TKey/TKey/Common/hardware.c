@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.2
-* Date               : 2026/03/17
+* Version            : V1.0.3
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -86,7 +86,7 @@ u16 Touch_Key_Adc(u8 ch)
 /*********************************************************************
  * @fn      Hardware
  *
- * @brief   Resets the CRC Data register (DR).
+ * @brief   touchkey routines.
  *
  * @return  none
  */
@@ -97,7 +97,7 @@ void Hardware(void)
 	while(1)
 	{
         ADC_val = Touch_Key_Adc(ADC_Channel_1);
-        printf("TouckKey Value:%d\r\n", ADC_val);
+        printf("TouchKey Value:%d\r\n", ADC_val);
         Delay_Ms(100);
 	}
 }

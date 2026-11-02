@@ -16,7 +16,7 @@
  *Master:SPI2_SCK(PB13)\SPI2_MISO(PC2)\SPI2_MOSI(PC1).
  *Slave:SPI2_SCK(PB13)\SPI2_MISO(PC2)\SPI2_MOSI(PC1).
  
- This example demonstrates that Master and Slave use DAM full-duplex transmission
+ This example demonstrates that Master and Slave use DMA full-duplex transmission
  and reception at the same time.
  Note: The two boards download the Master and Slave programs respectively, and power
  on at the same time.

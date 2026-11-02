@@ -54,6 +54,9 @@ RT_WEAK void *rt_heap_end_get(void)
 void rt_hw_board_init()
 {
     /* System Tick Configuration */
+	SystemInit();
+	SystemAndCoreClockUpdate();
+
     _SysTick_Config(SystemCoreClock / RT_TICK_PER_SECOND);
     /* Call components board initial (use INIT_BOARD_EXPORT()) */
 #ifdef RT_USING_COMPONENTS_INIT

@@ -89,8 +89,8 @@ int main(void)
 	PWR_VDD12ExternPower();
 
 	USART_Printf_Init(115200);
-	printf("SystemClk:%d\r\n", SystemClock);
-	printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
+	printf("SystemClk:%u\r\n", SystemClock);
+	printf("V3F SystemCoreClk:%u\r\n", SystemCoreClock);
 	Delay_Ms(500);
 
 	/* For chips with externally sealed VIO18 pins, if users use 3.3V and do not require low voltage support, 

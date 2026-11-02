@@ -17,7 +17,7 @@ This routine demonstrates the use of a USBSS device to simulate the custom devic
 If CH372 is a USB2.0 device, its functions are to download and upload data respectively through endpoint 1/2
 Endpoint 3 and Endpoint 4 upload and download data respectively.
 If CH372 is a USB3.0 device, the function is that the data downloaded from endpoint 1 is output through UHSIF, and the data input from UHSIF is uploaded through endpoint 1.
-This device can be operated through bushound or other upper computer software.
+This device can be operated through BusHound or other upper computer software.
 
 Note: This routine needs to be demonstrated together with the host software.
 

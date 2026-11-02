@@ -93,12 +93,13 @@ void AT_Init (void) {
 void Hardware(void)
 {
     printf ("IoCHub - Uart\r\n");
-    printf ("SystemClk:%d\r\n", SystemCoreClock);
+    printf ("SystemClk:%lu\r\n", (unsigned long)SystemCoreClock);
     TIM2_Init();
     NET_Init();
     IoCHub_Init();
     AT_Init();
     uart_Init();
+
     while (1) {
         NET_Process();
         WCHIOCHUB_Process();

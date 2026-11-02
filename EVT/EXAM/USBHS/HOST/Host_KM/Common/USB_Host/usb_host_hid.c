@@ -27,6 +27,7 @@
  */
 uint8_t HID_GetHidDesr( uint8_t usb_port, uint8_t ep0_size, uint8_t intf_num, uint8_t *pbuf, uint16_t *plen )
 {
+    *plen = ( uint16_t )( ( *plen > DEF_COM_BUF_LEN ) ? DEF_COM_BUF_LEN : *plen );
     uint8_t s = ERR_USB_UNSUPPORT;
     
     if( usb_port == DEF_USBFS_PORT_INDEX )
@@ -71,6 +72,7 @@ uint8_t HID_SetReport( uint8_t usb_port, uint8_t ep0_size, uint8_t intf_num, uin
 #if DEF_USBFS_PORT_EN
         memcpy( pUSBFS_SetupRequest, SetupSetReport, sizeof( USB_SETUP_REQ ) );
         pUSBFS_SetupRequest->wIndex = (uint16_t)intf_num;
+        pUSBFS_SetupRequest->wLength = *plen;
         s = USBFSH_CtrlTransfer( ep0_size, pbuf, plen );
 #endif            
     }
@@ -79,6 +81,7 @@ uint8_t HID_SetReport( uint8_t usb_port, uint8_t ep0_size, uint8_t intf_num, uin
 #if DEF_USBHS_PORT_EN     
         memcpy( pUSBHS_SetupRequest, SetupSetReport, sizeof( USB_SETUP_REQ ) );
         pUSBHS_SetupRequest->wIndex = (uint16_t)intf_num;
+        pUSBHS_SetupRequest->wLength = *plen;
         s = USBHSH_CtrlTransfer( ep0_size, pbuf, plen );
 #endif      
     }
@@ -87,7 +90,7 @@ uint8_t HID_SetReport( uint8_t usb_port, uint8_t ep0_size, uint8_t intf_num, uin
 }
 
 /*********************************************************************
- * @fn      HID_SetIdleSpeed
+ * @fn      HID_SetIdle
  *
  * @brief   Set idle.
  *

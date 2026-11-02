@@ -221,7 +221,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x00, 0x04,                                             // wMaxPacketSize
     0x00,                                                   // bInterval
 
-    /* Endpoint Compansion Descriptor */
+    /* Endpoint Companion Descriptor */
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     0X0F,                                                   // bMaxBurst
@@ -236,7 +236,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x00, 0x04,                                             // wMaxPacketSize
     0x00,                                                   // bInterval
 
-    /* Endpoint Compansion Descriptor */
+    /* Endpoint Companion Descriptor */
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     0X0F,                                                   // bMaxBurst

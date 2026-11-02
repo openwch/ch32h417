@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.3
-* Date               : 2026/03/17
+* Version            : V1.0.4
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -11,8 +11,8 @@
 *******************************************************************************/
 #include "hardware.h"
 
-u32 TxBuf[1];
-u16 Adc_Val[2];
+vu32 TxBuf[1];
+vu16 Adc_Val[2];
 u16 ADC_Val1,ADC_Val2;
 vu8 Injected_IT_Flag,DMA_IT_Flag;
 
@@ -40,7 +40,7 @@ void ADC_Function_Init(void)
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	ADC_DeInit(ADC1);
-    ADC_InitStructure.ADC_Mode = ADC_Mode_InjecSimult_FastInterl;
+    ADC_InitStructure.ADC_Mode = ADC_Mode_RegInjecSimult;
     ADC_InitStructure.ADC_ScanConvMode = DISABLE;
     ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
     ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;

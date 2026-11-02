@@ -1,0 +1,11 @@
+G:\pojx\a26\spi_sdcard\h417\SPI_SDCARD\SPI_SDCARD.wvsln:
+BuildOrder=SPI_SDCARD_V3F,SPI_SDCARD_V5F
+-arm:${eclipse_home}\toolchain\arm-none-eabi-gcc\bin
+-build:${eclipse_home}\toolchain\Build Tools\bin
+-openocd name:openocd.exe
+-openocd path:${eclipse_home}\toolchain\OpenOCD\bin
+-rv:${eclipse_home}\toolchain\RISC-V Embedded GCC\bin
+G:\pojx\a26\spi_sdcard\h417\SPI_SDCARD\V3F
+..\V3F
+G:\pojx\a26\spi_sdcard\h417\SPI_SDCARD\V5F
+..\V5F

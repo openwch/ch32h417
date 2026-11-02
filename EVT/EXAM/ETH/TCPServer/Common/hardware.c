@@ -9,6 +9,13 @@
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
+/*
+ *@Note
+TCP Server example, demonstrating that TCP Server
+receives data and sends back after connecting to a client.
+For details on the selection of engineering chips,
+please refer to the "CH32V30x Evaluation Board Manual" under the CH32V307EVT\EVT\PUB folder.
+ */
 #include "string.h"
 #include "eth_driver.h"
 
@@ -81,8 +88,11 @@ void WCHNET_CreateTcpSocketListen(void)
     TmpSocketInf.SourPort = srcport;
     TmpSocketInf.ProtoType = PROTO_TYPE_TCP;
     i = WCHNET_SocketCreat(&SocketIdForListen, &TmpSocketInf);
-    printf("SocketIdForListen %d\r\n", SocketIdForListen);
     mStopIfError(i);
+    if (i != WCHNET_ERR_SUCCESS) {
+        return;
+    }
+    printf("SocketIdForListen %d\r\n", SocketIdForListen);
     i = WCHNET_SocketListen(SocketIdForListen);                   //listen for connections
     mStopIfError(i);
 }
@@ -118,7 +128,7 @@ void WCHNET_DataLoopback(u8 id)
     u8 *p = MyBuf, TransCnt = 255;
 
     len = WCHNET_SocketRecvLen(id, NULL);                                //query length
-    printf("Receive Len = %d\r\n", len);
+    printf("Receive Len = %lu\r\n", (unsigned long) len);
     totallen = len;
     WCHNET_SocketRecv(id, MyBuf, &len);                                  //Read the data of the receive buffer into MyBuf
     while(1){
@@ -156,8 +166,7 @@ void WCHNET_HandleSockInt(u8 socketid, u8 intstat)
 #if KEEPALIVE_ENABLE
         WCHNET_SocketSetKeepLive(socketid, ENABLE);
 #endif
-        WCHNET_ModifyRecvBuf(socketid, (u32) SocketRecvBuf[socketid],
-        RECE_BUF_LEN);
+        WCHNET_ModifyRecvBuf(socketid, (u32) SocketRecvBuf[socketid], RECE_BUF_LEN);
         for (i = 0; i < WCHNET_MAX_SOCKET_NUM; i++) {
             if (socket[i] == 0xff) {                              //save connected socket id
                 socket[i] = socketid;
@@ -165,7 +174,12 @@ void WCHNET_HandleSockInt(u8 socketid, u8 intstat)
             }
         }
         printf("TCP Connect Success\r\n");
-        printf("socket id: %d\r\n",socket[i]);
+        if (i < WCHNET_MAX_SOCKET_NUM) {
+            printf("socket id: %d\r\n",socket[i]);
+        }
+        else {
+            printf("socket table is full, socket id: %d\r\n", socketid);
+        }
     }
     if (intstat & SINT_STAT_DISCONNECT)                           //disconnect
     {
@@ -238,22 +252,27 @@ void Hardware(void)
 {
     u8 i;
     printf("TCPServer Test\r\n");
-    printf("SystemClk:%d\r\n", SystemCoreClock);
-    printf("net version:%x\n", WCHNET_GetVer());
+    printf("SystemClk:%lu\r\n", (unsigned long)SystemCoreClock);
+    printf("net version:%x\r\n",(unsigned)WCHNET_GetVer());
     if (WCHNET_LIB_VER != WCHNET_GetVer()) {
-        printf("version error.\n");
+        printf("version error.\r\n");
     }
     WCHNET_GetMacAddr(MACAddr);                                 //get the chip MAC address
     printf("mac addr:");
     for(i = 0; i < 6; i++)
-        printf("%x ", MACAddr[i]);
-    printf("\n");
+        printf("%x ", (unsigned)MACAddr[i]);
+    printf("\r\n");
     TIM2_Init();
-    i = ETH_LibInit(IPAddr, GWIPAddr, IPMask, MACAddr);         //Ethernet library initialize
+    i = ETH_LibInit(IPAddr, GWIPAddr, IPMask, MACAddr);           //Ethernet library initialize
     mStopIfError(i);
-    if (i == WCHNET_ERR_SUCCESS)
+    if (i == WCHNET_ERR_SUCCESS) {
         printf("WCHNET_LibInit Success\r\n");
-#if KEEPALIVE_ENABLE                                            //Configure keep alive parameters
+    }
+    else {
+        printf("WCHNET_LibInit failed, halted\r\n");
+        while(1);
+    }
+#if KEEPALIVE_ENABLE                                               //Configure keep alive parameters
     {
         struct _KEEP_CFG cfg;
 
@@ -279,3 +298,4 @@ void Hardware(void)
         }
     }
 }
+

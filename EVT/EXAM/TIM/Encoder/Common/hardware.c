@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/12/05
+* Version            : V1.0.2
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -130,8 +130,6 @@ void TIM8_EncoderSignalGenerator_Init(void)
 
 /*********************************************************************
  * @fn      Hardware
- *
- * TIM1_INT
  *
  * @return  none
  */

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -17,9 +17,9 @@
 #define RxBuffSize        10 
 #define TxbuffSize        (( FLT_Over_Sample * ( 2 + FlT_Sinc_Order + 1 ) + 2 ) * RxBuffSize )
 
-int16_t Txdata[TxbuffSize] = {0};
-int32_t FLT0_Rxdata[RxBuffSize] = {0};
-int32_t FLT1_Rxdata[RxBuffSize] = {0};
+volatile int16_t Txdata[TxbuffSize] = {0};
+volatile int32_t FLT0_Rxdata[RxBuffSize] = {0};
+volatile int32_t FLT1_Rxdata[RxBuffSize] = {0};
 
 /*********************************************************************
  * @fn      DMA_Rx_Init

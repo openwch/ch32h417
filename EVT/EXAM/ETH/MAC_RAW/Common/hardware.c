@@ -10,7 +10,7 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-
+#include <string.h>
 #include "eth_driver.h"
 
 extern uint8_t volatile LinkSta; //0: No valid link established   1:Valid link establishe
@@ -100,24 +100,28 @@ void Hardware(void)
 	uint32_t PktCnt = 0;
 
     printf("MAC RAW Test\r\n");
-    printf("SystemClk:%d\r\n", SystemCoreClock);
-    printf("ChipID:%08x\r\n", DBGMCU_GetCHIPID());
+    printf("SystemClk:%lu\r\n", (unsigned long)SystemCoreClock);
+    printf("ChipID:%08lx\r\n", (unsigned long)DBGMCU_GetCHIPID());
     WCHNET_GetMacAddr(MACAddr);                                 //get the chip MAC address
     printf("mac addr:");
     for(i = 0; i < 6; i++)
-        printf("%x ", MACAddr[i]);
-    printf("\n");
-	TIM2_Init();
-	ETH_Init(MACAddr);
-	while(1)
-	{
-		WCHNET_MainTask();
+        printf("%x ", (unsigned)MACAddr[i]);
+    printf("\r\n");
+    TIM2_Init();
+    ETH_Init(MACAddr);
+    /* change source MAC address */
+    memcpy(&ARPPackage[6], MACAddr, 6);
+    memcpy(&ARPPackage[22], MACAddr, 6);
+
+    while(1)
+    {
+        WCHNET_MainTask();
         if(LinkSta)
         {
             MACRAW_Tx(ARPPackage, sizeof(ARPPackage));
             if(++PktCnt % 100 == 0)
-                printf("PktCnt:%d\r\n",PktCnt);
+                printf("PktCnt:%lu\r\n",(unsigned long)PktCnt);
             Delay_Ms(100);
         }
-	}
+    }
 }

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_fmc.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/18
 * Description        : This file provides all the FMC firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -348,7 +348,7 @@ void FMC_NORSRAM_NANDCmd(FunctionalState NewState)
     }
     else
     {
-        FMC_Bank1->BTCR[0] &= FMC_BCR1_FMCEN;
+        FMC_Bank1->BTCR[0] &= ~FMC_BCR1_FMCEN;
     }
 }
 

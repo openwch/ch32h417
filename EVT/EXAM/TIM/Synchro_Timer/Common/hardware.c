@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -93,8 +93,6 @@ void TIM_TimSynchroMode3_Init(void)
 /*********************************************************************
  * @fn      Hardware
  *
- * @brief   Resets the CRC Data register (DR).
- *
  * @return  none
  */
 void Hardware(void)
@@ -102,12 +100,11 @@ void Hardware(void)
 	printf("Synchro_Timer\r\n");
 	/* Timer synchronization Mode Selection */
    // TIM_TimSynchroMode1_Init();
-   //	TIM_TimSynchroMode2_Init();
-    	TIM_TimSynchroMode3_Init();
-        // Delay_Ms(500);
+   // TIM_TimSynchroMode2_Init();
+     TIM_TimSynchroMode3_Init();
+    // Delay_Ms(500);
 	while(1)
 	{
-
         printf("TIM1 cnt:%d\r\n", TIM1->CNT);
         printf("TIM2 cnt:%d\r\n", TIM2->CNT);
 	}

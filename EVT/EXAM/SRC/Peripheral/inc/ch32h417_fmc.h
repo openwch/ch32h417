@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417_fmc.h
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2026/04/03
+* Version            : V1.0.2
+* Date               : 2026/10/18
 * Description        : This file contains all the functions prototypes for the FMC
 *                      firmware library.
 *********************************************************************************
@@ -411,12 +411,12 @@ typedef enum
 #define FMC_SDRAM_CMD_Mode6                            ((uint32_t)0x00000006)
 
 /* FMC_interrupts_definition */
-#define FMC_IT_RE                                      ((uint32_t)0x00004000))
+#define FMC_IT_RE                                      ((uint32_t)0x00004000)
 
 /* FMC_flags_definition */
 #define FMC_FLAG_FEMPT                                 ((uint32_t)0x00000040)
-#define FMC_FLAG_BUSY                                  ((uint32_t)0x10000020))
-#define FMC_FLAG_RE                                    ((uint32_t)0x10000001))
+#define FMC_FLAG_BUSY                                  ((uint32_t)0x10000020)
+#define FMC_FLAG_RE                                    ((uint32_t)0x10000001)
 
 
 void FMC_DeInit(void);

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -12,11 +12,11 @@
 #include "hardware.h"
 
 /* Global define */
-#define Buf_Size 32
+
 
 /* Global define */
 #define Num    7
-u16 DAC_Value[Num] = {64, 128, 256, 512, 1024, 2048, 4095};
+static const  u16 DAC_Value[Num] = {64, 128, 256, 512, 1024, 2048, 4095};
 
 /*********************************************************************
  * @fn      Dac_Init
@@ -47,21 +47,7 @@ void Dac_Init(void)
     DAC_SetChannel1Data(DAC_Align_12b_R, 0);
 }
 
-/*********************************************************************
- * @fn      DAC1_Nosie_Gen_Test
- *
- * @brief   Noise wava generation test.
- *
- * @return  none
- */
-void DAC1_Nosie_Gen_Test(void)
-{
-    DAC->SWTR |= 0x01; /* Set by software, Reset by hardware */
-    __asm volatile("nop");
-    #if 0
-    printf("DOR1=0x%04x\r\n", DAC->DOR1); /* Value will be 0x0AAA,0x0D55,0x0EAA ... */
-    #endif
-}
+
 
 /*********************************************************************
  * @fn      Hardware

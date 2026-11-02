@@ -19,7 +19,7 @@
 USB_SETUP_REQ *Ctl_Setup;	  													/* Control the transmission data packet */
 uint8_t   gDeviceClassType;														/* Current device type */
 volatile uint8_t   gDeviceConnectstatus;										/* USB connection status */
-uint8_t   gDeviceUsbType = 0;												    /* USB connection status£º0x01--USB2.0&1.1  0x02--USB3.0 */
+uint8_t   gDeviceUsbType = 0;												    /* USB connection status:0x01--USB2.0&1.1  0x02--USB3.0 */
 uint8_t   gUdisk_flag = 0;
 #define	  DEVICE_ADDR				0x08										/* Device address of USB30 */
 
@@ -46,6 +46,12 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 {
 	uint16_t total, wait_erdy, temp;
 	uint32_t timeout;
+	uint16_t RetLenTemp = 0;
+
+	if( RetLen == NULL )
+	{
+		RetLen = &RetLenTemp;
+	}
 
 	memcpy( USBSS_EP0_Tx_Buf, ReqBuf, 8 );
 	USBSSH->UH_TX_DMA = (uint32_t)USBSS_EP0_Tx_Buf;                     			// Set tx dma address
@@ -100,7 +106,7 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 		if( *ReqBuf & 0x80 ) 														// Read data
 		{  	
 			USBSSH->HOST_RX_NUMP = 1;												// Setup  A packet of data
-			USBSSH->UH_RX_CTRL = 0 << 16 | UH_RTX_VALID | 1<<24 | 0 <<12; 			// 0<<16 Synchronization flag£¬1<<24 Sudden number of brust£¬0 <<12 Endpoint number
+			USBSSH->UH_RX_CTRL = 0 << 16 | UH_RTX_VALID | 1<<24 | 0 <<12; 			// 0<<16 Synchronization flag,1<<24 Sudden number of brust,0 <<12 Endpoint number
 
 			while(1)
 			{
@@ -149,7 +155,7 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 				memcpy( USBSS_EP0_Tx_Buf, DatBuf, *RetLen );	
 				
 				USBSSH->HOST_TX_NUMP = 1;
-    			USBSSH->UH_TX_CTRL = 0 <<16 | UH_RTX_VALID | 1<<24 | 0 <<12 | *RetLen;										// Seq_num --- 0 £¬Burst_nump -- 1£¬Endp -- 0
+    			USBSSH->UH_TX_CTRL = 0 <<16 | UH_RTX_VALID | 1<<24 | 0 <<12 | *RetLen;										// Seq_num --- 0 ,Burst_nump -- 1,Endp -- 0
 				while(1)
 				{
 					if( gDeviceConnectstatus == USB_INT_DISCONNECT )	return USB_INT_DISCONNECT;
@@ -205,7 +211,7 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 			}	
 		}
 	}
-	Delay_Ms(1);																											// This delay function is required£¬otherwise the STATUS package cannot be transmitted 
+	Delay_Ms(1);																											// This delay function is required,otherwise the STATUS package cannot be transmitted 
 	timeout = 0;
     USBSSH->HOST_TX_NUMP = 1;
     USBSSH->UH_TX_CTRL = UH_TX_STATUS | UH_RTX_VALID;																		// Tx status-TP
@@ -223,7 +229,13 @@ uint8_t U30HostCtrlTransfer( PUINT8 ReqBuf, PUINT8 DatBuf, PUINT16 RetLen )  		/
 			else if( (USBSSH->USB_STATUS & USB_TX_RES_MASK) == TX_RES_NRDY )
 			{
 				USBSSH->UH_TX_CTRL = 0x0;
-                while( !(USBSSH->USB_STATUS & USB_ERDY_FLAG) );
+                timeout = 0;
+                while( !(USBSSH->USB_STATUS & USB_ERDY_FLAG) )
+                {
+                    if( gDeviceConnectstatus == USB_INT_DISCONNECT )	return USB_INT_DISCONNECT;
+                    timeout++;
+                    if( timeout > 0xfffff )	return USB_CH417USBTIMEOUT;
+                }
                 USBSSH->USB_STATUS = USB_ERDY_FLAG;
                 USBSSH->UH_TX_CTRL = UH_TX_STATUS | UH_RTX_VALID;															// Tx status-TP
 			}
@@ -309,7 +321,7 @@ uint8_t U30HOST_GetConfigDescr( uint8_t *buf ,uint16_t *len )
 	if( status == USB_INT_SUCCESS ){
 		Setup_buf[6] = (( (PUSB_CFG_DESCR)buf ) -> wTotalLength)&0xff;
 		Setup_buf[7] = (( (PUSB_CFG_DESCR)buf ) -> wTotalLength)>>8;
-		l = Ctl_Setup->wLength;
+		l = ( Setup_buf[ 7 ] << 8 ) | Setup_buf[ 6 ];
 		status = U30HostCtrlTransfer( Setup_buf, buf, &l );
 		if( status == USB_INT_SUCCESS )
 		{
@@ -613,7 +625,7 @@ uint8_t U30HOST_CofDescrAnalyse( uint8_t *pbuf )
 	else
 	{
 		gDeviceClassType = USB_DEV_CLASS_RESERVED;								// The current device type is unknown by default
-		return ERR_USB_UNKNOWN;  									 	    // Not supported£¬ Return
+		return ERR_USB_UNKNOWN;  									 	    // Not supported, Return
 	}
 }
 
@@ -883,7 +895,7 @@ uint8_t USBHSH_Transact( uint8_t endp_pid_number, uint16_t endp_tog, uint32_t ti
                 {
                     return ( r | ERR_USB_TRANSFER );
                 }
-                if( timeout < 0xFFFF )
+                if( timeout < 0xFFFFFFFF )
                 {
                     timeout--;
                 }
@@ -1102,7 +1114,7 @@ uint8_t U20HOST_GetConfigDescr( uint8_t *buf ,uint16_t *len )
 		Setup_buf[6] = (( (PUSB_CFG_DESCR)buf ) -> wTotalLength)&0xff;
 		Setup_buf[7] = (( (PUSB_CFG_DESCR)buf ) -> wTotalLength)>>8;
 
-		l = Ctl_Setup->wLength;
+		l = ( Setup_buf[ 7 ] << 8 ) | Setup_buf[ 6 ];
 		status = U20HostCtrlTransfer( Setup_buf,buf, &l );
 		if( status == USB_INT_SUCCESS )
 		{

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -78,10 +78,6 @@ void Hardware(void)
 
     while(1)
     {
-        if(TIM_GetFlagStatus(TIM1, TIM_FLAG_CC2) != RESET)
-        {
-            TIM_ClearFlag(TIM1, TIM_FLAG_CC2);
-        }
 
         if(TIM_GetFlagStatus(TIM1, TIM_FLAG_Update) != RESET)
         {

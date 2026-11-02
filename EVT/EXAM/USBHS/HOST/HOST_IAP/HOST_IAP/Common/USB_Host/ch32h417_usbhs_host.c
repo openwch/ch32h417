@@ -711,7 +711,7 @@ uint8_t USBHSH_GetEndpData( uint8_t endp_num, uint16_t *pendp_tog, uint8_t *pbuf
 {
     uint8_t  s;
 
-    s = USBHSH_Transact( ( USB_PID_IN << 4 ) | endp_num, *pendp_tog, 0 );
+    s = USBHSH_Transact( USB_PID_IN | ( endp_num << 4 ), *pendp_tog, 0 );
     if( s == ERR_SUCCESS )
     {
         *plen = USBHSH->RX_LEN;
@@ -739,7 +739,7 @@ uint8_t USBHSH_SendEndpData( uint8_t endp_num, uint16_t *pendp_tog, uint8_t *pbu
 
     memcpy( TxBuffer, pbuf, len );
     USBHSH->TX_LEN = len;
-    s = USBHSH_Transact( ( USB_PID_OUT << 4 ) | endp_num, *pendp_tog, 0 );
+    s = USBHSH_Transact( USB_PID_OUT | ( endp_num << 4 ), *pendp_tog, 0 );
     if( s == ERR_SUCCESS )
     {
         *pendp_tog ^= USBHS_UH_T_TOG_DATA1;

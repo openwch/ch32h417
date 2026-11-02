@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.2
-* Date               : 2026/03/30
+* Version            : V1.0.3
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -15,8 +15,10 @@
 
 #define ADC_SPEED   ADC_SPEED_High
 //#define ADC_SPEED   ADC_SPEED_Low
-
-u16 TxBuf[1024];
+/* Global define */
+#define Num 1024
+/* Global Variable */
+vu16 TxBuf[Num];
 /*********************************************************************
  * @fn      USBHS_PLL
  *
@@ -139,7 +141,7 @@ void Hardware(void)
     printf("USBHS ready\r\n");
     ADC_Function_Init();
     ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_CyclesMode5);
-    DMA_Rx_Init(DMA1_Channel1, (int32_t)& ADC1->RDATAR, (uint32_t)TxBuf, 1024);
+    DMA_Rx_Init(DMA1_Channel1, (int32_t)& ADC1->RDATAR, (uint32_t)TxBuf, Num);
     DMA_MuxChannelConfig(DMA_MuxChannel1, 0x78); 
     DMA_Cmd(DMA1_Channel1, ENABLE);  
 	ADC_SoftwareStartConvCmd(ADC1, ENABLE);
@@ -147,13 +149,12 @@ void Hardware(void)
     {
 
     }
-
-	for(i = 0; i < 1024; i++){
+	for(i = 0; i < Num; i++){
 
 		printf("%d\r\n",TxBuf[i]);
 
         Delay_Ms(10);
     }
-	while (1)
-		;
+	while (1);
+		
 }

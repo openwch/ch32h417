@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main_v3f.c
  * Author             : WCH
- * Version            : V1.0.1
- * Date               : 2025/07/29
+ * Version            : V1.0.2
+ * Date               : 2026/10/14
  * Description        : Main program body for V3F.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -67,8 +67,8 @@ int main(void)
 	Delay_Ms(1000);
 	GPIO_ALL_IPD();
 	USART_Printf_Init(115200);
-	printf("SystemClk:%d\r\n", SystemClock);
-	printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
+	printf("SystemClk:%u\r\n", SystemClock);
+	printf("V3F SystemCoreClk:%u\r\n", SystemCoreClock);
 	Delay_Ms(500);
 	/*For chips with externally sealed VIO18 pins, if users use 3.3V and do not require low voltage support, 
 	VDDIO and VIO18 can be short circuited off chip. By configuring VSEL_VIO18 in the software to turn off LDO,

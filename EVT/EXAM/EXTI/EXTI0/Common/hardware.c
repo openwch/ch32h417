@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -26,9 +26,8 @@ void EXTI7_0_IRQHandler(void)
 {
   if(EXTI_GetITStatus(EXTI_Line0)!=RESET)
   {
-#if 1
+#if 0
     printf("Run at EXTI\r\n");
-
 #endif
     EXTI_ClearITPendingBit(EXTI_Line0);     /* Clear Flag */
   }
@@ -54,7 +53,7 @@ void EXTI0_INT_INIT(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    /* GPIOA ----> EXTI_Line0 */
+    /* GPIOB ----> EXTI_Line0 */
     GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource0);
     EXTI_InitStructure.EXTI_Line = EXTI_Line0;
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;

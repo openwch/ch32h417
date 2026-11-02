@@ -11,11 +11,10 @@
 *******************************************************************************/
 #include "string.h"
 #include "debug.h"
-#include "WCHNET.h"
+#include "wchnet.h"
 #include "eth_driver.h"
-#include "app_iochub.h"
 #include "app_net.h"
-
+#include "app_iochub.h"
 
 /*********************************************************************
  * @fn      TIM2_Init
@@ -92,13 +91,14 @@ void AT_Init (void) {
 void Hardware(void)
 {
     printf ("IoCHub Demo\r\n");
-    printf ("SystemClk:%d\r\n", SystemCoreClock);
+    printf ("SystemClk:%lu\r\n", (unsigned long)SystemCoreClock);
     TIM2_Init();
     NET_Init();
     IoCHub_Init();
     WCHIOCHUB_DataLoopbackInit();
     AT_Init();
-    while (1) {
+    while(1)
+    {
         NET_Process();
         WCHIOCHUB_Process();
         AT_Process();

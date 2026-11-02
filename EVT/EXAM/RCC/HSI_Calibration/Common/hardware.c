@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.2
-* Date               : 2025/12/05
+* Version            : V1.0.3
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -183,10 +183,24 @@ void Hardware(void)
             while (!SampleFlag);
             Adjust_val = last_Adjust_val;
             Meas_Freq = last_Meas_Freq;
-            last_Adjust_val - Adjust_val < 0 ? (last_Adjust_val -= 1) : (last_Adjust_val += 1);
+
+            if (HSI_VALUE > last_Meas_Freq)
+            {
+                last_Adjust_val++;   
+            } else 
+            {
+                last_Adjust_val--;   
+            }
+
+            if (last_Adjust_val < 0)  last_Adjust_val = 0;
+            if (last_Adjust_val > 31) last_Adjust_val = 31;
+
             RCC_AdjustHSICalibrationValue(last_Adjust_val);
-            Delay_Ms(100);
-            last_Meas_Freq = (uint32_t)((float)HSI_VALUE * (float)(HSE_VALUE / 512 / 10) / (float)rtc_cnt);
+
+            SampleFlag = 0;
+            while (!SampleFlag);
+            last_Meas_Freq = (uint32_t)((float)HSI_VALUE * (float)(HSE_VALUE / 128 / 10) / (float)rtc_cnt);
+
         }
     }
 

@@ -79,7 +79,6 @@ MSH_CMD_EXPORT(led,  led sample by using I/O drivers);
  */
 int main(void)
 {
-
 #if (Run_Core == Run_Core_V3FandV5F)
 
 	HSEM_FastTake(HSEM_ID0);

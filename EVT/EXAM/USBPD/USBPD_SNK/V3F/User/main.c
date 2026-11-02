@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main_v3f.c
  * Author             : WCH
- * Version            : V1.0.2
- * Date               : 2026/04/08
+ * Version            : V1.0.3
+ * Date               : 2026/10/14
  * Description        : Main program body for V3F.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -23,7 +23,7 @@
  *
  * There is no integrated 5.1K pull-down inside the chip,
  * CC_PD is only for status differentiation,
- * bit write 1 means SNK mode, write 0 means SCR mode
+ * bit write 1 means SNK mode, write 0 means SRC mode
  *
  * Modify "PDO_Request( PDO_INDEX_1 )" in pd process.c,to modify the request voltage.
  *

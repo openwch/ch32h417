@@ -9,6 +9,12 @@
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
+/*
+ *@Note
+IPRaw_PING example, demonstrate the PING function.
+For details on the selection of engineering chips,
+please refer to the "CH32V30x Evaluation Board Manual" under the CH32V307EVT\EVT\PUB folder.
+*/
 #include "string.h"
 #include "eth_driver.h"
 #include "PING.h"
@@ -37,7 +43,7 @@ void mStopIfError(u8 iError)
 {
     if (iError == WCHNET_ERR_SUCCESS)
         return;
-    printf("Error: %02X\r\n", (u16) iError);
+    printf("Error: %02X\r\n", (u16)iError);
 }
 
 /*********************************************************************
@@ -90,7 +96,7 @@ void WCHNET_CreateIPRawSocket(void)
 /*********************************************************************
  * @fn      WCHNET_HandleSockInt
  *
- * @brief   Socket Interrupt Handle
+ * @brief   Socket Interrupt Handle.
  *
  * @param   socketid - socket id.
  *          intstat - interrupt status
@@ -124,7 +130,7 @@ void WCHNET_HandleSockInt(u8 socketid,u8 intstat)
 /*********************************************************************
  * @fn      WCHNET_HandleGlobalInt
  *
- * @brief   Global Interrupt Handle
+ * @brief   Global Interrupt Handle.
  *
  * @return  none
  */
@@ -171,25 +177,32 @@ void Hardware(void)
 {
     u8 i;
     printf("IPRaw_PING Test\r\n"); 
-    printf("SystemClk:%d\r\n", SystemCoreClock);
+    printf("SystemClk:%lu\r\n", (unsigned long)SystemCoreClock);
     printf("HCLKClock:%d\r\n", HCLKClock);
-    printf("ChipID:%08x\r\n", DBGMCU_GetCHIPID());
-    printf("net version:%x\n", WCHNET_GetVer());
+    printf("ChipID:%08lx\r\n", (unsigned long)DBGMCU_GetCHIPID());
+    printf("net version:%x\r\n",(unsigned)WCHNET_GetVer());
     if (WCHNET_LIB_VER != WCHNET_GetVer()) {
-        printf("version error.\n");
+        printf("version error.\r\n");
     }
     WCHNET_GetMacAddr(MACAddr);                                 //get the chip MAC address
     printf("mac addr:");
     for(i = 0; i < 6; i++)
-        printf("%x ", MACAddr[i]);
-    printf("\n");
+        printf("%x ", (unsigned)MACAddr[i]);
+    printf("\r\n");
     TIM2_Init();
     i = ETH_LibInit(IPAddr, GWIPAddr, IPMask, MACAddr);         //Ethernet library initialize
     mStopIfError(i);
-    if(i == WCHNET_ERR_SUCCESS) printf("WCHNET_LibInit Success\r\n");
+    if(i == WCHNET_ERR_SUCCESS) {
+        printf("WCHNET_LibInit Success\r\n");
+    }
+    else {
+        printf("WCHNET_LibInit failed, halted\r\n");
+        while(1);
+    }
     WCHNET_CreateIPRawSocket();                                             //create IPRAW socket
     InitParameter();
     InitPING();
+
     while(1)
     {
         /*Ethernet library main task function,

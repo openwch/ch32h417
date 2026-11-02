@@ -27,7 +27,7 @@ __attribute__ ((aligned(4))) uint8_t  UDisk_Pack_Buffer[DEF_UDISK_PACK_512];
 uint8_t UDISK_Inquity_Tab[ ] =
 {
     /* UDISK */
-    0x00,                                                /* Peripheral Device Type：UDISK = 0x00 */
+    0x00,                                                /* Peripheral Device Type:UDISK = 0x00 */
     0x80,                                                /* Removable */
     0x02,                                                /* ISO/ECMA */
     0x02,
@@ -77,7 +77,7 @@ uint8_t  const  UDISK_Rd_Format_Capacity[ ] =
     ( MY_UDISK_SIZE >> 16 ) & 0xFF,
     ( MY_UDISK_SIZE >> 8 ) & 0xFF,
     ( MY_UDISK_SIZE ) & 0xFF,
-    0x02,
+    0x00,
     ( DEF_CFG_DISK_SEC_SIZE >> 16 ) & 0xFF,             /* Number of Blocks */
     ( DEF_CFG_DISK_SEC_SIZE >> 8 ) & 0xFF,
     ( DEF_CFG_DISK_SEC_SIZE ) & 0xFF,
@@ -156,7 +156,7 @@ uint8_t   *pEndp2_Buf;
 
 
 /*******************************************************************************
-* Function Name  : USIDK_CMD_Deal_Status
+* Function Name  : UDISK_CMD_Deal_Status
 * Description    : Current command execution status
 * Input          : key------Primary key for disk error details
 *                  asc------Minor key for disk error details
@@ -415,6 +415,10 @@ void UDISK_SCSI_CMD_Deal( void )
     
             case  CMD_U_REQUEST_SENSE:                                              
                 /* CMD: 0x03 */
+                if( UDISK_Transfer_DataLen > 0x12 )
+                {
+                    UDISK_Transfer_DataLen = 0x12;
+                }
                 mBOC.ReqSense.ErrorCode = 0x70;
                 mBOC.ReqSense.Reserved1 = 0x00;
                 mBOC.ReqSense.SenseKey  = Udisk_Sense_Key;

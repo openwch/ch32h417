@@ -56,6 +56,88 @@
 
 #define portasmHAS_SIFIVE_CLINT           0
 #define portasmHAS_MTIME                  0
+#define ARCH_FPU                          0
+
+
+#if ARCH_FPU
+#define portasmADDITIONAL_CONTEXT_SIZE 34 /* Must be even number on 32-bit cores. */
+.macro portasmSAVE_ADDITIONAL_REGISTERS
+    addi sp, sp, -(portasmADDITIONAL_CONTEXT_SIZE* portWORD_SIZE)
+    fsw f0, 1*portWORD_SIZE(sp)
+    fsw f1, 2*portWORD_SIZE(sp)
+    fsw f2, 3*portWORD_SIZE(sp)
+    fsw f3, 4*portWORD_SIZE(sp)
+    fsw f4, 5*portWORD_SIZE(sp)
+    fsw f5, 6*portWORD_SIZE(sp)
+    fsw f6, 7*portWORD_SIZE(sp)
+    fsw f7, 8*portWORD_SIZE(sp)
+    fsw f8, 9*portWORD_SIZE(sp)
+    fsw f9, 10*portWORD_SIZE(sp)
+    fsw f10, 11*portWORD_SIZE(sp)
+    fsw f11, 12*portWORD_SIZE(sp)
+    fsw f12, 13*portWORD_SIZE(sp)
+    fsw f13, 14*portWORD_SIZE(sp)
+    fsw f14, 15*portWORD_SIZE(sp)
+    fsw f15, 16*portWORD_SIZE(sp)
+    fsw f16, 17*portWORD_SIZE(sp)
+    fsw f17, 18*portWORD_SIZE(sp)
+    fsw f18, 19*portWORD_SIZE(sp)
+    fsw f19, 20*portWORD_SIZE(sp)
+    fsw f20, 21*portWORD_SIZE(sp)
+    fsw f21, 22*portWORD_SIZE(sp)
+    fsw f22, 23*portWORD_SIZE(sp)
+    fsw f23, 24*portWORD_SIZE(sp)
+    fsw f24, 25*portWORD_SIZE(sp)
+    fsw f25, 26*portWORD_SIZE(sp)
+    fsw f26, 27*portWORD_SIZE(sp)
+    fsw f27, 28*portWORD_SIZE(sp)
+    fsw f28, 29*portWORD_SIZE(sp)
+    fsw f29, 30*portWORD_SIZE(sp)
+    fsw f30, 31*portWORD_SIZE(sp)
+    fsw f31, 32*portWORD_SIZE(sp)
+    csrr t0, fcsr
+    sw t0,  33*portWORD_SIZE(sp)
+	.endm
+
+.macro portasmRESTORE_ADDITIONAL_REGISTERS
+    flw f0, 1*portWORD_SIZE(sp)
+    flw f1, 2*portWORD_SIZE(sp)
+    flw f2, 3*portWORD_SIZE(sp)
+    flw f3, 4*portWORD_SIZE(sp)
+    flw f4, 5*portWORD_SIZE(sp)
+    flw f5, 6*portWORD_SIZE(sp)
+    flw f6, 7*portWORD_SIZE(sp)
+    flw f7, 8*portWORD_SIZE(sp)
+    flw f8, 9*portWORD_SIZE(sp)
+    flw f9, 10*portWORD_SIZE(sp)
+    flw f10, 11*portWORD_SIZE(sp)
+    flw f11, 12*portWORD_SIZE(sp)
+    flw f12, 13*portWORD_SIZE(sp)
+    flw f13, 14*portWORD_SIZE(sp)
+    flw f14, 15*portWORD_SIZE(sp)
+    flw f15, 16*portWORD_SIZE(sp)
+    flw f16, 17*portWORD_SIZE(sp)
+    flw f17, 18*portWORD_SIZE(sp)
+    flw f18, 19*portWORD_SIZE(sp)
+    flw f19, 20*portWORD_SIZE(sp)
+    flw f20, 21*portWORD_SIZE(sp)
+    flw f21, 22*portWORD_SIZE(sp)
+    flw f22, 23*portWORD_SIZE(sp)
+    flw f23, 24*portWORD_SIZE(sp)
+    flw f24, 25*portWORD_SIZE(sp)
+    flw f25, 26*portWORD_SIZE(sp)
+    flw f26, 27*portWORD_SIZE(sp)
+    flw f27, 28*portWORD_SIZE(sp)
+    flw f28, 29*portWORD_SIZE(sp)
+    flw f29, 30*portWORD_SIZE(sp)
+    flw f30, 31*portWORD_SIZE(sp)
+    flw f31, 32*portWORD_SIZE(sp)
+    lw t0,  33*portWORD_SIZE(sp)
+    csrw fcsr, t0
+    addi sp, sp, (portasmADDITIONAL_CONTEXT_SIZE* portWORD_SIZE)
+	.endm
+#else
+
 #define portasmADDITIONAL_CONTEXT_SIZE    0
 
 .macro portasmSAVE_ADDITIONAL_REGISTERS
@@ -65,5 +147,7 @@
    .macro portasmRESTORE_ADDITIONAL_REGISTERS
 /* No additional registers to restore, so this macro does nothing. */
    .endm
+
+#endif
 
 #endif /* __FREERTOS_RISC_V_EXTENSIONS_H__ */

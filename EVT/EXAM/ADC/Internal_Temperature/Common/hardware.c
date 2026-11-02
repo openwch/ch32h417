@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.3
-* Date               : 2026/03/17
+* Version            : V1.0.4
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -10,7 +10,7 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-u16 ADC_val;
+
 /*********************************************************************
  * @fn      ADC_Function_Init
  *
@@ -114,6 +114,7 @@ u16 Get_ADC_Val(u8 ch)
  *            ADC_Channel_16 - ADC Channel16 selected.
  *            ADC_Channel_17 - ADC Channel17 selected.
  *
+ *            times - convert times 0x1-0xff.
  * @return  val - The Data conversion value.
  */
 u16 Get_ADC_Average(u8 ch, u8 times)

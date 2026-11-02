@@ -11,28 +11,10 @@
 *******************************************************************************/
 #include "uvclib.h"
 #include "dvp.h"
+#include "i2c_host.h"
 #include "ch32h417_dvp.h"
 
-#if 1
-#define RGB565_ROW_NUM   320
-#define RGB565_COL_NUM   480   //Col * 2
-#define OV2640_RGB565_HEIGHT   320
-#define OV2640_RGB565_WIDTH	   240
-
-//JPEG PIXEL 1024 * 768
-#define OV2640_JPEG_HEIGHT	768
-#define OV2640_JPEG_WIDTH	1024
-
-UINT32  JPEG_DVPDMAaddr0 = 0x2011A000;
-UINT32  JPEG_DVPDMAaddr1 = 0x2011A000 + OV2640_JPEG_WIDTH;
-
-UINT32  RGB565_DVPDMAaddr0 = 0x2011A000;
-UINT32  RGB565_DVPDMAaddr1 = 0x2011A000 + RGB565_COL_NUM;
-
-#endif
-
 void DVP_IRQHandler (void) __attribute__((interrupt("WCH-Interrupt-fast")));
-__attribute__ ((aligned(32))) uint8_t	UVC_DMABuffer[UVC_DMA_SIZE] __attribute__((section(".DMADATA")));
 
 /*******************************************************************************
  * @fn     DVP_IRQHandler
@@ -57,25 +39,33 @@ void DVP_IRQHandler(void)
  */
 void dvp_Init(void)
 {
+	DVP_InitTypeDef DVP_InitStructure = {0};
+
 	RCC_HBPeriphClockCmd( RCC_HBPeriph_DVP, ENABLE );
+	DVP_DeInit();
 
-    DVP->CR0 &= ~RB_DVP_MSK_DAT_MOD;						
-    DVP->CR0 |= RB_DVP_D8_MOD | RB_DVP_V_POLAR;				
-    DVP->CR1 &= ~( RB_DVP_ALL_CLR | RB_DVP_RCV_CLR );
+	DVP_StructInit( &DVP_InitStructure );
+	DVP_InitStructure.DVP_DataSize       = DVP_DataSize_8b;
+	DVP_InitStructure.DVP_HCLK_P         = DVP_Hclk_P_Rising;
+	DVP_InitStructure.DVP_HSYNC_P        = DVP_Hsync_P_High;
+	DVP_InitStructure.DVP_VSYNC_P        = DVP_Vsync_P_High;
+	DVP_InitStructure.DVP_CaptureMode    = DVP_CaptureMode_Continuous;
+	DVP_InitStructure.DVP_FrameCapRate   = DVP_FrameCapRate_100P;
+	DVP_InitStructure.DVP_JPEGMode       = DISABLE;
+	DVP_InitStructure.DVP_COL_NUM        = 1280;
+	DVP_InitStructure.DVP_ROW_NUM        = 480;
+	DVP_InitStructure.DVP_DMA_BUF0_Addr  = (uint32_t)Dvp_Recaddr;
+	DVP_InitStructure.DVP_DMA_BUF1_Addr  = (uint32_t)Dvp_Recaddr;
+	DVP_Init( &DVP_InitStructure );
 
-    DVP->DMA_BUF0 = (UINT32)(uint8_t *)Dvp_Recaddr;		            //DMA addr0
-	DVP->DMA_BUF1 = (UINT32)(uint8_t *)Dvp_Recaddr+Dvp_DataSize;    //DMA addr1
- 
-    /* Interupt Enable */     
-	DVP->IER |= RB_DVP_IE_STP_FRM;                 					// Frame end interrupt enable
-	DVP->IER |= RB_DVP_IE_FRM_DONE;                					// Frame receiving completion interrupt enable
-	DVP->IER |= RB_DVP_IE_ROW_DONE;                					// Line end interrupt enable
-	DVP->IER |= RB_DVP_IE_STR_FRM;                 					// New frame start interrupt enable
-    DVP->IER |= RB_DVP_IE_FIFO_OV; 
- 
-	DVP->CR1 |= RB_DVP_DMA_EN;  									// enable DMA
-	DVP->CR0 |= RB_DVP_ENABLE;  									// enable DVP
+	DVP_ReceiveCircuitResetCmd( DISABLE );
+	DVP_FIFO_ResetCmd( DISABLE );
 
+	DVP_ITConfig( DVP_IT_STR_FRM | DVP_IT_ROW_DONE | DVP_IT_FRM_DONE |
+	              DVP_IT_FIFO_OV | DVP_IT_STP_FRM, ENABLE );
+	DVP_DMACmd( ENABLE );
+	NVIC_SetPriority( DVP_IRQn, 0x00 );   /* highest: must not miss ROW_DONE */
+	NVIC_EnableIRQ( DVP_IRQn );
 }
 
 /*******************************************************************************
@@ -89,19 +79,9 @@ void dvp_Init(void)
  */
 void Dvp_Row_Col_Set( uint16_t res_width , uint16_t res_height )
 {
-    switch(Formatchange_flag)
-    {
-        case FORMAT_MJPEG:        
-            DVP->ROW_NUM = 0;
-            DVP->COL_NUM = 512;
-            Dvp_DataSize    = 512;
-            break;
-        case FORMAT_YUV2:
-            DVP->ROW_NUM = res_height;
-            DVP->COL_NUM = res_width *2;
-            Dvp_DataSize = res_width *2;
-            break;
-    }
+    DVP->ROW_NUM = res_height;
+    DVP->COL_NUM = res_width * 2;
+    Dvp_DataSize = res_width * 2;
 }
 
 /*******************************************************************************
@@ -113,149 +93,7 @@ void Dvp_Row_Col_Set( uint16_t res_width , uint16_t res_height )
  */
 void SCCB_Init( void )
 {
-	IIC_SCL_OUT;  
-	IIC_SDA_OUT; 
-
-	IIC_SCL_SET; 
-	IIC_SDA_SET;  
-}
-
-/*******************************************************************************
- * @fn       SCCB_Start
- *
- * @brief    Start Signal
- *
- * @return   None
- */
-
-void SCCB_Start( void )
-{
-	IIC_SDA_SET; 
-	IIC_SCL_SET;  
-	Delay_Us( 50 );
-	IIC_SDA_CLR;  
-	Delay_Us( 50 );
-	IIC_SCL_CLR; 
-}
-
-/*******************************************************************************
- * @fn        SCCB_Stop
- *
- * @brief     Stop Signal
- *
- * @return    None
- */
-
-void SCCB_Stop( void )
-{
-	IIC_SDA_CLR;  
-	Delay_Us( 50 );
-	IIC_SCL_SET;  
-	Delay_Us( 50 );
-	IIC_SDA_SET;  
-	Delay_Us( 50 );
-}
-
-/*******************************************************************************
- * @fn      SCCB_No_Ack
- *
- * @brief   NAK Signal
- *
- * @return  None
- */
-
-void SCCB_No_Ack( void )
-{
-	Delay_Us( 50 );
-	IIC_SDA_SET;  
-	IIC_SCL_SET;  
-	Delay_Us( 50 );
-	IIC_SCL_CLR; 
-	Delay_Us( 50 );
-	IIC_SDA_CLR;  
-	Delay_Us( 50 );
-}
-
-/*******************************************************************************
- * @fn        SCCB_WR_Byte
- * @brief     Write One Byte
- * @param     data
- * @return    0 - success
- *            other - fail
- */
-
-uint8_t SCCB_WR_Byte(uint8_t dat)
-{
-	uint8_t j,res;
-
-	for( j = 0; j < 8; j++ ) 
-	{
-		if( dat & 0x80 )
-		{
-			IIC_SDA_SET;
-		}
-		else{
-		    IIC_SDA_CLR;
-		}
-
-		dat <<= 1;
-		Delay_Us( 50 );
-		IIC_SCL_SET;
-		Delay_Us( 50 );
-		IIC_SCL_CLR;
-	}
-
-	IIC_SDA_IN;		
-
-	Delay_Us( 50 );
-	IIC_SCL_SET;			
-	Delay_Us( 50 );
-	if( SDA_IN_R )
-	{
-		res = 1;  
-	}
-	else 
-	{
-		res = 0;      
-	}
-   
-	IIC_SCL_CLR;
-
-	IIC_SDA_OUT;
-	return res;
-
-}
-
-/*******************************************************************************
- * @fn        SCCB_RD_Byte
- *
- * @brief     Read One Byte
- *
- * @return    Read one byte data
- */
-
-uint8_t SCCB_RD_Byte( void )
-{
-	uint8_t temp = 0, j;
-
-	IIC_SDA_IN;		
-
-	for( j = 8; j > 0; j-- ) 
-	{
-		Delay_Us( 50 );
-		IIC_SCL_SET;
-		temp = temp << 1;
-		if( SDA_IN_R )
-		{
-			temp++;
-		}
-		Delay_Us( 50 );
-		IIC_SCL_CLR;
-	}
-
-	IIC_SDA_OUT;	
-
-	return temp;
+	i2c_host_init();
 }
 
 /*******************************************************************************
@@ -272,26 +110,7 @@ uint8_t SCCB_RD_Byte( void )
 
 uint8_t SCCB_WR_Reg( uint8_t reg, uint8_t data )
 {
-	uint8_t res = 0;
-
-	SCCB_Start( ); 				
-	if( SCCB_WR_Byte( SCCB_ID ))
-	{
-		res = 1;	
-	}
-
-	Delay_Us(100);
-  	if( SCCB_WR_Byte( reg ))	
-	{
-		res = 1;	
-	}
-  	Delay_Us(100);
-  	if( SCCB_WR_Byte( data ))	
-	{
-		res = 1; 
-	}
-  	SCCB_Stop( );
-  	return	res;
+	return (uint8_t)(SCCB_Write(0x30, reg, data) != 0);
 }
 
 /*******************************************************************************
@@ -305,21 +124,38 @@ uint8_t SCCB_WR_Reg( uint8_t reg, uint8_t data )
 uint8_t SCCB_RD_Reg( uint8_t reg )
 {
 	uint8_t val = 0;
-	SCCB_Start( ); 			
-	SCCB_WR_Byte( SCCB_ID );		
-	Delay_Us( 100 );
-  	SCCB_WR_Byte( reg );		
-  	Delay_Us( 100 );
-	SCCB_Stop( );
-	Delay_Us( 100 );
+	SCCB_Read(0x30, reg, &val);
+	return val;
+}
 
-	SCCB_Start( );
-	SCCB_WR_Byte( SCCB_ID | 0x01 );	
-	Delay_Us( 100 );
-  	val=SCCB_RD_Byte( );		 	
-  	SCCB_No_Ack( );
-  	SCCB_Stop( );
-  	return val;
+/*******************************************************************************
+ * @fn        SCCB_WR_Reg16
+ *
+ * @brief     Write OV5640 Register (16-bit sub-address, high byte first)
+ *
+ * @param     reg  - 16-bit register address
+ *            data - register value
+ *
+ * @return    0 - success
+ *            other - fail
+ *******************************************************************************/
+uint8_t SCCB_WR_Reg16( uint16_t reg, uint8_t data )
+{
+	return (uint8_t)(SCCB_Write16(0x3C, reg, data) != 0);
+}
+
+/*******************************************************************************
+ * @fn         SCCB_RD_Reg16
+ *
+ * @brief      Read OV5640 Register (16-bit sub-address, high byte first)
+ *
+ * @return     Camera Register value
+ *******************************************************************************/
+uint8_t SCCB_RD_Reg16( uint16_t reg )
+{
+	uint8_t val = 0;
+	SCCB_Read16(0x3C, reg, &val);
+	return val;
 }
 
 

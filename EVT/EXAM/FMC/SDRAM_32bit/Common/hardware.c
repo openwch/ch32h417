@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.3
-* Date               : 2026/06/01
+* Version            : V1.0.4
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -12,6 +12,12 @@
 #include "hardware.h"
 
 /* Global define */
+
+#define bank1 0   
+#define bank2 1  
+#define bank1bank2 2    
+
+
 #define Bank5_SDRAM_ADDR                         ((u32)(0XC0000000)) //SDRAM address
 #define FMC_SDRAM_CMD_TARGET_BANK2               FMC_SDCMR_CTB2
 #define FMC_SDRAM_CMD_TARGET_BANK1               FMC_SDCMR_CTB1
@@ -39,54 +45,7 @@
 #define SDRAM_MODEREG_WRITEBURST_MODE_SINGLE     ((u16)0x0200)
 
 
-typedef struct
-{
-  uint32_t CommandMode;                  /*Defines the command issued to the SDRAM device.
-                                              This parameter can be a value of @ref FMC_SDRAM_Command_Mode.          */
 
-  uint32_t CommandTarget;                /*Defines which device (1 or 2) the command will be issued to.
-                                              This parameter can be a value of @ref FMC_SDRAM_Command_Target.        */
-
-  uint32_t AutoRefreshNumber;            /*Defines the number of consecutive auto refresh command issued
-                                              in auto refresh mode.
-                                              This parameter can be a value between Min_Data = 1 and Max_Data = 16   */
-  uint32_t ModeRegisterDefinition;       /*Defines the SDRAM Mode register content                                */
-}FMC_SDRAM_CommandTypeDef;
-
-/*********************************************************************
- * @fn      FMC_SDRAM_WriteBuffer
- *
- * @brief   Write buffer.
- *
- * @return  none
- */
-
-void FMC_SDRAM_WriteBuffer(u8 *pBuffer,u32 WriteAddr,u32 n)
-{
-	for(;n!=0;n--)
-	{
-		*(vu8*)(Bank5_SDRAM_ADDR+WriteAddr)=*pBuffer;
-		WriteAddr++;
-		pBuffer++;
-	}
-}
-
-/*********************************************************************
- * @fn      FMC_SDRAM_ReadBuffer
- *
- * @brief   Read buffer.
- *
- * @return  none
- */
-
-void FMC_SDRAM_ReadBuffer(u8 *pBuffer,u32 ReadAddr,u32 n)
-{
-	for(;n!=0;n--)
-	{
-		*pBuffer++=*(vu8*)(Bank5_SDRAM_ADDR+ReadAddr);
-		ReadAddr++;
-	}
-}
 /*********************************************************************
  * @fn      SDRAM_Send_Cmd
  *
@@ -98,8 +57,9 @@ void SDRAM_Send_Cmd(u8 bankx,u8 cmd,u8 refresh,u16 regval)
 {
     u32 target_bank=0;
     
-    if(bankx==0) target_bank=FMC_SDRAM_CMD_TARGET_BANK1;       
-    else if(bankx==1) target_bank=FMC_SDRAM_CMD_TARGET_BANK2;   
+    if(bankx==bank1) target_bank=FMC_SDRAM_CMD_TARGET_BANK1;       
+    else if(bankx==bank2) target_bank=FMC_SDRAM_CMD_TARGET_BANK2;   
+    else if(bankx==bank1bank2)target_bank=FMC_SDRAM_CMD_TARGET_BANK1_2;
 
     FMC_SDRAM_SendCMDConfig(target_bank,cmd,refresh,regval);
 }
@@ -113,7 +73,7 @@ void SDRAM_Send_Cmd(u8 bankx,u8 cmd,u8 refresh,u16 regval)
  */
 void SDRAM_Initialization_Sequence()
 {
-	u32 temp=0,bank1=0;
+	u32 temp=0;
     SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_CLK_ENABLE,1,0);
 	SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_PALL,1,0);       
     SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_AUTOREFRESH_MODE,8,0);

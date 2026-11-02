@@ -96,10 +96,10 @@ extern uint8_t RCC_Configuration( void );
 extern void TIM2_Init( void );
 extern void UART_CfgInit( uint32_t baudrate, uint8_t stopbits, uint8_t parity ); /* UART1 initialization */
 extern void UART_ParaInit( uint8_t mode );                                       /* Serial port parameter initialization */
-extern void UART_DMAInit( uint8_t type, uint8_t *pbuf, uint32_t len );           /* Serial port 1-related DMA initialization */
-extern void UART_Init( uint8_t mode, uint32_t baudrate, uint8_t stopbits, uint8_t parity ); /* Serial port 1 initialization */
-extern void UART_DataTx_Deal( void );                                            /* Serial port 1 data sending processing  */
-extern void UART_DataRx_Deal( void );                                            /* Serial port 1 data reception processing */
+extern void UART_DMAInit( uint8_t type, uint8_t *pbuf, uint32_t len );           /* Serial port 4-related DMA initialization */
+extern void UART_Init( uint8_t mode, uint32_t baudrate, uint8_t stopbits, uint8_t parity ); /* Serial port 4 initialization */
+extern void UART_DataTx_Deal( void );                                            /* Serial port 4 data sending processing  */
+extern void UART_DataRx_Deal( void );                                            /* Serial port 4 data reception processing */
 extern void UART_USB_Init( void );                                               /* USB serial port initialization*/
 #ifdef __cplusplus
 }

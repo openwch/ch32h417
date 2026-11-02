@@ -9,7 +9,7 @@
  * Attention: This software (modified or not) and binary are used for
  * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
-#include "ch32H417_uhsif.h"
+#include "ch32h417_uhsif.h"
 #include "ch32h417_usbss_device.h"
 #include "ch32h417_usbhs_device.h"
 
