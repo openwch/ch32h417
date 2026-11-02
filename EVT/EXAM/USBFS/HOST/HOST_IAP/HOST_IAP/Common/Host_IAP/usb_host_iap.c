@@ -96,7 +96,7 @@ uint8_t IAP_Flash_Read(uint32_t address, uint8_t* buff, uint32_t length)
  */
 uint8_t IAP_Flash_Write(uint32_t address, uint8_t* buff, uint32_t length)
 {
-    uint8_t temp_buf[DEF_FLASH_PAGE_SIZE];
+    static uint8_t temp_buf[DEF_FLASH_PAGE_SIZE];
     uint32_t full_page_len,last_page_len,last_page_address;
     uint8_t s;
     /* Verify Keys, No flash operation if keys are not correct */
@@ -120,7 +120,11 @@ uint8_t IAP_Flash_Write(uint32_t address, uint8_t* buff, uint32_t length)
         if(last_page_len)
         {
             last_page_address = address + full_page_len;
-            IAP_Flash_Read(last_page_address, temp_buf, DEF_FLASH_PAGE_SIZE);
+            s = IAP_Flash_Read(last_page_address, temp_buf, DEF_FLASH_PAGE_SIZE);
+            if(s != 0)
+            {
+                return s;
+            }
             memcpy(temp_buf, buff + full_page_len, last_page_len);
             s = FLASH_ROM_WRITE(last_page_address, (uint32_t *)temp_buf, DEF_FLASH_PAGE_SIZE);
             if(s != FLASH_COMPLETE)
@@ -358,7 +362,7 @@ void IAP_Jump_APP(void)
  *
  * @return  none
  */
-void mStopIfError( uint8_t iError )
+void mStopIfError( uint32_t iError )
 {
     if ( iError == ERR_SUCCESS )
     {
@@ -720,7 +724,9 @@ void IAP_Main_Deal( void )
             /* Make sure the flash operation is correct */
             Flash_Operation_Key0 = DEF_FLASH_OPERATION_KEY_CODE_0;
             DUG_PRINTF( "Erase App\r\n");
+            Flash_Operation_Key1 = DEF_FLASH_OPERATION_KEY_CODE_1;
             IAP_Flash_Erase(DEF_APP_CODE_START_ADDR, DEF_APP_CODE_MAXLEN);
+            Flash_Operation_Key1 = 0;
             IAP_Load_Addr_Offset = 0;
             IAP_WriteIn_Length = 0;
             IAP_WriteIn_Count = 0;
@@ -779,6 +785,7 @@ void IAP_Main_Deal( void )
                 {
                     /* IAP Verify code error, stay in IAP */
                     DUG_PRINTF( "Verify-Code ERR %02x\r\n", ret );
+                    return;
                 }
                 DUG_PRINTF( "\r\nIAP End.\r\n" );
                 /* Jump User Application */

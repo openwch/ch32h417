@@ -1,5 +1,5 @@
 
-南京沁恒微电子股份有限公司 2026.09
+南京沁恒微电子股份有限公司 2026.10
 最新资料请到我们的网站上查询
 https://wch.cn
 
@@ -34,12 +34,21 @@ https://wch.cn
   |      |      |      |      |-- DualADC_SlowInterleaved：双ADC慢速交叉采样例程  
   |      |      |      |      |-- TIM_trigger：定时器触发ADC转换例程 
   |      |      |      |      |-- Internal_Temperature：内部温度传感器例程
-  |      |      |      |      |-- DualDAC_Triangle：双通道DAC输出三角波程序
   |      |      |      |-- APPLICATION
   |      |      |      |      |-- SoftUART：I/O口模拟串口例程 
   |      |      |      |      |-- LTDC_LVGL：使用LTDC 在屏幕上显示动画
   |      |      |      |      |-- FATFS_eMMC：八线操作EMMC卡移植文件读写系统FATFS
   |      |      |      |      |-- Betaflight：H41x Betaflight 库
+  |      |      |      |      |-- CherryUSB: CherryUSB仓库地址及简介
+  |      |      |      |      |-- JPEG_decode_LTDC: LTDC 静态显示解码图片
+  |      |      |      |      |-- EEPROM_Emulation: 例程演示了flash 模拟EEPROM
+  |      |      |      |      |-- FATFS: 
+  |      |      |      |      |      |-- FATFS_SPI_FLASH: 此示例演示了使用FATFS的Winbond W25Qxx SPIFLASH的SPI操作
+  |      |      |      |      |      |-- FATFS_SDIO_SD: 此示例演示了如何通过带有FATFS的SDIO接口读写SD卡的全部扇区
+  |      |      |      |      |      |-- FATFS_QSPI_FLASH: 此示例演示了使用FATFS的Winbond W25Qxx SPIFLASH的QSPI操作
+  |      |      |      |      |      |-- FATFS_SDIO_eMMC: 此示例演示了如何通过带有FATFS的SDIO接口读取和写入eMMC卡的全部扇区
+  |      |      |      |      |      |-- FATFS_SDMMC_SD: 此示例演示了如何通过带有FATFS的SDMMC接口读写SD卡的全部扇区
+  |      |      |      |      |      |-- FATFS_SMDDC_eMMC: 本示例演示了如何通过SDMMC接口使用fatfs读写eMMC卡（KLM8G1GETF-B041）的所有扇区
   |      |      |      |-- CAN
   |      |      |      |      |-- Networking：CAN例程：正常模式，标准帧和扩展帧数据收发
   |      |      |      |      |-- TestMode：测试模式，包括静默模式、回环模式、回环静默模式
@@ -99,8 +108,12 @@ https://wch.cn
   |      |      |      |      |-- DVP_UART：DVP操作OV2640摄像头JPEG模式例程
   |      |      |      |      |-- DVP_LTDC：例程演示了DVP接口摄像头采集图像，通过LTDC实时显示到TFTLCD上 
   |      |      |      |-- ETH
+  |      |      |      |      |-- 1_Tool_Doc：例程相关文档及配置软件
   |      |      |      |      |-- DHCP：演示DHCP自动获取IP，并建立TCP连接进行数据回传
   |      |      |      |      |-- DNS：DHCP自动获取ip后，再请求域名解析演示例程
+  |      |      |      |      |-- ETH_CFG：ETH_CFG例程，创建一个UDP Server用于与上位机通信，以配置WCHNET功能，包括各项参数以及创建一个新的通信
+  |      |      |      |      |-- ETH_IAP：演示通过TCP数据传输，进行IAP
+  |      |      |      |      |-- ETH_UART：演示以太网与UART的数据透传。默认使用1000000波特率（可在bsp_uart.h中更改）进行串口数据传输
   |      |      |      |      |-- IoCHub：
   |      |      |      |      |      |-- IoCHub_Demo：IoCHub基础例程，通过AT指令实现IoCHub在MCU上的基础功能演示
   |      |      |      |      |      |-- IoCHub_UART：IoCHub UART例程，演示IoCHub与UART的数据透传
@@ -227,6 +240,7 @@ https://wch.cn
   |      |      |      |      |-- SEL_VIO18：VIO18软件配置例程
   |      |      |      |      |-- VDD12_ExternPower：VDD 1.2V外部供电例程
   |      |      |      |      |-- VDD12_ExternPowerInStopLP：演示STOPLP模式，VDD1.2v外部供电，降低电流方法 
+  |      |      |      |      |-- Stop_Mode_RTC_WakeUp: 示例演示了使用RTC定时器从停止模式周期性唤醒
   |      |      |      |-- QSPI
   |      |      |      |      |-- QSPI_FLASH：QSPI操作Winbond W25Qxx SPI_FLASH例程
   |      |      |      |      |-- QSPI_FLASH_DMA：QSPI通过DMA操作Winbond W25Qxx SPI_FLASH例程
@@ -258,6 +272,8 @@ https://wch.cn
   |      |      |      |      |-- FullDuplex_HardNSS：硬件NSS模式，Master/Slave 模式数据收发
   |      |      |      |      |-- SPI_DMA：SPI使用DMA，Master/Slave 模式收发例程
   |      |      |      |      |-- SPI_FLASH：SPI接口操作FLASH外设例程
+  |      |      |      |      |-- SPI_DMA_EXT: SPI主从设备使用DMA全双工传输和接收例程
+  |      |      |      |      |-- SPI_SDCARD: SPI 驱动SD卡例程
   |      |      |      |-- SWPMI
   |      |      |      |      |-- SWPMI_MultiBUffering：SWPMI多缓冲模式例程
   |      |      |      |      |-- SWPMI_SwpCard：SWP卡例程
@@ -290,6 +306,7 @@ https://wch.cn
   |      |      |      |      |-- USART_MultiProcessorCommunication：多处理器通信模式例程
   |      |      |      |      |-- USART_Polling：轮询收发模式，Master/Slave 模式收发例程
   |      |      |      |      |-- USART_Printf：串口打印调试例程
+  |      |      |      |      |-- USART_DMA_EXT: USART 通过DMA收发例程
   |      |      |      |-- USB
   |      |      |      |      |-- USBFS
   |      |      |      |      |      |-- DEVICE

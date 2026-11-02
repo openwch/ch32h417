@@ -91,7 +91,13 @@ typedef portUBASE_TYPE   TickType_t;
 
 /* Scheduler utilities. */
 extern void vTaskSwitchContext( void );
-#define portYIELD()                NVIC_SetPendingIRQ(Software_IRQn)
+#define portYIELD() \
+do{\
+    __disable_irq(); \
+    NVIC_SetPendingIRQ(Software_IRQn); \
+    while(NVIC_GetPendingIRQ(Software_IRQn) != SET); \
+    __enable_irq();\
+}while(0)
 #define portEND_SWITCHING_ISR( xSwitchRequired ) do { if( xSwitchRequired ) portYIELD(); } while( 0 )
 #define portYIELD_FROM_ISR( x )    portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
@@ -104,7 +110,11 @@ extern void vPortClearInterruptMask(portUBASE_TYPE uvalue);
 
 #define portSET_INTERRUPT_MASK_FROM_ISR()  xPortSetInterruptMask()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedStatusValue )  vPortClearInterruptMask(uxSavedStatusValue)
-#define portDISABLE_INTERRUPTS()	__asm volatile( "csrw mstatus,%0" ::"r"(0x1800) )
+#define portDISABLE_INTERRUPTS() \
+do{\
+    __asm volatile( "csrw mstatus,%0" ::"r"(0x7800) );\
+    __asm volatile ("fence.i");\
+}while(0)
 #define portENABLE_INTERRUPTS()		__asm volatile( "csrw mstatus,%0" ::"r"(0x1888) )
 #define portENTER_CRITICAL()	vPortEnterCritical()
 #define portEXIT_CRITICAL()		vPortExitCritical()

@@ -25,7 +25,7 @@
 #include "ch32h417_gpio.h"
 #include "iap.h"
 #include "usb_inf.h"
-extern vu8 End_Flag;
+
 extern vu32 Flash_Erase_Page_Size;
 #define Size_256B                  0x100
 #define Size_4KB                   0x1000
@@ -40,7 +40,9 @@ extern vu32 Flash_Erase_Page_Size;
 void APP_2_IAP(void)
 {
     NVIC_SystemReset();
-    while(1);
+    while(1)
+    {
+    }
 }
 
 /*********************************************************************
@@ -113,7 +115,9 @@ void Hardware(void)
         {
              Delay_Ms(10);
              APP_2_IAP();
-             while(1);
+             while(1)
+             {
+             }
         }
   }
 }

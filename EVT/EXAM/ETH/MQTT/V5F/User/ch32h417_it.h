@@ -14,7 +14,7 @@
 
 #include "debug.h"
 
-
+extern volatile u8 publishValid;
 #endif 
 
 

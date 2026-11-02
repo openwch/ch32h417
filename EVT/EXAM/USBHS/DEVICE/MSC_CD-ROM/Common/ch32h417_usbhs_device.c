@@ -528,6 +528,10 @@ void USBHS_IRQHandler(void)
                                         break;
                                     }
                                 }
+                                else
+                                {
+                                    errflag = 0xFF;
+                                }
                             }
                             break;
 

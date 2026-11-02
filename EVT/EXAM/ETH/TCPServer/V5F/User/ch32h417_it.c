@@ -40,11 +40,7 @@ void NMI_Handler(void)
  */
 void HardFault_Handler(void)
 {
-  printf("HardFault_Handler\r\n");
 
-  printf("mepc  :%08x\r\n", __get_MEPC());
-  printf("mcause:%08x\r\n", __get_MCAUSE());
-  printf("mtval :%08x\r\n", __get_MTVAL());
   NVIC_SystemReset();
   while (1)
   {
@@ -77,9 +73,9 @@ void ETH_IRQHandler(void)
 }
 
 /*********************************************************************
- * @fn      EXTI0_IRQHandler
+ * @fn      EXTI15_8_IRQHandler
  *
- * @brief   This function handles EXTI0 Handler.
+ * @brief   This function handles EXTI15_8 Handler.
  *
  * @return  none
  */

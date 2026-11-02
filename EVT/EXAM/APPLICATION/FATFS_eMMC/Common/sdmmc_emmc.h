@@ -37,7 +37,7 @@
 /* SDMMC_DIV */
 #define RB_SDMMC_DIV_MASK                          ((uint32_t)0x0000001F)      
 
-/*eMMC！！CSD*/
+/*eMMC_CSD*/
 typedef struct
 {
     u8  CSDStruct;
@@ -79,7 +79,7 @@ typedef struct
     u8  Reserved4;
 } eMMC_CSD;
 
-/*eMMC！！ Extended CSD*/
+/*eMMC_Extended CSD*/
 typedef union
 {
         struct _EXT_CSD
@@ -261,7 +261,7 @@ typedef struct
     u8  Reserved2;
 } eMMC_CID;
 
-/*eMMC！！CID*/
+/*eMMC_CID*/
 
 typedef struct
 {

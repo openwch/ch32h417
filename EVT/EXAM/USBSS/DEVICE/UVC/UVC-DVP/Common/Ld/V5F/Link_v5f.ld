@@ -4,15 +4,19 @@ __stack_size = 2048;
 
 PROVIDE( _stack_size = __stack_size );
 
+ITCM_START = 0x200A0000;  /* ITCM 128K, range: 0x200A0000 - 0x200BFFFF */
+DTCM_START = 0x200C0000;  /* DTCM 256K, range: 0x200C0000 - 0x200FFFFF */
+SRAM_DMA_START = 0x20128000;  /* 352K, same window as the V3F script */
 
 MEMORY
 {
-	/*FLASH, RAM, and RAM-CODE can be freely configured according to project 
+	/*FLASH, RAM, and RAM-CODE can be freely configured according to project
 	requirements;Please refer to the datasheet manual for specific allocation*/
 	FLASH (rx) : ORIGIN = 0x00030000, LENGTH = 128K             /* zero_wait flah ,and loaded into RAM_CODE for running */
-	RAM_CODE (xrw) : ORIGIN = 0x200A0000, LENGTH = 128K         /*ITCM RAM for running code*/
-	RAM (xrw) : ORIGIN = (0x200C0000+512+256), LENGTH = (256K-512-256)  /*DTCM RAM for .data .bss section and other*/ 
-   	RAM_LOAD (xrw) : ORIGIN = (0x200C0000+512), LENGTH = 256           /* RAM for .load section*/
+	RAM_CODE (xrw) : ORIGIN = ITCM_START, LENGTH = 128K         /*ITCM RAM for running code*/
+	RAM (xrw) : ORIGIN = (DTCM_START+512+256), LENGTH = (256K-512-256)  /*DTCM RAM for .data .bss section and other*/
+   	RAM_LOAD (xrw) : ORIGIN = (DTCM_START+512), LENGTH = 256           /* RAM for .load section*/
+	SRAM_DMA (xrw) : ORIGIN = SRAM_DMA_START, LENGTH = 352K
 }
 
 SECTIONS
@@ -192,17 +196,24 @@ SECTIONS
 		PROVIDE( _ebss = .);
 	} >RAM AT>FLASH
 
+	.sram_buf (NOLOAD) :
+	{
+		. = ALIGN(32);
+		KEEP(*(.sram_buf))
+		. = ALIGN(32);
+	} >SRAM_DMA
+
 	PROVIDE( _end = _ebss);
 	PROVIDE( end = . );
 
     .stack ORIGIN(RAM) + LENGTH(RAM) - __stack_size :
     {
-        PROVIDE( _heap_end = . );    
+        PROVIDE( _heap_end = . );
         . = ALIGN(4);
         PROVIDE(_susrstack = . );
         . = . + __stack_size;
         PROVIDE( _eusrstack = .);
-    } >RAM 
+    } >RAM
 
 }
 

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : lcd.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/09/17
+* Version            : V1.0.1
+* Date               : 2026/10/14
 * Description        : This file provides all the lcd firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.

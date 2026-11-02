@@ -34,20 +34,20 @@ extern "C" {
 /* usb device endpoint size define */
 #define DEF_USBD_UEP0_SIZE           64     /* usb hs/fs device end-point 0 size */
 /* HS */
-#define DEF_USBD_HS_PACK_SIZE        512    /* usb hs device max bluk/int pack size */
+#define DEF_USBD_HS_PACK_SIZE        512    /* usb hs device max bulk/int pack size */
 
 #define DEF_USBD_HS_ISO_PACK_SIZE    1024   /* usb hs device max iso pack size */
 /* FS */
-#define DEF_USBD_FS_PACK_SIZE        64     /* usb fs device max bluk/int pack size */
+#define DEF_USBD_FS_PACK_SIZE        64     /* usb fs device max bulk/int pack size */
 #define DEF_USBD_FS_ISO_PACK_SIZE    1023   /* usb fs device max iso pack size */
 /* LS */
-#define DEf_USBD_LS_UEP0_SIZE        8      /* usb ls device end-point 0 size */
+#define DEF_USBD_LS_UEP0_SIZE        8      /* usb ls device end-point 0 size */
 #define DEF_USBD_LS_PACK_SIZE        64     /* usb ls device max int pack size */
 
-#define DEF_USB_EP0_SIZE           0x40                                         /* 端点0大小 */
-#define DEF_USB_EP1_SIZE           64                                           /* 端点1大小 */
-#define DEF_USB_FS_EP2_SIZE        64                                           /* 端点2全速模式大小 */
-#define DEF_USB_HS_EP2_SIZE        512                                          /* 端点2高速模式大小 */
+#define DEF_USB_EP0_SIZE           0x40                                         /* Endpoint 0 size */
+#define DEF_USB_EP1_SIZE           64                                           /* Endpoint 1 size */
+#define DEF_USB_FS_EP2_SIZE        64                                           /* Endpoint 2 full-speed size */
+#define DEF_USB_HS_EP2_SIZE        512                                          /* Endpoint 2 high-speed size */
 
 /* HS end-point size */
 #define DEF_USB_EP1_HS_SIZE          DEF_USBD_HS_PACK_SIZE

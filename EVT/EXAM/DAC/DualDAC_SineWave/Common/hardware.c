@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -15,12 +15,12 @@
 #define Num 64
 
 /* Global Variable */ 
-uint32_t DAC_Value[Num]={2048,2248,2447,2642,2831,3013,3185,3347,3496,3631,3750,3854,3940,4007,4056,4086,
+volatile  uint32_t DAC_Value[Num]={2048,2248,2447,2642,2831,3013,3185,3347,3496,3631,3750,3854,3940,4007,4056,4086,
                          4095,4086,4056,4007,3940,3854,3750,3631,3496,3347,3185,3013,2831,2642,2447,2248,
                          2048,1847,1648,1453,1264,1082,910 ,748 ,599 ,464 ,345 ,241 ,155 ,88  ,39  ,9   ,
                          0   ,9   ,39  ,88  ,155 ,241 ,345 ,464 ,599 ,748 ,910 ,1082,1264,1453,1648,1847};
 
-uint32_t Dual_DAC_Value[Num];
+volatile  uint32_t Dual_DAC_Value[Num];
 
 /*********************************************************************
  * @fn      Dac_Init
@@ -118,7 +118,7 @@ void Timer4_Init(void)
 void Hardware(void)
 {
     u8 i = 0;
-    printf("Noise Wava Generation Test\r\n");
+    printf("DualDAC_SineWave Test\r\n");
     Dac_Init();
     Dac_Dma_Init();
     DMA_MuxChannelConfig(DMA_MuxChannel11, 0x67); 

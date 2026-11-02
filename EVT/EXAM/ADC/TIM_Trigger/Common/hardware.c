@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.3
-* Date               : 2026/03/17
+* Version            : V1.0.5
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -10,6 +10,16 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
+/* ADC Conversion Mode Definition*/
+#define ADC_trig_Mode     0
+#define ADC_inje_Mode     1
+
+/* ADC Conversion Mode Selection*/
+#define ADC_MODE_Conversion   ADC_trig_Mode
+// #define ADC_MODE_Conversion   ADC_inje_Mode
+
+
+
 u16 ADC_val;
 /*********************************************************************
  * @fn      ADC_Function_Init
@@ -36,7 +46,13 @@ void ADC_Function_Init(void)
 	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
 	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
 	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+
+#if  (ADC_MODE_Conversion == ADC_inje_Mode)
 	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigInjecConv_None;
+#else
+      ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T2_CC2;
+#endif
+
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 	ADC_InitStructure.ADC_NbrOfChannel = 1;
 	ADC_Init(ADC1, &ADC_InitStructure);
@@ -44,14 +60,24 @@ void ADC_Function_Init(void)
 
 	ADC_Cmd(ADC1, ENABLE);
 	ADC_LowPowerModeCmd(ADC1,ENABLE);
-    ADC_ExternalTrigInjectedConvConfig(ADC1, ADC_ExternalTrigInjecConv_T2_CC1);  
-    ADC_InjectedSequencerLengthConfig(ADC1, 1);
+
     ADC_InjectedChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_CyclesMode5);
+#if  (ADC_MODE_Conversion == ADC_inje_Mode)
+    ADC_InjectedSequencerLengthConfig(ADC1, 1);
+    ADC_ExternalTrigInjectedConvConfig(ADC1, ADC_ExternalTrigInjecConv_T2_CC1);  
     ADC_ExternalTrigInjectedConvCmd(ADC1, ENABLE);
+#else
+    ADC_ExternalTrigConvCmd(ADC1, ENABLE);
+#endif
 
     NVIC_EnableIRQ(ADC1_2_IRQn);
 	NVIC_SetPriority(ADC1_2_IRQn,0);
-    ADC_ITConfig(ADC1, ADC_IT_JEOC, ENABLE);
+#if  (ADC_MODE_Conversion == ADC_inje_Mode)
+	ADC_ITConfig(ADC1, ADC_IT_JEOC, ENABLE);
+#else
+    ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
+#endif
+
 
 	ADC_ResetCalibration(ADC1);
 	while(ADC_GetResetCalibrationStatus(ADC1));
@@ -60,45 +86,7 @@ void ADC_Function_Init(void)
 	ADC_BufferCmd(ADC1, DISABLE);
 }
 
-/*********************************************************************
- * @fn      Get_ADC_Val
- *
- * @brief   Returns ADCx conversion result data.
- *
- * @param   ch - ADC channel.
- *            ADC_Channel_0 - ADC Channel0 selected.
- *            ADC_Channel_1 - ADC Channel1 selected.
- *            ADC_Channel_2 - ADC Channel2 selected.
- *            ADC_Channel_3 - ADC Channel3 selected.
- *            ADC_Channel_4 - ADC Channel4 selected.
- *            ADC_Channel_5 - ADC Channel5 selected.
- *            ADC_Channel_6 - ADC Channel6 selected.
- *            ADC_Channel_7 - ADC Channel7 selected.
- *            ADC_Channel_8 - ADC Channel8 selected.
- *            ADC_Channel_9 - ADC Channel9 selected.
- *            ADC_Channel_10 - ADC Channel10 selected.
- *            ADC_Channel_11 - ADC Channel11 selected.
- *            ADC_Channel_12 - ADC Channel12 selected.
- *            ADC_Channel_13 - ADC Channel13 selected.
- *            ADC_Channel_14 - ADC Channel14 selected.
- *            ADC_Channel_15 - ADC Channel15 selected.
- *            ADC_Channel_16 - ADC Channel16 selected.
- *            ADC_Channel_17 - ADC Channel17 selected.
- *
- * @return  none
- */
-u16 Get_ADC_Val(u8 ch)
-{
-    u16 val;
-	ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_CyclesMode5);
-	ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 
-	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));
-
-	val = ADC_GetConversionValue(ADC1);
-
-	return val;
-}
 /*********************************************************************
  * @fn      TIM1_PWM_In
  *
@@ -124,10 +112,18 @@ void TIM1_PWM_In(u16 arr, u16 psc, u16 ccp)
     TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
     TIM_OCInitStructure.TIM_Pulse = ccp;
     TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_Low;
-    TIM_OC1Init(TIM2, &TIM_OCInitStructure);
-
+#if  (ADC_MODE_Conversion == ADC_inje_Mode)
+	TIM_OC1Init(TIM2, &TIM_OCInitStructure);
+#else
+    TIM_OC2Init(TIM2, &TIM_OCInitStructure);
+#endif
+ 
     TIM_CtrlPWMOutputs(TIM2, ENABLE);
-    TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Disable);
+#if  (ADC_MODE_Conversion == ADC_inje_Mode)
+  TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Disable);
+#else
+  TIM_OC2PreloadConfig(TIM2, TIM_OCPreload_Disable);
+#endif
     TIM_ARRPreloadConfig(TIM2, ENABLE);
     TIM_SelectOutputTrigger(TIM2, TIM_TRGOSource_Update);
     TIM_Cmd(TIM2, ENABLE);
@@ -160,14 +156,28 @@ void ADC1_2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
  */
 void ADC1_2_IRQHandler()
 {
+#if  (ADC_MODE_Conversion == ADC_inje_Mode)
     if(ADC_GetITStatus( ADC1, ADC_IT_JEOC)){
-        printf("ADC Extline trigger conversion...\r\n");
-        ADC_val = ADC_GetInjectedConversionValue(ADC1, ADC_InjectedChannel_1);
+        ADC_val = ADC_GetInjectedConversionValue(ADC1, ADC_InjectedChannel_1);  
+        #if 0
+        printf("ADC Extline trigger inje conversion...\r\n");
         printf("JADC %04d\r\n", ADC_val);
+        #endif
     }
 
     ADC_ClearITPendingBit( ADC1, ADC_IT_JEOC);
- 
+
+#else
+    if(ADC_GetITStatus( ADC1, ADC_IT_EOC)){
+        ADC_val = ADC_GetConversionValue(ADC1);
+        #if 0
+        printf("ADC Extline trigger conversion...\r\n");
+        printf("ADC %04d\r\n", ADC_val);
+        #endif
+    }
+
+    ADC_ClearITPendingBit( ADC1, ADC_IT_EOC);
+#endif
 }
 
 #endif

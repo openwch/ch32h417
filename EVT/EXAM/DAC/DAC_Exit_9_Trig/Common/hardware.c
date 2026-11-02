@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -15,7 +15,7 @@
 #define Num    7
 
 /* Global Variable */
-u16 DAC_Value[Num] = {64, 128, 256, 512, 1024, 2048, 4095};
+static const u16 DAC_Value[Num] = {64, 128, 256, 512, 1024, 2048, 4095};
 
 /*********************************************************************
  * @fn      Dac_Init
@@ -90,10 +90,7 @@ void Hardware(void)
     {
         DAC->R12BDHR1 = DAC_Value[i];
         i++;
-        if(i > Num)
-        {
-            i = 0;
-        }
+        i %= Num;
         Delay_Ms(1000);
 
         printf("run\r\n");

@@ -1,5 +1,6 @@
 {
 	"version": "1.0",
+	"hasAllParsed": true,
 	"isNormalMRSProject": true,
 	"basic": {
 		"chipInfo": {
@@ -12,6 +13,8 @@
 			"artifactType": "executable",
 			"link": "WCH-Link",
 			"peripheral_version": "1.4",
+			"externalFlashSupport": false,
+			"UIConfigSupport": false,
 			"calibrateSupport": false,
 			"calibrateCommand": ""
 		},
@@ -113,6 +116,7 @@
 					"code_generation_without_hardware_floating": false,
 					"use_pipelines": false,
 					"show_caret_indicating_the_column": false,
+					"calling_convention_variant": false,
 					"other_optimization_flags": ""
 				},
 				"warnings": {
@@ -315,7 +319,8 @@
 					}
 				},
 				"archiver": {
-					"archiver_flags": "-r"
+					"archiver_flags": "-r",
+					"libOutputPrefix": "lib"
 				},
 				"createFlash": {
 					"enabled": true,
@@ -323,6 +328,7 @@
 					"copy_only_section_text": false,
 					"copy_only_section_data": false,
 					"copy_only_sections": [],
+					"create_algorithm_file": false,
 					"other_flags": ""
 				},
 				"createList": {
@@ -356,6 +362,7 @@
 					"extra_compressed_extension": true,
 					"bit_extension": true,
 					"multiplication_subset_of_the_M_extension": false,
+					"vector_cryptography_extensions": "",
 					"integer_ABI": "ilp32",
 					"floating_point_ABI": "none",
 					"tuning": "default",
@@ -384,6 +391,8 @@
 		"disablepowerout": true,
 		"clearcodeflash": true,
 		"disablecodeprotect": false,
+		"flashType": "",
+		"asmFile_path": "",
 		"exepath": "",
 		"exearguments": ""
 	},
@@ -397,7 +406,7 @@
 			"configOptions": [
 				"-f \"${WCH:OpenOCD:default}/bin/wch-dual-core.cfg\" -c page_erase"
 			],
-			"host": "localhost",
+			"host": "127.0.0.1",
 			"port": 3333,
 			"skipDownloadBeforeDebug": false,
 			"enablePageEraser": true,
@@ -460,8 +469,10 @@
 			"ATTR_BUILD_BEFORE_LAUNCH_ATTR": 2,
 			"GdbServerAllocateConsole": true,
 			"GdbServerAllocateTelnetConsole": false,
+			"SkipDownloadBeforeDebug": false,
 			"StartGdbCLient": true,
-			"UPDATE_THREADLIST_ON_SUSPEND": false
+			"UPDATE_THREADLIST_ON_SUSPEND": false,
+			"DebugInRam": false
 		}
 	}
 }

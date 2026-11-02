@@ -260,9 +260,9 @@ void USB_Timer_Start( FunctionalState sta )
 }
 
 /*********************************************************************
- * @fn      TIM12_IRQHandler
+ * @fn      TIM4_IRQHandler
  *
- * @brief   This function handles TIM12 exception.
+ * @brief   This function handles TIM4 exception.
  *
  * @return  none
  */

@@ -16,6 +16,7 @@
 #include "string.h"
 #include "uvclib.h"
 #include "ov2640.h"
+#include "camera.h"
 
 /* Global */
 const uint8_t    *pUSBSS_Descr;
@@ -31,14 +32,13 @@ volatile uint16_t USBSS_SetupReqLen;
 volatile uint8_t  USBSS_DevConfig;
 volatile uint8_t  USBSS_DevAddr;
 volatile uint16_t USBSS_DevMaxPackLen;
-volatile uint8_t  USBSS_DevSpeed;
 volatile uint8_t  USBSS_DevSleepStatus;
 volatile uint8_t  USBSS_DevEnumStatus;
 
 /* Endpoint Buffer */
-__attribute__ ((aligned(4))) uint8_t USBSS_EP0_Buf[ DEF_USBSSD_UEP0_SIZE ];
-__attribute__ ((aligned(4))) uint8_t USBSS_EP1_Tx_Buf[ DEF_USB_EP1_SS_SIZE * 32 ];
-__attribute__ ((aligned(4))) uint8_t USBSS_EP1_Rx_Buf[ DEF_USB_EP1_SS_SIZE * 32 ];
+__attribute__ ((aligned(4), section(".sram_buf"))) uint8_t USBSS_EP0_Buf[ DEF_USBSSD_UEP0_SIZE ];
+__attribute__ ((aligned(4), section(".sram_buf"))) uint8_t USBSS_EP1_Tx_Buf[ DEF_USB_EP1_SS_SIZE * 32 ];
+__attribute__ ((aligned(4), section(".sram_buf"))) uint8_t USBSS_EP1_Rx_Buf[ DEF_USB_EP1_SS_SIZE * 32 ];
 
 void USBSS_IRQHandler (void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void USBSS_LINK_IRQHandler (void) __attribute__((interrupt("WCH-Interrupt-fast"))); 
@@ -56,17 +56,22 @@ void USBSS_LINK_IRQHandler( void )
 }
 
 /*********************************************************************
- * @fn      USBSS_Endp_Clear_Frature
+ * @fn      USBSS_Endp_Clear_Feature
  *
  * @brief   Clear the endpoint feature.
  *
  * @return  Whether it was cleared successfully.
  */
-uint8_t USBSS_Endp_Clear_Frature( uint8_t dir_endp )         
+uint8_t USBSS_Endp_Clear_Feature( uint8_t dir_endp )         
 {
     if(( dir_endp & DEF_UEP_MASK ) > DEF_UEP15 )
     {
         return 0xff;
+    }
+
+    if(( dir_endp & DEF_UEP_MASK ) == DEF_UEP0 )
+    {
+        return 0x00;
     }
     if(( dir_endp & DEF_UEP_IN ))
     {
@@ -88,17 +93,22 @@ uint8_t USBSS_Endp_Clear_Frature( uint8_t dir_endp )
 }
 
 /*********************************************************************
- * @fn      USBSS_Endp_Set_Frature
+ * @fn      USBSS_Endp_Set_Feature
  *
  * @brief   Set the endpoint feature.
  *
  * @return  Whether it was cleared successfully.
  */
-uint8_t USBSS_Endp_Set_Frature( uint8_t dir_endp )         
+uint8_t USBSS_Endp_Set_Feature( uint8_t dir_endp )         
 {
     if(( dir_endp & DEF_UEP_MASK ) > DEF_UEP15 )
     {
         return 0xff;
+    }
+
+    if(( dir_endp & DEF_UEP_MASK ) == DEF_UEP0 )
+    {
+        return 0x00;
     }
     if(( dir_endp & DEF_UEP_IN ))
     {
@@ -155,10 +165,8 @@ uint8_t USBSS_Get_Endp_Status( uint8_t dir_endp )
  *
  * @return  none
  */
-void USBSS_IRQHandler( void )              
+void USBSS_IRQHandler( void )
 {
-    static UINT8 format = 0;
-    static UINT8 frame = 0;
     uint8_t endp_num;
     uint8_t  errflag;
     uint16_t len;
@@ -224,7 +232,7 @@ void USBSS_IRQHandler( void )
 
                         /* get usb configuration descriptor */
                         case USB_DESCR_TYP_CONFIG:
-                            pUSBSS_Descr = SS_ConfigDescriptor;
+                            pUSBSS_Descr = pSS_ConfigDescriptor;
                             len = DEF_USBSSD_CONFIG_DESC_LEN;
                             break;
 
@@ -323,9 +331,9 @@ void USBSS_IRQHandler( void )
                 /* Set usb configuration to use */
                 case USB_SET_CONFIGURATION:
                     USBSS_DevConfig = (uint8_t)( USBSS_SetupReqValue & 0xFF );
-                    if( USBSS_DevConfig && ( USBSS_DevConfig != SS_ConfigDescriptor[ 5 ] ))
+                    if( USBSS_DevConfig && ( USBSS_DevConfig != pSS_ConfigDescriptor[ 5 ] ))
                     {
-                        USBSS_DevConfig = SS_ConfigDescriptor[ 5 ];
+                        USBSS_DevConfig = pSS_ConfigDescriptor[ 5 ];
                         errflag = 0xFF;
                     }
                     else if( USBSS_DevConfig == 0 )
@@ -379,7 +387,7 @@ void USBSS_IRQHandler( void )
                         if((uint8_t)( USBSS_SetupReqValue & 0xFF ) == USB_REQ_FEAT_ENDP_HALT )
                         {
                             /* Clear End-point Feature */
-                            USBSS_Endp_Clear_Frature((uint8_t)( USBSS_SetupReqIndex & 0xFF ));
+                            USBSS_Endp_Clear_Feature((uint8_t)( USBSS_SetupReqIndex & 0xFF ));
                         }
                         else
                         {
@@ -434,7 +442,11 @@ void USBSS_IRQHandler( void )
                         if( (uint8_t)( USBSS_SetupReqValue & 0xFF ) == USB_REQ_FEAT_ENDP_HALT )
                         {
                             /* Set end-points status stall */
-                            USBSS_Endp_Set_Frature((uint8_t)(USBSS_SetupReqIndex & 0xFF ));
+                            USBSS_Endp_Set_Feature((uint8_t)(USBSS_SetupReqIndex & 0xFF ));
+                        }
+                        else
+                        {
+                            errflag = 0xFF;
                         }
                     }
                     break;
@@ -603,16 +615,14 @@ void USBSS_IRQHandler( void )
                     /* Switch video format or resolution */
                     if( rx_len == DEF_UVC10_VEDIO_CTL )
                     {
-                        if( (format != *(UINT8 *)(USBSS_EP0_Buf + 2)) || (frame != *(UINT8 *)(USBSS_EP0_Buf + 3)))
-                        {
-                            format = *(UINT8 *)(USBSS_EP0_Buf + 2);
-                            frame = *(UINT8 *)(USBSS_EP0_Buf+3);
-                            Get_Curr[ 2 ] = format;
-                            Get_Curr[ 3 ] = frame;
-                            Formatchange_flag = *(UINT8 *)(USBSS_EP0_Buf + 2);
-                            OV2640_Format_Mode( Formatchange_flag );
-                            OV2640_Change_Resolution( format, frame );
-                        }
+                        UVC_ControlSel = (uint8_t)(USBSS_SetupReqValue >> 8);
+                        UVC_Ctrl_SetData(USBSS_EP0_Buf);
+                    }
+                    else if( rx_len )
+                    {
+                        UVC_Control_SetData((uint8_t)(USBSS_SetupReqIndex >> 8),
+                                            (uint8_t)(USBSS_SetupReqValue >> 8),
+                                            USBSS_EP0_Buf, rx_len);
                     }
                     break;
                     

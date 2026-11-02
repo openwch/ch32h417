@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2026/01/28
+* Version            : V1.0.2
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -54,8 +54,6 @@ void SYSTICK_Init_Config(uint64_t ticks)
 /*********************************************************************
  * @fn      Hardware
  *
- * @brief   Resets the CRC Data register (DR).
- *
  * @return  none
  */
 void Hardware(void)
@@ -83,9 +81,11 @@ void SysTick0_Handler(void)
     if(SysTick0->ISR == 1)
     {
         SysTick0->ISR &= ~(1<<0);//clear State flag
-        printf("welcome to WCH\r\n");
         counter++;
+        #if 0
+        printf("welcome to WCH\r\n");
         printf("Counter:%d\r\n",counter);
+        #endif
     }
 }
 
@@ -102,9 +102,11 @@ void SysTick1_Handler(void)
     if(SysTick0->ISR == (1<<1))
     {
         SysTick0->ISR &= ~(1<<1);//clear State flag
-        printf("welcome to WCH\r\n");
         counter++;
+        #if 0
+        printf("welcome to WCH\r\n");
         printf("Counter:%d\r\n",counter);
+        #endif
     }
 }
 

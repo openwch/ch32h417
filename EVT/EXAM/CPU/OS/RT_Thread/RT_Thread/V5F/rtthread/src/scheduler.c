@@ -266,7 +266,6 @@ void rt_schedule(void)
 
                 RT_DEBUG_LOG(RT_DEBUG_SCHEDULER, ("switch in interrupt\n"));
 
-                /* 这里如果需要切换线程会把rt_thread_switch_interrupt_flag置位 */
                 rt_hw_context_switch_interrupt((rt_uint32_t)&from_thread->sp,
                                                (rt_uint32_t)&to_thread->sp);
             }

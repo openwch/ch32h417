@@ -86,7 +86,7 @@ uint8_t MS_GetMaxLun( void )
 	}
 	if( status == USB_INT_SUCCESS )return 0x00;
 
-	return 0x00;
+	return status;
 }
 
 /*********************************************************************
@@ -451,7 +451,10 @@ uint8_t U30HOST_Issue_BulkOut( uint8_t *pDatBuf, UINT32 *pSize )
 		if( *pSize >= U30_MAX_PACKSIZE ){
 			len = U30_MAX_PACKSIZE;
 			*pSize -= U30_MAX_PACKSIZE;
-	}	
+		}
+		else{
+			len = *pSize;
+		}
 	}
 	return USB_INT_SUCCESS;
 }

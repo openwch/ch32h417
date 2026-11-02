@@ -10,9 +10,10 @@ MEMORY
 	/*FLASH, RAM, and RAM-CODE can be freely configured according to project 
 	requirements;Please refer to the datasheet manual for specific allocation*/
 	FLASH (rx) : ORIGIN = 0x00000000, LENGTH = 192K     /* zero_wait flah ,and loaded into RAM_CODE for running */
-	RAM_CODE (xrw) : ORIGIN = 0x20100000, LENGTH = 192K  /* RAM for running code*/
-	RAM (xrw) : ORIGIN = 0x20130000+256, LENGTH = (320K-256)     /* RAM for .data .bss section and other*/
-  	RAM_LOAD (xrw) : ORIGIN = 0x20130000, LENGTH = 256         /* RAM for .load section*/
+	RAM_CODE (xrw) : ORIGIN = 0x20100000, LENGTH = 128K  /* RAM for running code*/
+	RAM (xrw) : ORIGIN = 0x20120000+256, LENGTH = (32K-256)     /* RAM for .data .bss section and other*/
+  	RAM_LOAD (xrw) : ORIGIN = 0x20120000, LENGTH = 256         /* RAM for .load section*/
+	SRAM_DMA (xrw) : ORIGIN = 0x20128000, LENGTH = 352K         /* same window as the V5F script */
 }
 
 SECTIONS
@@ -177,6 +178,13 @@ SECTIONS
     	. = ALIGN(4);
 		PROVIDE( _edata = .);
 	} >RAM AT>FLASH
+
+	.sram_buf (NOLOAD) :
+	{
+		. = ALIGN(32);
+		KEEP(*(.sram_buf))
+		. = ALIGN(32);
+	} >SRAM_DMA
 
 	.bss :
 	{

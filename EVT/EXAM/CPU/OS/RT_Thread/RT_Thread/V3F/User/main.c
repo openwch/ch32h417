@@ -80,7 +80,6 @@ void LED1_BLINK_INIT(void)
  */
 int main(void)
 {
-
 #if (Run_Core == Run_Core_V3FandV5F)
 	NVIC_WakeUp_V5F(Core_V5F_StartAddr);//wake up V5
 	HSEM_ITConfig(HSEM_ID0, ENABLE);
@@ -96,6 +95,7 @@ int main(void)
     rt_kprintf(" www.wch.cn\r\n");
 	LED1_BLINK_INIT();
 	GPIO_ResetBits(GPIOB,GPIO_Pin_1);
+
 
 	while(1)
 	{
@@ -113,6 +113,7 @@ int main(void)
     rt_kprintf(" www.wch.cn\r\n");
 	LED1_BLINK_INIT();
 	GPIO_ResetBits(GPIOB,GPIO_Pin_1);
+
 
 	while(1)
 	{

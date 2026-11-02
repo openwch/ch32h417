@@ -69,6 +69,11 @@ uint8_t USBSS_Endp_Clear_Frature( uint8_t dir_endp )
     {
         return 0xff;
     }
+
+    if(( dir_endp & DEF_UEP_MASK ) == DEF_UEP0 )
+    {
+        return 0x00;
+    }
     if(( dir_endp & DEF_UEP_IN ))
     {
         USBSS_EP_TX_TypeDef* endp = (USBSS_EP_TX_TypeDef*)( &USBSSD->EP1_TX + ((( dir_endp - 1 ) & 0x7f ) * 2));
@@ -100,6 +105,11 @@ uint8_t USBSS_Endp_Set_Frature( uint8_t dir_endp )
     if(( dir_endp & DEF_UEP_MASK ) > DEF_UEP15 )
     {
         return 0xff;
+    }
+
+    if(( dir_endp & DEF_UEP_MASK ) == DEF_UEP0 )
+    {
+        return 0x00;
     }
     if(( dir_endp & DEF_UEP_IN ))
     {
@@ -417,6 +427,10 @@ void USBSS_IRQHandler( void )
                             /* Set end-points status stall */
                             USBSS_Endp_Set_Frature((uint8_t)(USBSS_SetupReqIndex & 0xFF ));
                         }
+                        else
+                        {
+                            errflag = 0xFF;
+                        }
                     }
 
                     break;
@@ -589,7 +603,7 @@ void USBSS_IRQHandler( void )
                         {
                             if( UHSIF_RD_Pack[ UHSIF_RD_COMM.deal ].len < DEF_BUFF_SIZE )
                             {
-                                /* 短包处理 */
+                                /* Short packet handling */
                                 while( cnt-- )
                                 {
                                     if( ( USBSSD->EP1_TX.UEP_TX_ST & USBSS_EP_TX_CHAIN_EN_MASK ) != USBSS_EP_TX_CHAIN_EN_MASK )
@@ -610,7 +624,7 @@ void USBSS_IRQHandler( void )
                             }
                             else 
                             {
-                                /* 长包处理 */ 
+                                /* Long packet handling */ 
                                 while( cnt-- )
                                 {
                                     if( ( USBSSD->EP1_TX.UEP_TX_ST & USBSS_EP_TX_CHAIN_EN_MASK ) != USBSS_EP_TX_CHAIN_EN_MASK )

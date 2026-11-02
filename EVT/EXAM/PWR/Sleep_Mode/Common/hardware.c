@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.2
-* Date               : 2025/12/05
+* Version            : V1.0.3
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -125,7 +125,6 @@ void EXTI7_0_IRQHandler(void)
 {
   if(EXTI_GetITStatus(EXTI_Line1)!=RESET)
   {
-    printf("V3F EXTI0 Wake_up\r\n");
     EXTI_ClearITPendingBit(EXTI_Line1); /* Clear Flag */
   }
 } 

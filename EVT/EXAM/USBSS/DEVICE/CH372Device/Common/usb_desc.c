@@ -249,7 +249,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x00, 0x04,                                             // wMaxPacketSize
     0x00,                                                   // bInterval
 
-    /* Endpoint Compansion Descriptor */
+    /* Endpoint Companion Descriptor */
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     DEF_ENDP1_IN_BURST_LEVEL - 1,                           // bMaxBurst
@@ -264,7 +264,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x00, 0x04,                                             // wMaxPacketSize
     0x00,                                                   // bInterval
 
-    /* Endpoint Compansion Descriptor */
+    /* Endpoint Companion Descriptor */
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     DEF_ENDP1_OUT_BURST_LEVEL - 1,                          // bMaxBurst
@@ -279,7 +279,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x00, 0x04,                                             // wMaxPacketSize
     0x00,                                                   // bInterval
     
-    /* Endpoint Compansion Descriptor */
+    /* Endpoint Companion Descriptor */
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     DEF_ENDP2_IN_BURST_LEVEL - 1,                           // bMaxBurst
@@ -294,7 +294,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x00, 0x04,                                             // wMaxPacketSize
     0x00,                                                   // bInterval
 
-    /* Endpoint Compansion Descriptor */
+    /* Endpoint Companion Descriptor */
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     DEF_ENDP2_OUT_BURST_LEVEL - 1,                          // bMaxBurst
@@ -309,7 +309,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x00, 0x04,                                             // wMaxPacketSize
     0x00,                                                   // bInterval
 
-    /* Endpoint Compansion Descriptor */
+    /* Endpoint Companion Descriptor */
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     DEF_ENDP3_IN_BURST_LEVEL - 1,                           // bMaxBurst
@@ -324,7 +324,7 @@ const uint8_t SS_ConfigDescriptor[ ] =
     0x00, 0x04,                                             // wMaxPacketSize
     0x00,                                                   // bInterval
 
-    /* Endpoint Compansion Descriptor */
+    /* Endpoint Companion Descriptor */
     0x06,                                                   // bLength
     0x30,                                                   // bDescriptorType
     DEF_ENDP3_OUT_BURST_LEVEL - 1,                          // bMaxBurst

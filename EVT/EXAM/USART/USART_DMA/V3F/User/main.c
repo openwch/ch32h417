@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main_v3f.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2026/10/16
  * Description        : Main program body for V3F.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -16,7 +16,7 @@
  Master:USART2_Tx(PD5)\USART2_Rx(PD6).
  Slave:USART3_Tx(PB10)\USART3_Rx(PB11).
 
- This example demonstrates UART2 and USART3 use DAM data to send and receive.
+ This example demonstrates UART2 and USART3 use DMA data to send and receive.
 
     Hardware connection:PD5 -- PB11
                PD6 -- PB10

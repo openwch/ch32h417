@@ -100,7 +100,7 @@ void HOST_SS_ACCESS_SECTOR( )
     if( USBHSH->PORT_STATUS_CHG & USBHS_UHIF_PORT_CONNECT )                                             /* Device attach (The status of the USBHS host port has changed) */
     {                                              
         USBHSH->PORT_STATUS_CHG = USBHS_UHIF_PORT_CONNECT;
-        if( USBHSH->PORT_STATUS & USBHS_UHIS_PORT_CONNECT )                                             /* Device attach£¨Determine the connection status of the port£© */
+        if( USBHSH->PORT_STATUS & USBHS_UHIS_PORT_CONNECT )                                             /* Device attach(Determine the connection status of the port) */
         {                                          
             printf("USB2.0 DEVICE ATTACH =%02x,%02x\n", USBHSH->PORT_STATUS_CHG, USBHSH->PORT_STATUS );
             gDeviceUsbType = USB_U20_SPEED;

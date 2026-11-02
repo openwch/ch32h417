@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.3
-* Date               : 2026/06/01
+* Version            : V1.0.4
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -50,19 +50,6 @@ uint32_t          TxBuffer[BUFFER_SIZE] = {1, 11, 2, 22, 3, 33, 4, 77};
 uint32_t          RxBuffer[BUFFER_SIZE] = {1, 11, 2, 22, 3, 33, 4, 77};
 volatile uint32_t WriteReadStatus = 0, Index = 0;
 
-typedef struct
-{
-    uint32_t CommandMode; /*Defines the command issued to the SDRAM device.
-                                              This parameter can be a value of @ref FMC_SDRAM_Command_Mode.          */
-
-    uint32_t CommandTarget; /*Defines which device (1 or 2) the command will be issued to.
-                                              This parameter can be a value of @ref FMC_SDRAM_Command_Target.        */
-
-    uint32_t AutoRefreshNumber;      /*Defines the number of consecutive auto refresh command issued
-                                              in auto refresh mode.
-                                              This parameter can be a value between Min_Data = 1 and Max_Data = 16   */
-    uint32_t ModeRegisterDefinition; /*Defines the SDRAM Mode register content                                */
-} FMC_SDRAM_CommandTypeDef;
 
 /*********************************************************************
  * @fn      FMC_SDRAM_WriteBuffer_DMA
@@ -154,7 +141,7 @@ void SDRAM_Send_Cmd(u8 bankx,u8 cmd,u8 refresh,u16 regval)
  */
 void SDRAM_Initialization_Sequence()
 {
-	u32 temp=0,bank1=0;
+	u32 temp=0;
     SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_CLK_ENABLE,1,0);      
 	SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_PALL,1,0);       
     SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_AUTOREFRESH_MODE,8,0);
@@ -181,12 +168,12 @@ void SDRAM_Initialization_Sequence()
  *          
  */
 
-void Fill_Buffer(uint32_t *pBuffer, uint16_t BufferLenght, uint32_t Offset)
+void Fill_Buffer(uint32_t *pBuffer, uint16_t BufferLength, uint32_t Offset)
 {
     uint16_t IndexTmp = 0;
 
     /* Put in global buffer same values */
-    for (IndexTmp = 0; IndexTmp < BufferLenght; IndexTmp++)
+    for (IndexTmp = 0; IndexTmp < BufferLength; IndexTmp++)
     {
         pBuffer[IndexTmp] = IndexTmp + Offset;
     }

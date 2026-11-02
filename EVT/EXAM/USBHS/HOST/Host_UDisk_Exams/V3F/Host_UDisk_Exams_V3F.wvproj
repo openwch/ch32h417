@@ -1,5 +1,6 @@
 {
 	"version": "1.0",
+	"hasAllParsed": true,
 	"isNormalMRSProject": true,
 	"basic": {
 		"chipInfo": {
@@ -11,6 +12,8 @@
 			"description": "ROM(byte): 256K, SRAM(byte): 64K, CHIP PINS: 64, GPIO PORTS: 51.\\nWCH CH32V3 series of mainstream MCUs covers the needs of a large variety of applications in the industrial,medical and consumer markets. High performance with first-class peripherals and low-power,low-voltage operation is paired with a high level of integration at accessible prices with a simple architecture and easy-to-use tools.",
 			"link": "WCH-Link",
 			"peripheral_version": "1.4",
+			"externalFlashSupport": false,
+			"UIConfigSupport": false,
 			"calibrateSupport": false,
 			"calibrateCommand": ""
 		},
@@ -121,6 +124,7 @@
 					"code_generation_without_hardware_floating": false,
 					"use_pipelines": false,
 					"show_caret_indicating_the_column": false,
+					"calling_convention_variant": false,
 					"other_optimization_flags": ""
 				},
 				"warnings": {
@@ -330,7 +334,8 @@
 					}
 				},
 				"archiver": {
-					"archiver_flags": "-r"
+					"archiver_flags": "-r",
+					"libOutputPrefix": "lib"
 				},
 				"createFlash": {
 					"enabled": true,
@@ -338,6 +343,7 @@
 					"copy_only_section_text": false,
 					"copy_only_section_data": false,
 					"copy_only_sections": [],
+					"create_algorithm_file": false,
 					"other_flags": ""
 				},
 				"createList": {
@@ -370,6 +376,7 @@
 					"extra_compressed_extension": true,
 					"bit_extension": true,
 					"multiplication_subset_of_the_M_extension": false,
+					"vector_cryptography_extensions": "",
 					"integer_ABI": "ilp32",
 					"floating_point_ABI": "none",
 					"tuning": "default",
@@ -418,6 +425,7 @@
 					"code_generation_without_hardware_floating": false,
 					"use_pipelines": false,
 					"show_caret_indicating_the_column": false,
+					"calling_convention_variant": false,
 					"other_optimization_flags": ""
 				},
 				"warnings": {
@@ -617,7 +625,8 @@
 					}
 				},
 				"archiver": {
-					"archiver_flags": "-r"
+					"archiver_flags": "-r",
+					"libOutputPrefix": "lib"
 				},
 				"createFlash": {
 					"enabled": true,
@@ -625,6 +634,7 @@
 					"copy_only_section_text": false,
 					"copy_only_section_data": false,
 					"copy_only_sections": [],
+					"create_algorithm_file": false,
 					"other_flags": ""
 				},
 				"createList": {
@@ -657,6 +667,7 @@
 					"extra_compressed_extension": true,
 					"bit_extension": false,
 					"multiplication_subset_of_the_M_extension": false,
+					"vector_cryptography_extensions": "",
 					"integer_ABI": "ilp32",
 					"floating_point_ABI": "none",
 					"tuning": "default",
@@ -666,7 +677,7 @@
 					"save_restore": true,
 					"other_target_flags": ""
 				},
-				"component_toolchain": "${WCH:Toolchain:GCC8}",
+				"component_toolchain": "${WCH:Toolchain:GCC15}",
 				"name": "dbg",
 				"configVariables": []
 			}
@@ -686,6 +697,8 @@
 		"disablepowerout": true,
 		"clearcodeflash": true,
 		"disablecodeprotect": false,
+		"flashType": "",
+		"asmFile_path": "",
 		"exepath": "",
 		"exearguments": ""
 	},
@@ -699,7 +712,7 @@
 			"configOptions": [
 				"-f \"${WCH:OpenOCD:default}/bin/wch-dual-core.cfg\" -c noload"
 			],
-			"host": "localhost",
+			"host": "127.0.0.1",
 			"port": 3333,
 			"skipDownloadBeforeDebug": true,
 			"enablePageEraser": false,
@@ -761,8 +774,10 @@
 			"ATTR_BUILD_BEFORE_LAUNCH_ATTR": 2,
 			"GdbServerAllocateConsole": true,
 			"GdbServerAllocateTelnetConsole": false,
+			"SkipDownloadBeforeDebug": false,
 			"StartGdbCLient": true,
-			"UPDATE_THREADLIST_ON_SUSPEND": false
+			"UPDATE_THREADLIST_ON_SUSPEND": false,
+			"DebugInRam": false
 		}
 	}
 }

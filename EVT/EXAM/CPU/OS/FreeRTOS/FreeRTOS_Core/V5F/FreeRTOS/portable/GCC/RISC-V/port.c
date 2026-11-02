@@ -167,7 +167,7 @@ void vPortSetupTimerInterrupt( void )
     /* set systick is lowest priority */
     NVIC_SetPriority(SysTick1_IRQn,0xf0);
     SysTick1->CTLR=0;
-    SysTick1->ISR=0;
+    SysTick0->ISR &= ~(1<<1);
     SysTick1->CNT=0;
     SysTick1->CMP=configCPU_CLOCK_HZ/configTICK_RATE_HZ;;
     SysTick1->CTLR= 0xf;
@@ -255,7 +255,7 @@ void SysTick1_Handler( void )
     // printf("33\r\n");
     GET_INT_SP();
     portDISABLE_INTERRUPTS();
-    SysTick1->ISR=0;
+    SysTick0->ISR &= ~(1<<1);
     if( xTaskIncrementTick() != pdFALSE )
     {
         portYIELD();

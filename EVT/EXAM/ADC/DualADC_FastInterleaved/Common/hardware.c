@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.3
-* Date               : 2026/03/17
+* Version            : V1.0.4
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -10,7 +10,7 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-u16 Adc_Val[2];
+vu16 Adc_Val[2];
 vu8 ADC_IT_Flag;
 
 void ADC1_2_IRQHandler(void)   __attribute__((interrupt("WCH-Interrupt-fast")));
@@ -75,8 +75,6 @@ void ADC_Function_Init(void)
     ADC_StartCalibration(ADC2);
     while(ADC_GetCalibrationStatus(ADC2));
 
-    ADC_SoftwareStartConvCmd(ADC2, ENABLE);
-
 	NVIC_EnableIRQ(ADC1_2_IRQn);
 	NVIC_SetPriority(ADC1_2_IRQn,0);
 	ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
@@ -99,6 +97,12 @@ void Hardware(void)
 	{
         ADC_SoftwareStartConvCmd(ADC1, ENABLE);
         Delay_Ms(500);
+        if(ADC_IT_Flag == 1)
+        {
+			ADC_IT_Flag=0;
+            printf("\r\nADC2 ch1=%d\r\n",Adc_Val[1]);
+            printf("\r\nADC1 ch1=%d\r\n",Adc_Val[0]);
+        }
 	}
 }
 
@@ -117,11 +121,6 @@ void ADC1_2_IRQHandler()
 
         Adc_Val[0]=ADC1->RDATAR&0xffff;
         Adc_Val[1]=(ADC1->RDATAR>>16)&0xffff;
-    #if 1
-        printf("\r\nADC2 ch1=%d\r\n",Adc_Val[1]);
-        printf("\r\nADC1 ch1=%d\r\n",Adc_Val[0]);
-
-     #endif
 
     }
     ADC_ClearITPendingBit( ADC1, ADC_IT_EOC);

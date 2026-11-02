@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_it.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : Main Interrupt Service Routines.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -51,9 +51,12 @@ void HardFault_Handler(void)
  */
 void SW_Handler(void)
 {
+    __disable_irq();
     __asm("li  a4, 0x6000");
     __asm("jr  a4");
 
-    while(1);
+    while(1)
+    {
+    }
 }
 

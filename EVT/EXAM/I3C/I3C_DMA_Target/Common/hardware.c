@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides some functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -15,7 +15,7 @@
 #define I3X_RX_mux (84)
 
 uint8_t trasmit_buf[10] = {};
-uint8_t recive_buf[10]  = {};
+volatile uint8_t recive_buf[10]  = {};
 
 /*********************************************************************
  * @fn      GPIO_Config
@@ -223,7 +223,7 @@ void Hardware(void)
     I3C_TxPreloadConfig(10);
     I3C_DMA_Transmit(trasmit_buf, 10);
 
-    I3C_DMA_Recive(recive_buf, 10);
+    I3C_DMA_Recive((uint8_t *)recive_buf, 10);
 
     while (DMA_GetFlagStatus(DMA1, DMA1_FLAG_TC5) == RESET)
     {

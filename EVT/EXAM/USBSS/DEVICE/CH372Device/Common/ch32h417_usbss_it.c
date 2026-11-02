@@ -55,17 +55,22 @@ void USBSS_LINK_IRQHandler( void )
 }
 
 /*********************************************************************
- * @fn      USBSS_Endp_Clear_Frature
+ * @fn      USBSS_Endp_Clear_Feature
  *
  * @brief   Clear the endpoint feature.
  *
  * @return  Whether it was cleared successfully.
  */
-uint8_t USBSS_Endp_Clear_Frature( uint8_t dir_endp )         
+uint8_t USBSS_Endp_Clear_Feature( uint8_t dir_endp )         
 {
     if(( dir_endp & DEF_UEP_MASK ) > DEF_UEP15 )
     {
         return 0xff;
+    }
+
+    if(( dir_endp & DEF_UEP_MASK ) == DEF_UEP0 )
+    {
+        return 0x00;
     }
     if(( dir_endp & DEF_UEP_IN ))
     {
@@ -98,17 +103,22 @@ uint8_t USBSS_Endp_Clear_Frature( uint8_t dir_endp )
 }
 
 /*********************************************************************
- * @fn      USBSS_Endp_Set_Frature
+ * @fn      USBSS_Endp_Set_Feature
  *
  * @brief   Set the endpoint feature.
  *
  * @return  Whether it was cleared successfully.
  */
-uint8_t USBSS_Endp_Set_Frature( uint8_t dir_endp )         
+uint8_t USBSS_Endp_Set_Feature( uint8_t dir_endp )         
 {
     if(( dir_endp & DEF_UEP_MASK ) > DEF_UEP15 )
     {
         return 0xff;
+    }
+
+    if(( dir_endp & DEF_UEP_MASK ) == DEF_UEP0 )
+    {
+        return 0x00;
     }
     if(( dir_endp & DEF_UEP_IN ))
     {
@@ -368,7 +378,7 @@ void USBSS_IRQHandler( void )
                         if((uint8_t)( USBSS_SetupReqValue & 0xFF ) == USB_REQ_FEAT_ENDP_HALT )
                         {
                             /* Clear End-point Feature */
-                            USBSS_Endp_Clear_Frature((uint8_t)( USBSS_SetupReqIndex & 0xFF ));
+                            USBSS_Endp_Clear_Feature((uint8_t)( USBSS_SetupReqIndex & 0xFF ));
                         }
                         else
                         {
@@ -423,7 +433,11 @@ void USBSS_IRQHandler( void )
                         if( (uint8_t)( USBSS_SetupReqValue & 0xFF ) == USB_REQ_FEAT_ENDP_HALT )
                         {
                             /* Set end-points status stall */
-                            USBSS_Endp_Set_Frature((uint8_t)(USBSS_SetupReqIndex & 0xFF ));
+                            USBSS_Endp_Set_Feature((uint8_t)(USBSS_SetupReqIndex & 0xFF ));
+                        }
+                        else
+                        {
+                            errflag = 0xFF;
                         }
                     }
 

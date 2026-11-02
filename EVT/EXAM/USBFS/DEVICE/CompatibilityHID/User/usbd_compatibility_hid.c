@@ -9,7 +9,7 @@
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
-#include "ch32v205_usbfs_device.h"
+#include "ch32h417_usbfs_device.h"
 #include "debug.h"
 #include "string.h"
 #include "usbd_compatibility_hid.h"

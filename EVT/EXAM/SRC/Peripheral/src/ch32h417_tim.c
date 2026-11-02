@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
 * File Name          : ch32h417_tim.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/09/11
 * Description        : This file provides all the TIM firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -560,12 +560,12 @@ void TIM_CtrlPWMOutputs(TIM_TypeDef *TIMx, FunctionalState NewState)
  * @param   TIMx - where x can be 1 to 12 to select the TIM peripheral.
  *          TIM_IT - specifies the TIM interrupts sources to be enabled or disabled.
  *            TIM_IT_Update - TIM update Interrupt source.
- *            TIM_IT_CC1 - TIM Capture Compare 1 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC2 - TIM Capture Compare 2 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC3 - TIM Capture Compare 3 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC4 - TIM Capture Compare 4 Interrupt source��not for TIM6/TIM7.
+ *            TIM_IT_CC1 - TIM Capture Compare 1 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC2 - TIM Capture Compare 2 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC3 - TIM Capture Compare 3 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC4 - TIM Capture Compare 4 Interrupt source - not for TIM6/TIM7.
  *            TIM_IT_COM - TIM Commutation Interrupt source, only for TIM1/TIM8.
- *            TIM_IT_Trigger - TIM Trigger Interrupt source��not for TIM6/TIM7.
+ *            TIM_IT_Trigger - TIM Trigger Interrupt source - not for TIM6/TIM7.
  *            TIM_IT_Break - TIM Break Interrupt source, only for TIM1/TIM8.
  *          NewState - ENABLE or DISABLE.
  *
@@ -648,10 +648,10 @@ void TIM_DMAConfig(TIM_TypeDef *TIMx, uint16_t TIM_DMABase, uint16_t TIM_DMABurs
  * @param   TIMx - where x can be 1 to 12 to select the TIM peripheral.
  *          TIM_DMASource - specifies the DMA Request sources.
  *            TIM_DMA_Update - TIM update Interrupt source.
- *            TIM_DMA_CC1 - TIM Capture Compare 1 DMA source��not for TIM6/TIM7.
- *            TIM_DMA_CC2 - TIM Capture Compare 2 DMA source��not for TIM6/TIM7.
- *            TIM_DMA_CC3 - TIM Capture Compare 3 DMA source��not for TIM6/TIM7.
- *            TIM_DMA_CC4 - TIM Capture Compare 4 DMA source��not for TIM6/TIM7.
+ *            TIM_DMA_CC1 - TIM Capture Compare 1 DMA source - not for TIM6/TIM7.
+ *            TIM_DMA_CC2 - TIM Capture Compare 2 DMA source - not for TIM6/TIM7.
+ *            TIM_DMA_CC3 - TIM Capture Compare 3 DMA source - not for TIM6/TIM7.
+ *            TIM_DMA_CC4 - TIM Capture Compare 4 DMA source - not for TIM6/TIM7.
  *            TIM_DMA_COM - TIM Commutation DMA source, only for TIM1/TIM8.
  *            TIM_DMA_Trigger - TIM Trigger DMA source.
  *          NewState - ENABLE or DISABLE.
@@ -2080,17 +2080,17 @@ uint16_t TIM_GetPrescaler(TIM_TypeDef *TIMx)
  * @param   TIMx - where x can be 1 to 4 select the TIM peripheral.
  *          TIM_FLAG - specifies the flag to check.
  *            TIM_FLAG_Update - TIM update Flag.
- *            TIM_FLAG_CC1 - TIM Capture Compare 1 Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC2 - TIM Capture Compare 2 Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC3 - TIM Capture Compare 3 Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC4 - TIM Capture Compare 4 Flag��not for TIM6/TIM7.
+ *            TIM_FLAG_CC1 - TIM Capture Compare 1 Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC2 - TIM Capture Compare 2 Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC3 - TIM Capture Compare 3 Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC4 - TIM Capture Compare 4 Flag - not for TIM6/TIM7.
  *            TIM_FLAG_COM - TIM Commutation Flag, only for TIM1/TIM8.
- *            TIM_FLAG_Trigger - TIM Trigger Flag��not for TIM6/TIM7.
+ *            TIM_FLAG_Trigger - TIM Trigger Flag - not for TIM6/TIM7.
  *            TIM_FLAG_Break - TIM Break Flag, only for TIM1/TIM8.
- *            TIM_FLAG_CC1OF - TIM Capture Compare 1 overcapture Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC2OF - TIM Capture Compare 2 overcapture Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC3OF - TIM Capture Compare 3 overcapture Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC4OF - TIM Capture Compare 4 overcapture Flag��not for TIM6/TIM7.
+ *            TIM_FLAG_CC1OF - TIM Capture Compare 1 overcapture Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC2OF - TIM Capture Compare 2 overcapture Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC3OF - TIM Capture Compare 3 overcapture Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC4OF - TIM Capture Compare 4 overcapture Flag - not for TIM6/TIM7.
  *               
  * @return  none
  */
@@ -2118,17 +2118,17 @@ FlagStatus TIM_GetFlagStatus(TIM_TypeDef *TIMx, uint16_t TIM_FLAG)
  * @param   TIMx - where x can be 1 to 12 select the TIM peripheral.
  *          TIM_FLAG - specifies the flag to check.
  *            TIM_FLAG_Update - TIM update Flag.
- *            TIM_FLAG_CC1 - TIM Capture Compare 1 Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC2 - TIM Capture Compare 2 Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC3 - TIM Capture Compare 3 Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC4 - TIM Capture Compare 4 Flag��not for TIM6/TIM7.
+ *            TIM_FLAG_CC1 - TIM Capture Compare 1 Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC2 - TIM Capture Compare 2 Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC3 - TIM Capture Compare 3 Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC4 - TIM Capture Compare 4 Flag - not for TIM6/TIM7.
  *            TIM_FLAG_COM - TIM Commutation Flag, only for TIM1/TIM8.
- *            TIM_FLAG_Trigger - TIM Trigger Flag��not for TIM6/TIM7.
+ *            TIM_FLAG_Trigger - TIM Trigger Flag - not for TIM6/TIM7.
  *            TIM_FLAG_Break - TIM Break Flag, only for TIM1/TIM8.
- *            TIM_FLAG_CC1OF - TIM Capture Compare 1 overcapture Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC2OF - TIM Capture Compare 2 overcapture Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC3OF - TIM Capture Compare 3 overcapture Flag��not for TIM6/TIM7.
- *            TIM_FLAG_CC4OF - TIM Capture Compare 4 overcapture Flag��not for TIM6/TIM7.
+ *            TIM_FLAG_CC1OF - TIM Capture Compare 1 overcapture Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC2OF - TIM Capture Compare 2 overcapture Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC3OF - TIM Capture Compare 3 overcapture Flag - not for TIM6/TIM7.
+ *            TIM_FLAG_CC4OF - TIM Capture Compare 4 overcapture Flag - not for TIM6/TIM7.
  *
  * @return  none
  */
@@ -2145,12 +2145,12 @@ void TIM_ClearFlag(TIM_TypeDef *TIMx, uint16_t TIM_FLAG)
  * @param   TIMx - where x can be 1 to 12 select the TIM peripheral.
  *          TIM_IT - specifies the TIM interrupt source to check.
  *            TIM_IT_Update - TIM update Interrupt source.
- *            TIM_IT_CC1 - TIM Capture Compare 1 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC2 - TIM Capture Compare 2 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC3 - TIM Capture Compare 3 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC4 - TIM Capture Compare 4 Interrupt source��not for TIM6/TIM7.
+ *            TIM_IT_CC1 - TIM Capture Compare 1 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC2 - TIM Capture Compare 2 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC3 - TIM Capture Compare 3 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC4 - TIM Capture Compare 4 Interrupt source - not for TIM6/TIM7.
  *            TIM_IT_COM - TIM Commutation Interrupt source, only for TIM1/TIM8.
- *            TIM_IT_Trigger - TIM Trigger Interrupt source��not for TIM6/TIM7.
+ *            TIM_IT_Trigger - TIM Trigger Interrupt source - not for TIM6/TIM7.
  *            TIM_IT_Break - TIM Break Interrupt source, only for TIM1/TIM8.
  *
  * @return  none
@@ -2183,12 +2183,12 @@ ITStatus TIM_GetITStatus(TIM_TypeDef *TIMx, uint16_t TIM_IT)
  * @param   TIMx - where x can be 1 to 12 select the TIM peripheral.
  *          TIM_IT - specifies the TIM interrupt source to check.
  *            TIM_IT_Update - TIM update Interrupt source.
- *            TIM_IT_CC1 - TIM Capture Compare 1 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC2 - TIM Capture Compare 2 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC3 - TIM Capture Compare 3 Interrupt source��not for TIM6/TIM7.
- *            TIM_IT_CC4 - TIM Capture Compare 4 Interrupt source��not for TIM6/TIM7.
+ *            TIM_IT_CC1 - TIM Capture Compare 1 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC2 - TIM Capture Compare 2 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC3 - TIM Capture Compare 3 Interrupt source - not for TIM6/TIM7.
+ *            TIM_IT_CC4 - TIM Capture Compare 4 Interrupt source - not for TIM6/TIM7.
  *            TIM_IT_COM - TIM Commutation Interrupt source, only for TIM1/TIM8.
- *            TIM_IT_Trigger - TIM Trigger Interrupt source��not for TIM6/TIM7.
+ *            TIM_IT_Trigger - TIM Trigger Interrupt source - not for TIM6/TIM7.
  *            TIM_IT_Break - TIM Break Interrupt source, only for TIM1/TIM8.
  *
  * @return  none

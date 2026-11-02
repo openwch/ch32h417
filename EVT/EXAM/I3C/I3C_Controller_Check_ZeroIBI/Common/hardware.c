@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides some functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -146,6 +146,7 @@ uint32_t I3C_ENTDAA(uint8_t tgt_daa)
     {
         if (I3C_GetFlagStatus(I3C_EVR_TXFNFF))
         {
+            payload = 0;
             for (uint32_t index = 0; index < 8; index++)
             {
                 while (I3C_GetFlagStatus((I3C_EVR_RXFNEF)) == RESET)
@@ -155,8 +156,11 @@ uint32_t I3C_ENTDAA(uint8_t tgt_daa)
             }
 
             I3C_WriteByte(tgt_daa++);
-            target_payload[tgt_cnt] = payload;
-            tgt_cnt++;
+            if (tgt_cnt < (sizeof(target_payload) / sizeof(target_payload[0])))
+            {
+                target_payload[tgt_cnt] = payload;
+                tgt_cnt++;
+            }
         }
 
     } while ((I3C_GetFlagStatus(I3C_EVR_FCF) == RESET) &&

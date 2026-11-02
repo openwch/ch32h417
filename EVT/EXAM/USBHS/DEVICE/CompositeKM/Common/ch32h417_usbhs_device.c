@@ -53,7 +53,7 @@ volatile uint8_t USBHS_HidIdle[2];
 volatile uint8_t USBHS_HidProtocol[2];
 
 /* Endpoint Buffer */
-__attribute__((aligned(4))) uint8_t USBHS_EP0_Buf[DEF_USBD_UEP0_SIZE];      // ep0(512)
+__attribute__((aligned(4))) uint8_t USBHS_EP0_Buf[DEF_USBD_UEP0_SIZE];      // ep0(64)
 __attribute__((aligned(4))) uint8_t USBHS_EP1_TX_Buf[DEF_USB_EP1_HS_SIZE];  // ep1_in(512)
 __attribute__((aligned(4))) uint8_t USBHS_EP2_TX_Buf[DEF_USB_EP2_HS_SIZE];  // ep2_in(512)
 
@@ -321,6 +321,10 @@ void USBHS_IRQHandler(void)
                                 break;
                             }
                         }
+                        else
+                        {
+                            errflag = 0xFF;
+                        }
                     }
                     else
                     {
@@ -564,6 +568,10 @@ void USBHS_IRQHandler(void)
                                         break;
                                     }
                                 }
+                                else
+                                {
+                                    errflag = 0xFF;
+                                }
                             }
                             break;
 
@@ -686,6 +694,10 @@ void USBHS_IRQHandler(void)
                             default:
                                 break;
                             }
+                        }
+                        else
+                        {
+                            errflag = 0xFF;
                         }
                     }
                     else

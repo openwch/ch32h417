@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : ch32h417.h
 * Author             : WCH
-* Version            : V1.0.6
-* Date               : 2026/09/09
+* Version            : V1.0.8
+* Date               : 2026/10/18
 * Description        : CH32H417_416_415 Device Peripheral Access Layer Header File.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -30,7 +30,7 @@
 
 /* CH32H417 Standard Peripheral Library version number */
 #define __CH32H417_STDPERIPH_VERSION_MAIN   (0x01) /* [15:8] main version */
-#define __CH32H417_STDPERIPH_VERSION_SUB    (0x06) /* [7:0] sub version */
+#define __CH32H417_STDPERIPH_VERSION_SUB    (0x08) /* [7:0] sub version */
 #define __CH32H417_STDPERIPH_VERSION        ( (__CH32H417_STDPERIPH_VERSION_MAIN << 8)\
                                              |(__CH32H417_STDPERIPH_VERSION_SUB << 0))
 
@@ -6808,77 +6808,77 @@ typedef struct
 #define AFIO_EXTICR1_EXTI7_CMPOUT                    ((uint32_t)0x60000000)            /* CMP OUT */
 
 /******************  Bit definition for AFIO_EXTICR2 register  *******************/
-#define AFIO_EXTICR2_EXTI8                           ((uint32_t)0x0000000F)        /* EXTI 0 configuration */
-#define AFIO_EXTICR2_EXTI9                           ((uint32_t)0x000000F0)        /* EXTI 1 configuration */
-#define AFIO_EXTICR2_EXTI10                          ((uint32_t)0x00000F00)        /* EXTI 2 configuration */
-#define AFIO_EXTICR2_EXTI11                          ((uint32_t)0x0000F000)        /* EXTI 3 configuration */
-#define AFIO_EXTICR2_EXTI12                          ((uint32_t)0x000F0000)        /* EXTI 4 configuration */
-#define AFIO_EXTICR2_EXTI13                          ((uint32_t)0x00F00000)        /* EXTI 5 configuration */
-#define AFIO_EXTICR2_EXTI14                          ((uint32_t)0x0F000000)        /* EXTI 6 configuration */
-#define AFIO_EXTICR2_EXTI15                          ((uint32_t)0xF0000000)        /* EXTI 7 configuration */
+#define AFIO_EXTICR2_EXTI8                           ((uint32_t)0x0000000F)        /* EXTI 8 configuration */
+#define AFIO_EXTICR2_EXTI9                           ((uint32_t)0x000000F0)        /* EXTI 9 configuration */
+#define AFIO_EXTICR2_EXTI10                          ((uint32_t)0x00000F00)        /* EXTI 10 configuration */
+#define AFIO_EXTICR2_EXTI11                          ((uint32_t)0x0000F000)        /* EXTI 11 configuration */
+#define AFIO_EXTICR2_EXTI12                          ((uint32_t)0x000F0000)        /* EXTI 12 configuration */
+#define AFIO_EXTICR2_EXTI13                          ((uint32_t)0x00F00000)        /* EXTI 13 configuration */
+#define AFIO_EXTICR2_EXTI14                          ((uint32_t)0x0F000000)        /* EXTI 14 configuration */
+#define AFIO_EXTICR2_EXTI15                          ((uint32_t)0xF0000000)        /* EXTI 15 configuration */
 
-#define AFIO_EXTICR2_EXTI8_PA                        ((uint32_t)0x00000000)            /* PA[0] pin */
-#define AFIO_EXTICR2_EXTI8_PB                        ((uint32_t)0x00000001)            /* PB[0] pin */
-#define AFIO_EXTICR2_EXTI8_PC                        ((uint32_t)0x00000002)            /* PC[0] pin */
-#define AFIO_EXTICR2_EXTI8_PD                        ((uint32_t)0x00000003)            /* PD[0] pin */
-#define AFIO_EXTICR2_EXTI8_PE                        ((uint32_t)0x00000004)            /* PE[0] pin */
-#define AFIO_EXTICR2_EXTI8_PF                        ((uint32_t)0x00000005)            /* PF[0] pin */
+#define AFIO_EXTICR2_EXTI8_PA                        ((uint32_t)0x00000000)            /* PA[8] pin */
+#define AFIO_EXTICR2_EXTI8_PB                        ((uint32_t)0x00000001)            /* PB[8] pin */
+#define AFIO_EXTICR2_EXTI8_PC                        ((uint32_t)0x00000002)            /* PC[8] pin */
+#define AFIO_EXTICR2_EXTI8_PD                        ((uint32_t)0x00000003)            /* PD[8] pin */
+#define AFIO_EXTICR2_EXTI8_PE                        ((uint32_t)0x00000004)            /* PE[8] pin */
+#define AFIO_EXTICR2_EXTI8_PF                        ((uint32_t)0x00000005)            /* PF[8] pin */
 #define AFIO_EXTICR2_EXTI8_CMPOUT                    ((uint32_t)0x00000006)            /* CMP OUT */
 
-#define AFIO_EXTICR2_EXTI9_PA                        ((uint32_t)0x00000000)            /* PA[1] pin */
-#define AFIO_EXTICR2_EXTI9_PB                        ((uint32_t)0x00000010)            /* PB[1] pin */
-#define AFIO_EXTICR2_EXTI9_PC                        ((uint32_t)0x00000020)            /* PC[1] pin */
-#define AFIO_EXTICR2_EXTI9_PD                        ((uint32_t)0x00000030)            /* PD[1] pin */
-#define AFIO_EXTICR2_EXTI9_PE                        ((uint32_t)0x00000040)            /* PE[1] pin */
-#define AFIO_EXTICR2_EXTI9_PF                        ((uint32_t)0x00000050)            /* PF[1] pin */
+#define AFIO_EXTICR2_EXTI9_PA                        ((uint32_t)0x00000000)            /* PA[9] pin */
+#define AFIO_EXTICR2_EXTI9_PB                        ((uint32_t)0x00000010)            /* PB[9] pin */
+#define AFIO_EXTICR2_EXTI9_PC                        ((uint32_t)0x00000020)            /* PC[9] pin */
+#define AFIO_EXTICR2_EXTI9_PD                        ((uint32_t)0x00000030)            /* PD[9] pin */
+#define AFIO_EXTICR2_EXTI9_PE                        ((uint32_t)0x00000040)            /* PE[9] pin */
+#define AFIO_EXTICR2_EXTI9_PF                        ((uint32_t)0x00000050)            /* PF[9] pin */
 #define AFIO_EXTICR2_EXTI9_CMPOUT                    ((uint32_t)0x00000060)            /* CMP OUT */
 
-#define AFIO_EXTICR2_EXTI10_PA                       ((uint32_t)0x00000000)            /* PA[2] pin */
-#define AFIO_EXTICR2_EXTI10_PB                       ((uint32_t)0x00000100)            /* PB[2] pin */
-#define AFIO_EXTICR2_EXTI10_PC                       ((uint32_t)0x00000200)            /* PC[2] pin */
-#define AFIO_EXTICR2_EXTI10_PD                       ((uint32_t)0x00000300)            /* PD[2] pin */
-#define AFIO_EXTICR2_EXTI10_PE                       ((uint32_t)0x00000400)            /* PE[2] pin */
-#define AFIO_EXTICR2_EXTI10_PF                       ((uint32_t)0x00000500)            /* PF[2] pin */
+#define AFIO_EXTICR2_EXTI10_PA                       ((uint32_t)0x00000000)            /* PA[10] pin */
+#define AFIO_EXTICR2_EXTI10_PB                       ((uint32_t)0x00000100)            /* PB[10] pin */
+#define AFIO_EXTICR2_EXTI10_PC                       ((uint32_t)0x00000200)            /* PC[10] pin */
+#define AFIO_EXTICR2_EXTI10_PD                       ((uint32_t)0x00000300)            /* PD[10] pin */
+#define AFIO_EXTICR2_EXTI10_PE                       ((uint32_t)0x00000400)            /* PE[10] pin */
+#define AFIO_EXTICR2_EXTI10_PF                       ((uint32_t)0x00000500)            /* PF[10] pin */
 #define AFIO_EXTICR2_EXTI10_CMPOUT                   ((uint32_t)0x00000600)            /* CMP OUT */
 
-#define AFIO_EXTICR2_EXTI11_PA                       ((uint32_t)0x00000000)            /* PA[3] pin */
-#define AFIO_EXTICR2_EXTI11_PB                       ((uint32_t)0x00001000)            /* PB[3] pin */
-#define AFIO_EXTICR2_EXTI11_PC                       ((uint32_t)0x00002000)            /* PC[3] pin */
-#define AFIO_EXTICR2_EXTI11_PD                       ((uint32_t)0x00003000)            /* PD[3] pin */
-#define AFIO_EXTICR2_EXTI11_PE                       ((uint32_t)0x00004000)            /* PE[3] pin */
-#define AFIO_EXTICR2_EXTI11_PF                       ((uint32_t)0x00005000)            /* PF[3] pin */
+#define AFIO_EXTICR2_EXTI11_PA                       ((uint32_t)0x00000000)            /* PA[11] pin */
+#define AFIO_EXTICR2_EXTI11_PB                       ((uint32_t)0x00001000)            /* PB[11] pin */
+#define AFIO_EXTICR2_EXTI11_PC                       ((uint32_t)0x00002000)            /* PC[11] pin */
+#define AFIO_EXTICR2_EXTI11_PD                       ((uint32_t)0x00003000)            /* PD[11] pin */
+#define AFIO_EXTICR2_EXTI11_PE                       ((uint32_t)0x00004000)            /* PE[11] pin */
+#define AFIO_EXTICR2_EXTI11_PF                       ((uint32_t)0x00005000)            /* PF[11] pin */
 #define AFIO_EXTICR2_EXTI11_CMPOUT                   ((uint32_t)0x00006000)            /* CMP OUT */
 
-#define AFIO_EXTICR2_EXTI12_PA                       ((uint32_t)0x00000000)            /* PA[4] pin */
-#define AFIO_EXTICR2_EXTI12_PB                       ((uint32_t)0x00010000)            /* PB[4] pin */
-#define AFIO_EXTICR2_EXTI12_PC                       ((uint32_t)0x00020000)            /* PC[4] pin */
-#define AFIO_EXTICR2_EXTI12_PD                       ((uint32_t)0x00030000)            /* PD[4] pin */
-#define AFIO_EXTICR2_EXTI12_PE                       ((uint32_t)0x00040000)            /* PE[4] pin */
-#define AFIO_EXTICR2_EXTI12_PF                       ((uint32_t)0x00050000)            /* PF[4] pin */
+#define AFIO_EXTICR2_EXTI12_PA                       ((uint32_t)0x00000000)            /* PA[12] pin */
+#define AFIO_EXTICR2_EXTI12_PB                       ((uint32_t)0x00010000)            /* PB[12] pin */
+#define AFIO_EXTICR2_EXTI12_PC                       ((uint32_t)0x00020000)            /* PC[12] pin */
+#define AFIO_EXTICR2_EXTI12_PD                       ((uint32_t)0x00030000)            /* PD[12] pin */
+#define AFIO_EXTICR2_EXTI12_PE                       ((uint32_t)0x00040000)            /* PE[12] pin */
+#define AFIO_EXTICR2_EXTI12_PF                       ((uint32_t)0x00050000)            /* PF[12] pin */
 #define AFIO_EXTICR2_EXTI12_CMPOUT                   ((uint32_t)0x00060000)            /* CMP OUT */
 
-#define AFIO_EXTICR2_EXTI13_PA                       ((uint32_t)0x00000000)            /* PA[5] pin */
-#define AFIO_EXTICR2_EXTI13_PB                       ((uint32_t)0x00100000)            /* PB[5] pin */
-#define AFIO_EXTICR2_EXTI13_PC                       ((uint32_t)0x00200000)            /* PC[5] pin */
-#define AFIO_EXTICR2_EXTI13_PD                       ((uint32_t)0x00300000)            /* PD[5] pin */
-#define AFIO_EXTICR2_EXTI13_PE                       ((uint32_t)0x00400000)            /* PE[5] pin */
-#define AFIO_EXTICR2_EXTI13_PF                       ((uint32_t)0x00500000)            /* PF[5] pin */
+#define AFIO_EXTICR2_EXTI13_PA                       ((uint32_t)0x00000000)            /* PA[13] pin */
+#define AFIO_EXTICR2_EXTI13_PB                       ((uint32_t)0x00100000)            /* PB[13] pin */
+#define AFIO_EXTICR2_EXTI13_PC                       ((uint32_t)0x00200000)            /* PC[13] pin */
+#define AFIO_EXTICR2_EXTI13_PD                       ((uint32_t)0x00300000)            /* PD[13] pin */
+#define AFIO_EXTICR2_EXTI13_PE                       ((uint32_t)0x00400000)            /* PE[13] pin */
+#define AFIO_EXTICR2_EXTI13_PF                       ((uint32_t)0x00500000)            /* PF[13] pin */
 #define AFIO_EXTICR2_EXTI13_CMPOUT                   ((uint32_t)0x00600000)            /* CMP OUT */
 
-#define AFIO_EXTICR2_EXTI14_PA                       ((uint32_t)0x00000000)            /* PA[6] pin */
-#define AFIO_EXTICR2_EXTI14_PB                       ((uint32_t)0x01000000)            /* PB[6] pin */
-#define AFIO_EXTICR2_EXTI14_PC                       ((uint32_t)0x02000000)            /* PC[6] pin */
-#define AFIO_EXTICR2_EXTI14_PD                       ((uint32_t)0x03000000)            /* PD[6] pin */
-#define AFIO_EXTICR2_EXTI14_PE                       ((uint32_t)0x04000000)            /* PE[6] pin */
-#define AFIO_EXTICR2_EXTI14_PF                       ((uint32_t)0x05000000)            /* PF[6] pin */
+#define AFIO_EXTICR2_EXTI14_PA                       ((uint32_t)0x00000000)            /* PA[14] pin */
+#define AFIO_EXTICR2_EXTI14_PB                       ((uint32_t)0x01000000)            /* PB[14] pin */
+#define AFIO_EXTICR2_EXTI14_PC                       ((uint32_t)0x02000000)            /* PC[14] pin */
+#define AFIO_EXTICR2_EXTI14_PD                       ((uint32_t)0x03000000)            /* PD[14] pin */
+#define AFIO_EXTICR2_EXTI14_PE                       ((uint32_t)0x04000000)            /* PE[14] pin */
+#define AFIO_EXTICR2_EXTI14_PF                       ((uint32_t)0x05000000)            /* PF[14] pin */
 #define AFIO_EXTICR2_EXTI14_CMPOUT                   ((uint32_t)0x06000000)            /* CMP OUT */
 
-#define AFIO_EXTICR2_EXTI15_PA                       ((uint32_t)0x00000000)            /* PA[7] pin */
-#define AFIO_EXTICR2_EXTI15_PB                       ((uint32_t)0x10000000)            /* PB[7] pin */
-#define AFIO_EXTICR2_EXTI15_PC                       ((uint32_t)0x20000000)            /* PC[7] pin */
-#define AFIO_EXTICR2_EXTI15_PD                       ((uint32_t)0x30000000)            /* PD[7] pin */
-#define AFIO_EXTICR2_EXTI15_PE                       ((uint32_t)0x40000000)            /* PE[7] pin */
-#define AFIO_EXTICR2_EXTI15_PF                       ((uint32_t)0x50000000)            /* PF[7] pin */
+#define AFIO_EXTICR2_EXTI15_PA                       ((uint32_t)0x00000000)            /* PA[15] pin */
+#define AFIO_EXTICR2_EXTI15_PB                       ((uint32_t)0x10000000)            /* PB[15] pin */
+#define AFIO_EXTICR2_EXTI15_PC                       ((uint32_t)0x20000000)            /* PC[15] pin */
+#define AFIO_EXTICR2_EXTI15_PD                       ((uint32_t)0x30000000)            /* PD[15] pin */
+#define AFIO_EXTICR2_EXTI15_PE                       ((uint32_t)0x40000000)            /* PE[15] pin */
+#define AFIO_EXTICR2_EXTI15_PF                       ((uint32_t)0x50000000)            /* PF[15] pin */
 #define AFIO_EXTICR2_EXTI15_CMPOUT                   ((uint32_t)0x60000000)            /* CMP OUT */
 
 /******************************************************************************/
@@ -7301,7 +7301,7 @@ typedef struct
 #define LPTIM_ISR_ARRM                               ((uint32_t)0x00000002)
 #define LPTIM_ISR_EXTTRIG                            ((uint32_t)0x00000004)
 #define LPTIM_ISR_CMPOK                              ((uint32_t)0x00000008)
-#define LPTIM_ISR_ARROK                              ((uint32_t)0000000010)
+#define LPTIM_ISR_ARROK                              ((uint32_t)0x00000010)
 #define LPTIM_ISR_UP                                 ((uint32_t)0x00000020)
 #define LPTIM_ISR_DOWN                               ((uint32_t)0x00000040)
 #define LPTIM_ISR_DIRSYNC                            ((uint32_t)0x00000080)
@@ -7888,7 +7888,7 @@ typedef struct
 #define  RCC_SFTRSTF                                 ((uint32_t)0x10000000)        /* Software Reset flag */
 #define  RCC_IWDGRSTF                                ((uint32_t)0x20000000)        /* Independent Watchdog reset flag */
 #define  RCC_WWDGRSTF                                ((uint32_t)0x40000000)        /* Window watchdog reset flag */
-#define  RCC_LOCKUPRSTF                              ((uint32_t)0x80000000)        /* Low-Power reset flag */
+#define  RCC_LOCKUPRSTF                              ((uint32_t)0x80000000)        /* Lockup reset flag */
 
 /*******************  Bit definition for RCC_HBRSTR register  ********************/
 #define  RCC_DMA1RST                                 ((uint32_t)0x00000001)
@@ -8796,7 +8796,7 @@ typedef struct
 #define  OPA_CTLR1_NSEL1                             ((uint16_t)0x0070)
 #define  OPA_CTLR1_NSEL1_0                           ((uint16_t)0x0010)
 #define  OPA_CTLR1_NSEL1_1                           ((uint16_t)0x0020)
-#define  OPA_CTLR1_NSEL1_2                           ((uint16_t)0x0030)
+#define  OPA_CTLR1_NSEL1_2                           ((uint16_t)0x0040)
 
 #define  OPA_CTLR1_FBEN1                             ((uint16_t)0x0100)
 #define  OPA_CTLR1_PGADIF1                           ((uint16_t)0x0200)
@@ -8814,7 +8814,7 @@ typedef struct
 #define  OPA_CTLR2_NSEL2                             ((uint16_t)0x0070)
 #define  OPA_CTLR2_NSEL2_0                           ((uint16_t)0x0010)
 #define  OPA_CTLR2_NSEL2_1                           ((uint16_t)0x0020)
-#define  OPA_CTLR2_NSEL2_2                           ((uint16_t)0x0030)
+#define  OPA_CTLR2_NSEL2_2                           ((uint16_t)0x0040)
 
 #define  OPA_CTLR2_FBEN2                             ((uint16_t)0x0100)
 #define  OPA_CTLR2_PGADIF2                           ((uint16_t)0x0200)
@@ -8832,7 +8832,7 @@ typedef struct
 #define  OPA_CTLR3_NSEL3                             ((uint16_t)0x0070)
 #define  OPA_CTLR3_NSEL3_0                           ((uint16_t)0x0010)
 #define  OPA_CTLR3_NSEL3_1                           ((uint16_t)0x0020)
-#define  OPA_CTLR3_NSEL3_2                           ((uint16_t)0x0030)
+#define  OPA_CTLR3_NSEL3_2                           ((uint16_t)0x0040)
 
 #define  OPA_CTLR3_FBEN3                             ((uint16_t)0x0100)
 #define  OPA_CTLR3_PGADIF3                           ((uint16_t)0x0200)
@@ -9068,7 +9068,7 @@ typedef struct
 #define  SDMMC_RST_LGC                               ((uint16_t)0x0010)
 #define  SDMMC_NEGSMP                                ((uint16_t)0x0020)
 #define  SDMMC_SLV_MODE                              ((uint16_t)0x0100)
-#define  SDMMC_SLV_FORCE_ERR                         ((uint16_t)000200)
+#define  SDMMC_SLV_FORCE_ERR                         ((uint16_t)0x0200)
 
 /*******************  Bit definition for SDMMC_TIMEOUT register  *******************/
 #define  SDMMC_TOCNT_MASK                            ((uint8_t)0x0F)
@@ -9366,7 +9366,7 @@ typedef struct
 #define  SAI_SR_FLTH                                 ((uint32_t)0x00070000)
 #define  SAI_SR_FLTH_0                               ((uint32_t)0x00010000)
 #define  SAI_SR_FLTH_1                               ((uint32_t)0x00020000)
-#define  SAI_SR_FLTH_2                               ((uint32_t)0x00030000)
+#define  SAI_SR_FLTH_2                               ((uint32_t)0x00040000)
 
 /*********************  Bit definition for SAI_xDATAR register  *********************/
 #define  SAI_DATAR_DR                                ((uint32_t)0xFFFFFFFF)
@@ -10428,7 +10428,7 @@ typedef struct
 #define  DFSDM_FLTFCR3_FOSR_6                        ((uint32_t)0x00400000)
 #define  DFSDM_FLTFCR3_FOSR_7                        ((uint32_t)0x00800000)
 #define  DFSDM_FLTFCR3_FOSR_8                        ((uint32_t)0x01000000)
-#define  DFSDM_FLTFCR3_FOSR_9                        ((uint32_t)0x03FF0000)
+#define  DFSDM_FLTFCR3_FOSR_9                        ((uint32_t)0x02000000)
 
 #define  DFSDM_FLTFCR3_FORD                          ((uint32_t)0xE0000000)
 #define  DFSDM_FLTFCR3_FORD_0                        ((uint32_t)0x20000000)

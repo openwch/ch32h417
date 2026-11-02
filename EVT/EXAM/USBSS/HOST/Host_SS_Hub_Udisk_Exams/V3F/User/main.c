@@ -13,7 +13,7 @@
 /*
  * @Note
  * This routine demonstrates how the CH32H417 can act as a USB host to control 
- * the udisk under the HUB£¨Support for file system£©.
+ * the udisk under the HUB(Support for file system).
  * The file system of the USB disk needs to be FAT12/FAT16/FAT32.
 */
 

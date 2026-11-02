@@ -11,14 +11,12 @@
  *******************************************************************************/
 /*
  *@Note
-  Example routine to emulate a custom USB device (CH372 device).
-  This routine demonstrates the use of a USBSS Device to emulate a custom device, the CH372,
-  with endpoints 1/2 downlinking data and uploading via endpoints 2/1 respectively
-  Endpoints 3 and 4 upload and download data separately respectively.
-  The device can be operated using Bushund or other upper computer software.
-  Note: This routine needs to be demonstrated in conjunction with the host software.
-
-  If the USB is set to high-speed, an external crystal oscillator is recommended for the clock source.
+  Example routine for a UVC camera device (DVP interface, YUY2).
+  This routine captures image data from an OV2640/OV5640 sensor through DVP and
+  streams it to the host as a UVC video device over USBSS or USBHS.
+  The OV2640/OV5640 model is detected at power-up and the matching configuration
+  descriptors are selected before USB initialization.
+  The device can be previewed and its resolutions switched with CameraTestTool.
 */
 
 #include "debug.h"
@@ -40,14 +38,11 @@ int main(void)
 	printf("V5F SystemCoreClk:%d\r\n", SystemCoreClock);
 	Chip = (( DBGMCU_GetCHIPID() >> 4 ) & 0x0F);
 
-#if (Run_Core == Run_Core_V3FandV5F)
-	HSEM_FastTake(HSEM_ID0);
-	HSEM_ReleaseOneSem(HSEM_ID0, 0);
+#if (Run_Core == Run_Core_V3FandV5F) || (Run_Core == Run_Core_V5F)
+	Hardware();
 
 #elif (Run_Core == Run_Core_V3F)
 
-#elif (Run_Core == Run_Core_V5F)
-	Hardware();
 #endif
 
 	while(1)

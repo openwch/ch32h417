@@ -189,7 +189,7 @@ uint8_t UHSIF_GPIO_Init( uint8_t mode_select, uint8_t uhsif_port_rm, uint8_t uhs
  *          line_dir:    0 ~ 1 (0:IN; 1:OUT)
  *          buff_count:  0 ~ 8 (Selection of buff quantity)
  *          *pbuf:         Configure the send and receive addresses of the current line
- *          water_mark_value£º 0 ~ 0x3fff(When sending, it indicates the number of remaining words to be sent in the buffer; 
+ *          water_mark_value: 0 ~ 0x3fff(When sending, it indicates the number of remaining words to be sent in the buffer; 
                                when receiving, it indicates the number of remaining words to be received in the buffer)
  *
  * @return  Whether the UHISF configuration was successful

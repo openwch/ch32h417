@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/17
+* Version            : V1.0.2
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -30,17 +30,27 @@ volatile uint32_t WriteReadStatus = 0, Index = 0;
  * @return  None
  *          
  */
-
-void Fill_Buffer(uint32_t *pBuffer, uint16_t BufferLenght, uint32_t Offset)
+void Fill_Buffer(uint32_t *pBuffer, uint16_t BufferLength, uint32_t Offset)
 {
     uint16_t IndexTmp = 0;
 
     /* Put in global buffer same values */
-    for (IndexTmp = 0; IndexTmp < BufferLenght; IndexTmp++ )
+    for (IndexTmp = 0; IndexTmp < BufferLength; IndexTmp++ )
     {
         pBuffer[IndexTmp] =IndexTmp +Offset;
     }
 }
+
+/*********************************************************************
+ * @fn      GPIO_Config
+ *
+ * @brief   GPIO init
+ *
+ * @param   None
+ *
+ * @return  None
+ *          
+ */
 void GPIO_Config(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure = {0};
@@ -238,7 +248,6 @@ void FMC_SRAM_Init(void)
 
     RCC_HBPeriphClockCmd(RCC_HBPeriph_FMC, ENABLE);
     GPIO_Config();
-
 
     readWriteTiming.FMC_AddressSetupTime = 0x01;
     readWriteTiming.FMC_AddressHoldTime = 0x00;

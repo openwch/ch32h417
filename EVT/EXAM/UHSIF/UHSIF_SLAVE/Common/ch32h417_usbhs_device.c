@@ -540,6 +540,10 @@ void USBHS_IRQHandler(void)
                                         break;
                                     }
                                 }
+                                else
+                                {
+                                    errflag = 0xFF;
+                                }
                             }
                             break;
 
@@ -568,6 +572,7 @@ void USBHS_IRQHandler(void)
                                     {
                                         USBHS_EP0_Buf[0] = 0x01;
                                     }
+                                    break;
 
                                 case(DEF_UEP1 | DEF_UEP_IN):
                                     if(((USBHSD->UEP1_TX_CTRL) & USBHS_UEP_T_RES_MASK) == USBHS_UEP_T_RES_STALL)

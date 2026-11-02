@@ -1,9 +1,9 @@
 /********************************** (C) COPYRIGHT *******************************
- * File Name          : SPI_FLAH.h
+ * File Name          : SPI_FLASH.h
  * Author             : WCH
  * Version            : V1.0.0
  * Date               : 2024/07/31
- * Description        : header file for SPI_FLAH.c
+ * Description        : header file for SPI_FLASH.c
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
 * Attention: This software (modified or not) and binary are used for 

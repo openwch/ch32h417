@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/12/05
+* Version            : V1.0.2
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -22,7 +22,7 @@ void PIOC_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 volatile uint8_t  PIOC_TX_FLAG=0;
 volatile uint16_t PIOC_TX_RemainLEN=0;
-uint8_t  *PIOC_TX_ADDR;
+uint8_t * volatile PIOC_TX_ADDR=NULL;
 uint32_t PIOC_baudrate=115200;
 uint8_t  PIOC_parity=0;
 uint8_t  PIOC_stopbits=0;

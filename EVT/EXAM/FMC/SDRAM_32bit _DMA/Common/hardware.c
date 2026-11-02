@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.3
-* Date               : 2026/06/01
+* Version            : V1.0.4
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -12,6 +12,10 @@
 #include "hardware.h"
 
 /* Global define */
+#define bank1 0   
+#define bank2 1  
+#define bank1bank2 2    
+
 #define BUFFER_SIZE                              1024*5
 #define WRITE_READ_ADDR                          ((uint32_t)0x0)
 
@@ -44,19 +48,6 @@ uint32_t TxBuffer[BUFFER_SIZE]={1,11,2,22,3,33,4,77};
 uint32_t RxBuffer[BUFFER_SIZE]={1,11,2,22,3,33,4,77};
 volatile uint32_t WriteReadStatus = 0, Index = 0;
 
-typedef struct
-{
-  uint32_t CommandMode;                  /*Defines the command issued to the SDRAM device.
-                                              This parameter can be a value of @ref FMC_SDRAM_Command_Mode.          */
-
-  uint32_t CommandTarget;                /*Defines which device (1 or 2) the command will be issued to.
-                                              This parameter can be a value of @ref FMC_SDRAM_Command_Target.        */
-
-  uint32_t AutoRefreshNumber;            /*Defines the number of consecutive auto refresh command issued
-                                              in auto refresh mode.
-                                              This parameter can be a value between Min_Data = 1 and Max_Data = 16   */
-  uint32_t ModeRegisterDefinition;       /*Defines the SDRAM Mode register content                                */
-}FMC_SDRAM_CommandTypeDef;
 
 /*********************************************************************
  * @fn      FMC_SDRAM_WriteBuffer
@@ -135,11 +126,13 @@ void SDRAM_Send_Cmd(u8 bankx,u8 cmd,u8 refresh,u16 regval)
 {
     u32 target_bank=0;
     
-    if(bankx==0) target_bank=FMC_SDRAM_CMD_TARGET_BANK1;       
-    else if(bankx==1) target_bank=FMC_SDRAM_CMD_TARGET_BANK2;   
+    if(bankx==bank1) target_bank=FMC_SDRAM_CMD_TARGET_BANK1;       
+    else if(bankx==bank2) target_bank=FMC_SDRAM_CMD_TARGET_BANK2;   
+    else if(bankx==bank1bank2)target_bank=FMC_SDRAM_CMD_TARGET_BANK1_2;
 
     FMC_SDRAM_SendCMDConfig(target_bank,cmd,refresh,regval);
 }
+
 
 /*********************************************************************
  * @fn      SDRAM_Initialization_Sequence
@@ -150,7 +143,7 @@ void SDRAM_Send_Cmd(u8 bankx,u8 cmd,u8 refresh,u16 regval)
  */
 void SDRAM_Initialization_Sequence()
 {
-	u32 temp=0,bank1=0;
+	u32 temp=0;
     SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_CLK_ENABLE,1,0);        
 	SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_PALL,1,0);       
     SDRAM_Send_Cmd(bank1,FMC_SDRAM_CMD_AUTOREFRESH_MODE,8,0);
@@ -592,12 +585,12 @@ void GPIO_Config(void)
  *          
  */
 
-void Fill_Buffer(uint32_t *pBuffer, uint16_t BufferLenght, uint32_t Offset)
+void Fill_Buffer(uint32_t *pBuffer, uint16_t BufferLength, uint32_t Offset)
 {
     uint16_t IndexTmp = 0;
 
     /* Put in global buffer same values */
-    for (IndexTmp = 0; IndexTmp < BufferLenght; IndexTmp++ )
+    for (IndexTmp = 0; IndexTmp < BufferLength; IndexTmp++ )
     {
         pBuffer[IndexTmp] =IndexTmp +Offset;
     }

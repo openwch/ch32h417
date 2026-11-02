@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2026/03/17
+* Version            : V1.0.2
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -10,7 +10,7 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-u16 ADC_val1,ADC_val2;
+vu16 ADC_val1,ADC_val2;
 
 /*********************************************************************
  * @fn      ADC_Function_Init
@@ -35,7 +35,7 @@ void ADC_Function_Init(void)
 
 	ADC_DeInit(ADC1);
 	ADC_DeInit(ADC2);
-    ADC_InitStructure.ADC_Mode = ADC_Mode_RegInjecSimult;
+    ADC_InitStructure.ADC_Mode = ADC_Mode_InjecSimult;;
     ADC_InitStructure.ADC_ScanConvMode = DISABLE;
     ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
     ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;

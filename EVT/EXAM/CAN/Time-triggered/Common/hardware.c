@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : hardware.c
  * Author             : WCH
- * Version            : V1.0.2
- * Date               : 2026/03/25
+ * Version            : V1.0.3
+ * Date               : 2026/10/16
  * Description        : This document demonstrates the use of TTCAN.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -125,6 +125,7 @@ const CANPinTable_t CANRXPinTable[] = {
 volatile int CAN2FilterStartBank = 14, CAN3FilterStartBank = 28;
 
 volatile uint8_t TxBuff[8], RxBuff[8];
+volatile uint8_t tx_done_flag = 0, rx_done_flag = 0;
 
 uint8_t mbox;
 
@@ -246,6 +247,12 @@ uint8_t CAN_Send_Msg(CAN_TypeDef *CANx, uint32_t IdType, uint32_t Identifier, ui
     }
 
     mbox = CAN_Transmit(CANx, &CanTxStructure);
+    if (mbox == CAN_TxStatus_NoMailBox)
+    {
+        /* No free transmit mailbox: report failure instead of using an
+         * invalid mailbox number for CAN_TransmitStatus() (out-of-bounds). */
+        return 1;
+    }
     i = 0;
 
     while ((CAN_TransmitStatus(CANx, mbox) != CAN_TxStatus_Ok) && (i < 0xFFF))
@@ -388,6 +395,10 @@ uint8_t CAN_Receive_Msg(CAN_TypeDef *CANx, uint8_t *RxBuff)
 #else
     CAN_Receive(CANx, CAN_FIFO0, &CanRxStructure);
 #endif
+    if (CanRxStructure.DLC > 8)
+    {
+        return 0;
+    }
     for (i = 0; i < 8; i++)
     {
         RxBuff[i] = CanRxStructure.Data[i];
@@ -473,7 +484,33 @@ void Hardware(void)
         }
         CAN_Send_Msg(CAN1, CAN_ID_STD, 0x317, (uint8_t *)TxBuff, 8);
         Circle_CNT++;
+        /* The send completion print has been moved from the ISR into the
+         * main loop, guarded by tx_done_flag set in the interrupt. */
+        if (tx_done_flag)
+        {
+            tx_done_flag = 0;
+            printf("Sent data: ");
+            for (uint8_t i = 0; i < (CAN1->sTxMailBox[mbox].TXMDTR & 0xff); i++)
+            {
+                printf("%#04x ", TxBuff[i]);
+            }
+            printf("\n");
+        }
         Delay_Ms(500);
+#else
+        /* The receive print has been moved from the ISR into the main
+         * loop, guarded by rx_done_flag set in the interrupt. */
+        if (rx_done_flag)
+        {
+            rx_done_flag = 0;
+            printf("Receive data: ");
+            for (int i = 0; i < 8; i++)
+            {
+                printf("%#04x ", RxBuff[i]);
+            }
+            printf("\n");
+        }
+        Delay_Ms(10);
 #endif
     }
 }
@@ -484,12 +521,14 @@ __attribute__((interrupt("WCH-Interrupt-fast"))) void CAN1_RX0_IRQHandler()
     if (CAN_GetITStatus(CAN1, CAN_IT_FMP0))
     {
         px = CAN_Receive_Msg(CAN1, (uint8_t *)RxBuff);
-        printf("Receive data: ");
-        for (int i = 0; i < px; i++)
+        if (px > 8)
         {
-            printf("%#04x ", RxBuff[i]);
+            px = 8;
         }
-        printf("\n");
+        if (px)
+        {
+            rx_done_flag = 1;
+        }
         CAN_ClearITPendingBit(CAN1, CAN_IT_FMP0);
     }
 }
@@ -498,12 +537,9 @@ __attribute__((interrupt("WCH-Interrupt-fast"))) void CAN1_TX_IRQHandler()
 {
     if (CAN_GetITStatus(CAN1, CAN_IT_TME))
     {
-        printf("Sent data: ");
-        for (int i = 0; i < (CAN1->sTxMailBox[mbox].TXMDTR & 0xff); i++)
-        {
-            printf("%#04x ", TxBuff[i]);
-        }
-        printf("\n");
+        /* Do not call printf in the ISR: it is blocking and not reentrant.
+         * Set a flag and print in the Hardware() main loop instead. */
+        tx_done_flag = 1;
         CAN_ClearITPendingBit(CAN1, CAN_IT_TME);
     }
 }

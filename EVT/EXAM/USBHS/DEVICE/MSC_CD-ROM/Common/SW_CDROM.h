@@ -20,7 +20,7 @@
 #endif 
 
 /******************************************************************************/
-/* BulkOnly Mass Storage Class requst */
+/* BulkOnly Mass Storage Class request */
 #define CMD_CDROM_RESET                 0xFF
 #define CMD_CDROM_GET_MAX_LUN           0xFE
 

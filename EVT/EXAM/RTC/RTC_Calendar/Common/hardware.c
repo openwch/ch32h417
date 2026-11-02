@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/12/05
+* Version            : V1.0.2
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -124,7 +124,7 @@ u8 RTC_Init(void)
     RCC_RTCCLKCmd(ENABLE);
     RTC_WaitForLastTask();
     RTC_WaitForSynchro();
-    //		RTC_ITConfig(RTC_IT_ALR, ENABLE);
+    //RTC_ITConfig(RTC_IT_ALR, ENABLE);
     RTC_ITConfig(RTC_IT_SEC, ENABLE);
     RTC_WaitForLastTask();
     RTC_EnterConfigMode();
@@ -345,8 +345,6 @@ u8 RTC_Get_Week(u16 year, u8 month, u8 day)
 }
 /*********************************************************************
  * @fn      Hardware
- *
- * @brief   Resets the CRC Data register (DR).
  *
  * @return  none
  */

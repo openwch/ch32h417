@@ -372,7 +372,7 @@
 	"flashConfig": {
 		"mcutype": "CH32H417",
 		"address": "0x08000000",
-		"target_path": "D:\\桌面文件\\0.MCU\\7.2025\\1.QH317_CH32H417\\1.前期规划\\4.EVT注意事项\\1.EVT\\CH32H417EVT_V1.0\\EVT\\EXAM\\CPU\\PFIC\\Interrupt_Nest\\V3F\\obj\\Interrupt_Nest_V3F.hex",
+		"target_path": "obj/Interrupt_Nest_V3F.hex",
 		"clkSpeed": "High",
 		"debug_interface_mode": "1-wire serial",
 		"erase": false,

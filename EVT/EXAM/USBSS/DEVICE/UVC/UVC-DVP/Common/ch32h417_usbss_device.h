@@ -237,7 +237,6 @@ extern void USBSS_Device_Init( FunctionalState sta );
 extern void USBSS_LINK_Handle( USBSSH_TypeDef *USBSSHx );
 extern void SET_Device_Address( uint32_t address, USBSSH_TypeDef *USBSSx );
 extern uint32_t USBSS_PHY_Cfg( uint8_t port_num, uint8_t addr, uint16_t data );
-extern void USBSS_PHY_Init( uint8_t port_num );
 extern void USBSS_CFG_MOD( void );
 extern void USBSS_PLL_Init( FunctionalState sta );
 extern void USB_Timer_Start( FunctionalState sta );

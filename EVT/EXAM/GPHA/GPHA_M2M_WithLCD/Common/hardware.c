@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides some functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -548,7 +548,7 @@ void Hardware(void)
 
     GPIO_Config();
 
-    // LTDC¡¡CLK Settings
+	// LTDC CLK Settings
     // In this routine, the CLK required for the screen is 10M and the PLL is 400M, so divide by 40
     RCC_LTDCCLKConfig(RCC_LTDCClockSource_PLL);
     RCC_LTDCClockSourceDivConfig(RCC_LTDCClockSource_Div40);

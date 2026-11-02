@@ -87,9 +87,9 @@ void ETH_IRQHandler(void)
 }
 
 /*********************************************************************
- * @fn      EXTI0_IRQHandler
+ * @fn      EXTI15_8_IRQHandler
  *
- * @brief   This function handles EXTI0 Handler.
+ * @brief   This function handles EXTI15_8 Handler.
  *
  * @return  none
  */

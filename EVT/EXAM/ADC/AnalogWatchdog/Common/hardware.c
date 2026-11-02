@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.2
-* Date               : 2026/03/17
+* Version            : V1.0.3
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -10,7 +10,7 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-
+vu8  IntResponse=0 ;
 /*********************************************************************
  * @fn      ADC_Function_Init
  *
@@ -115,8 +115,12 @@ void Hardware(void)
 	{
 		ADC_val = Get_ADC_Val( ADC_Channel_1);
 		Delay_Ms(500);
+        if(IntResponse == 1)
+        {
+		    IntResponse=0;
+           printf( "Enter AnalogWatchdog Interrupt\r\n" );
+        }
 		printf( "%04d\r\n", ADC_val );
-		Delay_Ms(2);
 	}
 }
 
@@ -134,7 +138,8 @@ void ADC1_2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 void ADC1_2_IRQHandler()
 {
     if(ADC_GetITStatus( ADC1, ADC_IT_AWD)){
-       printf( "Enter AnalogWatchdog Interrupt\r\n" );
+         IntResponse=1;
+     
     }
 
     ADC_ClearITPendingBit( ADC1, ADC_IT_AWD);

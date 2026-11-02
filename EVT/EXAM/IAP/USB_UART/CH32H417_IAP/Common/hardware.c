@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.2
-* Date               : 2026/04/03
+* Version            : V1.0.3
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -72,14 +72,18 @@ void Hardware(void)
         if(*(vu32*)CalAddr != CheckNum)
         {
             IAP_2_APP();
-            while(1);
+            while(1)
+            {
+            }
         }
     }
 #elif UPGRADE_MODE == UPGRADE_MODE_IO
     if(PA0_Check() == 0)
     {
         IAP_2_APP();
-        while(1);
+        while(1)
+        {
+        }
     }
 #endif
 
@@ -97,7 +101,9 @@ void Hardware(void)
         if (End_Flag)
         {
             IAP_2_APP();
-            while(1);
+            while(1)
+            {
+            }
         }
 #endif
 	}

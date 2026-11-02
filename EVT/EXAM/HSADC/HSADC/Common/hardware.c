@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.2
-* Date               : 2025/12/05
+* Version            : V1.0.3
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -10,8 +10,8 @@
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
 #include "hardware.h"
-__attribute__((aligned(32))) u16 txbuf[1024];
-__attribute__((aligned(32))) u16 txbuf1[1024];
+__attribute__((aligned(32))) volatile u16 txbuf[1024];
+__attribute__((aligned(32))) volatile u16 txbuf1[1024];
 
 /*********************************************************************
  * @fn      HSADC_Function_Init

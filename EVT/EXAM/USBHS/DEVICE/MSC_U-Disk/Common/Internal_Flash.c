@@ -35,7 +35,7 @@ void IFlash_Prog_4K(uint32_t address, uint32_t *pbuf)
     }
     addr += FLASH_BASE;
     FLASH_ROM_ERASE(addr, sector);
-    FLASH_ROM_WRITE(addr, pbuf, sector);
+    FLASH_ROM_WRITE(addr, pbuf, 4096);
 }
 
 void IFlash_Read(uint32_t address, uint32_t len, uint8_t *pbuf)

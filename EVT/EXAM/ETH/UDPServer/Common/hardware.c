@@ -9,6 +9,12 @@
 * Attention: This software (modified or not) and binary are used for 
 * microcontroller manufactured by Nanjing Qinheng Microelectronics.
 *******************************************************************************/
+/*
+ *@Note
+UDP Server example, demonstrating that the UDP Server receives data and loops back.
+For details on the selection of engineering chips,
+please refer to the "CH32V30x Evaluation Board Manual" under the CH32V307EVT\EVT\PUB folder.
+ */
 #include "string.h"
 #include "eth_driver.h"
 
@@ -21,6 +27,7 @@ u16 srcport = 1000;                             //source port
 
 u8 SocketId;
 u8 SocketRecvBuf[UDP_RECE_BUF_LEN];             //socket receive buffer
+u32 UdpSendErrCnt = 0;                          //loopback sending failure counter
 /*********************************************************************
  * @fn      mStopIfError
  *
@@ -65,9 +72,9 @@ void TIM2_Init(void)
 /*********************************************************************
  * @fn      WCHNET_UdpServerRecv
  *
- * @brief   UDP Receive data function
+ * @brief   UDP receive callback, sends the received datagram back to the sender
  *
- *@param    socinf - socket information.
+ * @param   socinf - socket information.
  *          ipaddr - The IP address from which the data was sent
  *          port - source port
  *          buf - pointer to the data buffer
@@ -77,6 +84,11 @@ void TIM2_Init(void)
 void WCHNET_UdpServerRecv(struct _SOCK_INF *socinf, u32 ipaddr, u16 port, u8 *buf, u32 len)
 {
     u8 ip_addr[4], i;
+    u8 ret;
+
+    if ((socinf == NULL) || (buf == NULL) || (len > UDP_RECE_BUF_LEN)) {
+        return;
+    }
 
     printf("Remote IP:");
     for (i = 0; i < 4; i++) {
@@ -88,7 +100,11 @@ void WCHNET_UdpServerRecv(struct _SOCK_INF *socinf, u32 ipaddr, u16 port, u8 *bu
     printf("srcport = %d len = %d socketid = %d\r\n", port, len,
             socinf->SockIndex);
 
-    WCHNET_SocketUdpSendTo(socinf->SockIndex, buf, &len, ip_addr, port);
+    ret = WCHNET_SocketUdpSendTo(socinf->SockIndex, buf, &len, ip_addr, port);
+    if (ret != WCHNET_ERR_SUCCESS) {
+        UdpSendErrCnt++;
+        printf("UDP send error: %02X, failed count: %d\r\n", (u16) ret, UdpSendErrCnt);
+    }
 }
 
 /*********************************************************************
@@ -110,8 +126,11 @@ void WCHNET_CreateUdpSocket(void)
     TmpSocketInf.RecvStartPoint = (u32) SocketRecvBuf;
     TmpSocketInf.AppCallBack = WCHNET_UdpServerRecv;
     i = WCHNET_SocketCreat(&SocketId, &TmpSocketInf);
-    printf("SocketId %d\r\n", SocketId);
     mStopIfError(i);
+    if (i != WCHNET_ERR_SUCCESS) {
+        return;
+    }
+    printf("SocketId %d\r\n", SocketId);
 }
 
 /*********************************************************************
@@ -191,22 +210,28 @@ void Hardware(void)
 {
     u8 i;
     printf("UDPServer Test\r\n");
-    printf("SystemClk:%d\r\n", SystemCoreClock);
-    printf("net version:%x\n", WCHNET_GetVer());
+    printf("SystemClk:%lu\r\n", (unsigned long)SystemCoreClock);
+    printf("net version:%x\r\n",(unsigned)WCHNET_GetVer());
     if (WCHNET_LIB_VER != WCHNET_GetVer()) {
-        printf("version error.\n");
+        printf("version error.\r\n");
     }
     WCHNET_GetMacAddr(MACAddr);                                 //get the chip MAC address
     printf("mac addr:");
     for(i = 0; i < 6; i++)
-        printf("%x ", MACAddr[i]);
-    printf("\n");
+        printf("%x ", (unsigned)MACAddr[i]);
+    printf("\r\n");
     TIM2_Init();
     i = ETH_LibInit(IPAddr, GWIPAddr, IPMask, MACAddr);         //Ethernet library initialize
     mStopIfError(i);
-    if (i == WCHNET_ERR_SUCCESS)
+    if (i == WCHNET_ERR_SUCCESS) {
         printf("WCHNET_LibInit Success\r\n");
-    WCHNET_CreateUdpSocket(); 
+    }
+    else {
+        printf("WCHNET_LibInit failed, halted\r\n");
+        while(1);
+    }
+    WCHNET_CreateUdpSocket();                                     //Create  UDP Socket
+
     while(1)
     {
         /*Ethernet library main task function,
@@ -220,3 +245,4 @@ void Hardware(void)
         }
     }
 }
+

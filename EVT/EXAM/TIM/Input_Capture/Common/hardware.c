@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/12/05
+* Version            : V1.0.2
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -26,12 +26,16 @@ void TIM2_IRQHandler(void)
 
 	if( TIM_GetITStatus( TIM2, TIM_IT_CC1 ) != RESET )
 	{
+		#if 0
 		printf( "CH1_Val:%d\r\n", TIM_GetCapture1( TIM2 ) );
+		#endif
 	}
 
 	if( TIM_GetITStatus( TIM2, TIM_IT_CC2 ) != RESET )
 	{
+		#if 0
 		printf( "CH2_Val:%d\r\n", TIM_GetCapture2( TIM2 ) );
+		#endif
 	}
 
 	TIM_ClearITPendingBit( TIM2, TIM_IT_CC1 | TIM_IT_CC2 );
@@ -92,8 +96,6 @@ void Input_Capture_Init( u16 arr, u16 psc )
 
 /*********************************************************************
  * @fn      Hardware
- *
- * @brief   Input_Capture.
  *
  * @return  none
  */

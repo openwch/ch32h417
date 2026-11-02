@@ -110,7 +110,11 @@ uint8_t IAP_Flash_Erase( uint32_t address, uint32_t length )
     /* Verify Address, No flash operation if the address is out of range */
     if((address >= DEF_VERIFY_CODE_START_ADDR) && ((address + length - 1) <= DEF_VERIFY_CODE_END_ADDR))
     {
-        FLASH_ROM_ERASE(DEF_VERIFY_CODE_START_ADDR,DEF_FLASH_SECTOR_SIZE);
+        FLASH_ROM_ERASE(address,length);
+    }
+    else
+    {
+        return 0xC0;
     }
 
     return 0;

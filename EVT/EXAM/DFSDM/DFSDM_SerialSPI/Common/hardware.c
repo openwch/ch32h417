@@ -23,7 +23,8 @@ uint8_t SPI_Tx_Data[TxbuffSize] = {0};
 
 int32_t high_threshold_val = 32768;
 int32_t low_threshold_val = -32768;
-volatile uint8_t ErrorFlag = 0;
+volatile uint8_t ErrorExceed = 0;
+volatile uint8_t ErrorShortC = 0;
 
 /*********************************************************************
  * @fn      SPI_Function_Init
@@ -258,13 +259,20 @@ void Hardware(void)
 
     while((!DMA_GetFlagStatus(DMA1, DMA1_FLAG_TC1)) &&  (!DMA_GetFlagStatus(DMA1, DMA1_FLAG_TC2)));
 
-    if(!ErrorFlag)
+    if(ErrorExceed == 0 && ErrorShortC == 0)
     {
         for(i = 0; i < RxBuffSize; i++)
         {
             printf("%d\r\n", Rxdata[i] >> 8);
         }
-    }  
+    } 
+    else
+    {
+        if(ErrorExceed) printf("Exceeded the threshold of the analog watchdog!\r\n");
+        if(ErrorShortC) printf("The channel0 input Short-circuit occurred!\r\n"); 
+         ErrorExceed = 0;
+         ErrorShortC = 0;
+    } 
 
     while(1);
 }
@@ -283,14 +291,12 @@ void DFSDM0_IRQHandler(void)
 {
     if(DFSDM_GetITStatus(DFSDM_FLT0, DFSDM_IT_FLAG_FLTx_AWDF) != RESET)
     {
-        ErrorFlag = 1;
-        printf("Exceeded the threshold of the analog watchdog!\r\n");
+        ErrorExceed = 1;
         DFSDM_ClearITPendingBit(DFSDM_FLT0, DFSDM_IT_FLAG_FLTx_AWDF);
     }
     if(DFSDM_GetITStatus(DFSDM_FLT0, DFSDM_IT_FLAG_FLT0_SCDF0) != RESET)
     {
-        ErrorFlag = 1;
-        printf("The channel0 input Short-circuit occurred!\r\n");
+        ErrorShortC = 1;
         DFSDM_ClearITPendingBit(DFSDM_FLT0, DFSDM_IT_FLAG_FLT0_SCDF0);
     }
 }

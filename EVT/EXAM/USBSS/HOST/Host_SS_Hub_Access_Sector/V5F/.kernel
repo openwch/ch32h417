@@ -14,12 +14,11 @@
 			"filledWith": "0xFF",
 			"files": [
 				{
-					"filePath": "C:\\Users\\OWNER\\Desktop\\留档文案\\CH32H417_EVT\\CH32H417_HOST_HUB_ACCESS_SECTOR\\USBSS\\HOST\\HOST_SS_HUB_ACCESS_SECTOR\\V3F\\obj\\HOST_SS_HUB_ACCESS_SECTOR_V3F.hex"
+					"filePath": "../V3F/${ConfigName}/${DualCoreModuleName}_V3F.hex"
 				}
 			]
 		},
 		"downloadMerged": true,
-		"loadMergedBeforeDebug": true,
-		"retainOffsetData": true
+		"loadMergedBeforeDebug": true
 	}
 }

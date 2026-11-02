@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : hardware.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2026/10/16
  * Description        : This file provides all the hardware firmware functions.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -164,8 +164,6 @@ static void touch_Baseinit (void) {
     TKY_BaseInitStructure.filterGrade = TKY_FILTER_GRADE;
     TKY_BaseInitStructure.maxQueueNum = TKY_MAX_QUEUE_NUM;
     TKY_BaseInitStructure.baseRefreshOnPress = TKY_BASE_REFRESH_ON_PRESS;
-    /*---Speed of baseline update£¬baseRefreshSampleNum and filterGrade£¬Inversely proportional to the baseline update speed,
-    the baseline update speed is also related to the code structure, which can be observed through the function GetCurQueueBaseLine---*/
     TKY_BaseInitStructure.baseRefreshSampleNum = TKY_BASE_REFRESH_SAMPLE_NUM;
     TKY_BaseInitStructure.baseUpRefreshDouble = TKY_BASE_UP_REFRESH_DOUBLE;
     TKY_BaseInitStructure.baseDownRefreshSlow = TKY_BASE_DOWN_REFRESH_SLOW;

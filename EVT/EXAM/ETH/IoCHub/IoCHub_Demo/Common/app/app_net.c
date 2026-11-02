@@ -35,12 +35,13 @@ void mStopIfError (u8 iError)
 {
     if (iError == WCHNET_ERR_SUCCESS)
         return;
-    printf ("Error: %02X\r\n", (u16) iError); /*print error*/
+    printf ("Error: %02X\r\n", (u16) iError);
 }
+
 /*******************************************************************************
- * Function Name  : appCallBack
+ * Function Name  : udpCallBack
  * Description    : UDP Recv
- * Input          :
+ * Input          : socinf, ipaddr, port, buf, len - one received UDP datagram
  * Output         : None
  * Return         : None
  ********************************************************************************/
@@ -71,6 +72,10 @@ void WCHNET_CreatTcpSocket (uint32_t srcport, uint32_t desport, uint8_t *DESIP, 
     TmpSocketInf.RecvBufLen = RECE_BUF_LEN;
     i = WCHNET_SocketCreat (SocketId, &TmpSocketInf);
     mStopIfError (i);
+    if (i != WCHNET_ERR_SUCCESS)
+    {
+        return;
+    }
     i = WCHNET_SocketConnect (*SocketId);
     mStopIfError (i);
 }
@@ -92,8 +97,12 @@ void WCHNET_CreatUdpSocket (uint32_t srcport, uint8_t *SocketId)
     TmpSocketInf.RecvBufLen = RECE_BUF_LEN;
     TmpSocketInf.AppCallBack = udpCallBack;
     i = WCHNET_SocketCreat (SocketId, &TmpSocketInf);
-    WCHNET_ModifyRecvBuf(*SocketId, (u32) SocketRecvBuf[*SocketId], RECE_BUF_LEN);
     mStopIfError (i);
+    if (i != WCHNET_ERR_SUCCESS)
+    {
+        return;
+    }
+    WCHNET_ModifyRecvBuf(*SocketId, (u32) SocketRecvBuf[*SocketId], RECE_BUF_LEN);
 }
 
 /*********************************************************************
@@ -189,8 +198,8 @@ void WCHNET_HandleGlobalInt (void)
 
 /*******************************************************************************
  * Function Name  : WCHNET_DHCPCallBack
- * Description    : 
- * Input          : None
+ * Description    : Assignment of the IP parameters obtained from the DHCP server
+ * Input          : status - DHCP result (0 = success), arg - pointer to IP/GW/mask/DNS
  * Output         : None
  * Return         : result
  *******************************************************************************/
@@ -272,20 +281,29 @@ uint8_t UDP_Send (uint8_t socketid, uint8_t *buf, uint32_t slen, uint8_t *dstIP,
 void NET_Init (void)
 {
     u8 i;
-    printf("net version:%x\n", WCHNET_GetVer ());
+    printf("net version:%x\r\n", (unsigned)WCHNET_GetVer ());
 
     if ( WCHNET_LIB_VER != WCHNET_GetVer ())
     {
-    	printf("version error.\n");
+    	printf("version error.\r\n");
     }
-    WCHNET_GetMacAddr (MACAddr); 
+    WCHNET_GetMacAddr (MACAddr);
     printf("mac addr:");
     for ( i = 0; i < 6; i++)
-    	printf("%02X ", MACAddr[i]);
-    printf("\n");
+    	printf("%02X ", (unsigned)MACAddr[i]);
+    printf("\r\n");
 
     i = ETH_LibInit (IPAddr, GWIPAddr, IPMask, MACAddr);
     mStopIfError (i);
+    if (i == WCHNET_ERR_SUCCESS)
+    {
+    	printf("WCHNET_LibInit Success\r\n");
+    }
+    else
+    {
+    	printf("WCHNET_LibInit failed, halted\r\n");
+    	while(1);
+    }
 
     #ifdef KEEPLIVE_ENABLE
     {
@@ -298,8 +316,4 @@ void NET_Init (void)
     #endif
     memset(socket, 0xff, WCHNET_MAX_SOCKET_NUM);
     WCHNET_DHCPStart (WCHNET_DHCPCallBack);
-
-    if (i == WCHNET_ERR_SUCCESS)
-    	printf("WCHNET_LibInit Success\r\n");
-
 }

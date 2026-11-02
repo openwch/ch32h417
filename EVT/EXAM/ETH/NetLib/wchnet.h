@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : wchnet.h
  * Author             : WCH
- * Version            : V1.9.1
- * Date               : 2026/09/07
+ * Version            : V1.90
+ * Date               : 2023/05/12
  * Description        : This file contains the headers of 
 *                    the Ethernet protocol stack library.
 *********************************************************************************

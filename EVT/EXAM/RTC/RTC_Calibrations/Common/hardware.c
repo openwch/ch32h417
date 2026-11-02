@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/12/05
+* Version            : V1.0.2
+* Date               : 2026/10/15
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -68,9 +68,11 @@ void RTC_IRQHandler(void)
             RTC_ClearITPendingBit(RTC_FLAG_ALR);
             RTC_Get();
         }
+        #if 0
         printf("year/month/day/week/hour/min/sec:\r\n");
         printf("%d-%d-%d  %d  %d:%d:%d\r\n", calendar.w_year, calendar.w_month, calendar.w_date,
                calendar.week, calendar.hour, calendar.min, calendar.sec);
+        #endif
     }
     else
     {
@@ -88,10 +90,9 @@ void RTC_IRQHandler(void)
 
                 TIM1->CTLR1 &= ~TIM_CEN;
                 CalibrationVal = TIM1->CNT + CalibrationTIMCir * 65536;
-
+                #if 0
                 CalibrationVal < 1000000 ? printf("Calibration val = %d\n", 1000000 - CalibrationVal) : printf("Calibration val = %d\n", CalibrationVal - 1000000);
-                ;
-
+                #endif
                 TIM1->CNT = 0;
                 Calibration_STA = 0;
                 CalibrationFlag = 1;

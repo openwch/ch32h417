@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/17
+* Version            : V1.0.2
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -38,7 +38,10 @@ void Hardware(void)
     while(1)
     {
         LCD_ShowChinese(45,40,"ÇßºãÎ¢µç×Ó",DARKBLUE,WHITE,32,0);
+        Delay_Ms(5);
         LCD_ShowString(95,80,"WCH",DARKBLUE,WHITE,32,0);
+        Delay_Ms(5);
         LCD_ShowString(65,120,"LCD DEMO",DARKBLUE,WHITE,32,0);
+        Delay_Ms(5);
     }
 }

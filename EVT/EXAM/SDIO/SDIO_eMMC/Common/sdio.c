@@ -13,9 +13,9 @@
 #include "string.h"
 
 
-SDIO_InitTypeDef SDIO_InitStructure;
-SDIO_CmdInitTypeDef SDIO_CmdInitStructure;
-SDIO_DataInitTypeDef SDIO_DataInitStructure;
+SDIO_InitTypeDef SDIO_InitStructure={0};
+SDIO_CmdInitTypeDef SDIO_CmdInitStructure={0};
+SDIO_DataInitTypeDef SDIO_DataInitStructure={0};
 
 SD_Error CmdError( void );
 SD_Error CmdResp7Error( void );
@@ -111,7 +111,7 @@ SD_Error eMMC_Init( void )
     {
         errorstatus = eMMC_ChangeHS200();
     }
-    if( ( errorstatus == SD_OK ) || ( SDIO_MULTIMEDIA_CARD == CardType ) )
+    if( errorstatus == SD_OK  )
     {
         if( eMMCCardInfo.CardType == SDIO_STD_CAPACITY_SD_CARD_V1_1 || eMMCCardInfo.CardType == SDIO_STD_CAPACITY_SD_CARD_V2_0 )
         {
@@ -475,8 +475,8 @@ SD_Error eMMC_GetCardInfo(eMMC_CardInfo *eMMC, u32 *CSD_Tab, u32 *CID_Tab, u16 R
     tmp = (u8)((CSD_Tab[2] & 0x0000FF00) >> 8);
     eMMC->eMMC_csd.DeviceSizeMul |= (tmp & 0x80) >> 7;
     eMMC->CardBlockSize = 1 << (eMMC->eMMC_csd.RdBlockLen);
-    eMMC->SectorNums = (u32)(eMMC->eMMC_ExtCsd.EXT_CSD.SEC_COUNT[3] << 24) | (u32)(eMMC->eMMC_ExtCsd.EXT_CSD.SEC_COUNT[2] << 16) |
-            (u32)(eMMC->eMMC_ExtCsd.EXT_CSD.SEC_COUNT[1] << 8) | (u32)(eMMC->eMMC_ExtCsd.EXT_CSD.SEC_COUNT[0]);
+    eMMC->SectorNums = ((u32)eMMC->eMMC_ExtCsd.EXT_CSD.SEC_COUNT[3] << 24) | ((u32)eMMC->eMMC_ExtCsd.EXT_CSD.SEC_COUNT[2] << 16) |
+           ( (u32)eMMC->eMMC_ExtCsd.EXT_CSD.SEC_COUNT[1] << 8) | ((u32)eMMC->eMMC_ExtCsd.EXT_CSD.SEC_COUNT[0]);
     eMMC->eMMC_csd.EraseGrSize = (tmp & 0x40) >> 6;
     eMMC->eMMC_csd.EraseGrMul = (tmp & 0x3F) << 1;
 
@@ -1211,7 +1211,6 @@ SD_Error SD_WriteBlock( u8 *buf, long long addr,  u16 blksize )
         }
         if( timeout == 0 )
         {
-            eMMC_Init();
             return SD_DATA_TIMEOUT;
         }
         timeout = SDIO_DATATIMEOUT;

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -13,7 +13,7 @@
 
 
 /* Global Variable */
-u16 dacbuff16bit[8]={0x123,0x234,0x345,0x456,0x567,0x678,0x789,0x89a};
+static const u16 dacbuff16bit[8]={0x123,0x234,0x345,0x456,0x567,0x678,0x789,0x89a};
 
 
 /*********************************************************************
@@ -78,7 +78,7 @@ void DAC1_DMA_Init(void)
 /*********************************************************************
  * @fn      TIM8_Init
  *
- * @brief   Initializes TIM3 collection.
+ * @brief   Initializes TIM8 collection.
  *
  * @param   arr - TIM_Period
  *          psc - TIM_Prescaler

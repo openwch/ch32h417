@@ -65,8 +65,6 @@ struct{
 
 } isp_cmd;
 
-typedef void (*iapfun)(void);
-
 extern u8 IAP_Deal_Buf[USBD_DATA_SIZE+4];
 
 u8 RecData_Deal(void);

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : hardware.c
  * Author             : WCH
- * Version            : V1.0.2
- * Date               : 2026/03/25
+ * Version            : V1.0.3
+ * Date               : 2026/10/16
  * Description        : This document demonstrates how to perform tests using loopback mode.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -250,6 +250,12 @@ uint8_t CAN_Send_Msg(CAN_TypeDef *CANx, uint32_t IdType, uint32_t Identifier, ui
     }
 
     mbox = CAN_Transmit(CANx, &CanTxStructure);
+    if (mbox == CAN_TxStatus_NoMailBox)
+    {
+        /* No free transmit mailbox: report failure instead of using an
+         * invalid mailbox number for CAN_TransmitStatus() (out-of-bounds). */
+        return 1;
+    }
     i = 0;
 
     while ((CAN_TransmitStatus(CANx, mbox) != CAN_TxStatus_Ok) && (i < 0xFFF))

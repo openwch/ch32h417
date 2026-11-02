@@ -481,7 +481,6 @@ void PHY_LEDCfg(void)
  */
 uint32_t ETH_RegInit( ETH_InitTypeDef* ETH_InitStruct, uint16_t PHYAddress )
 {
-    uint16_t tmpreg = 0;
     /* Set the SMI interface clock, set as the main frequency divided by 42  */
     ETH->MACMIIAR = (uint32_t)ETH_MACMIIAR_CR_Div42;
 
@@ -519,9 +518,7 @@ uint32_t ETH_RegInit( ETH_InitTypeDef* ETH_InitStruct, uint16_t PHYAddress )
                     ETH_InitStruct->ETH_ForwardUndersizedGoodFrames);
 
     /* Reset the physical layer */
-    tmpreg = ETH_ReadPHYRegister(PHYAddress, PHY_BCR);
-    tmpreg |= PHY_Reset;
-    ETH_WritePHYRegister(PHYAddress, PHY_BCR, tmpreg);
+    ETH_WritePHYRegister(PHYAddress, PHY_BCR, PHY_Reset);
     return ETH_SUCCESS;
 }
 

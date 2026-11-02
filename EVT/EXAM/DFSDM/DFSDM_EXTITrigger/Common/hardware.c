@@ -2,7 +2,7 @@
 * File Name          : hardware.c
 * Author             : WCH
 * Version            : V1.0.1
-* Date               : 2026/03/17
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -53,7 +53,7 @@ void ADC_Function_Init(void)
 	ADC_InitTypeDef ADC_InitStructure={0};
 	GPIO_InitTypeDef GPIO_InitStructure={0};
 
-    RCC_HB2PeriphClockCmd(RCC_HB2Periph_ADC1|RCC_HB2Periph_GPIOA, ENABLE );
+    RCC_HB2PeriphClockCmd(RCC_HB2Periph_ADC1|RCC_HB2Periph_GPIOB, ENABLE );
     RCC_ADCCLKConfig(RCC_ADCCLKSource_HCLK);
     RCC_ADCHCLKCLKAsSourceConfig(RCC_PPRE2_DIV2,RCC_HCLK_ADCPRE_DIV8);
 
@@ -136,8 +136,6 @@ void DFSDM_Function_Init(void)
     DFSDM_Cmd(ENABLE);
 }
 
-
-
 /*********************************************************************
  * @fn      Hardware
  *
@@ -159,5 +157,4 @@ void Hardware(void)
             printf("conversion value=%d\r\n", value);
         }       
     }
-
 }

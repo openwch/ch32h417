@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2026/03/17
+* Version            : V1.0.2
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -11,9 +11,8 @@
 *******************************************************************************/
 #include "hardware.h"
 
-u16 ADC_val[2];
-s16 Calibrattion_Val1 = 0;
-s16 Calibrattion_Val2 = 0;
+vu16 ADC_val[2];
+
 /*********************************************************************
  * @fn      ADC_Function_Init
  *
@@ -122,7 +121,7 @@ u16 Get_ADC_Val(u8 ch)
 	return val;
 }
 /*********************************************************************
- * @fn      TIM1_PWM_In
+ * @fn      TIM1_PWM_Init
  *
  * @brief   Initializes TIM1 PWM output.
  *
@@ -132,7 +131,7 @@ u16 Get_ADC_Val(u8 ch)
  *
  * @return  none
  */
-void TIM1_PWM_In( u16 arr, u16 psc, u16 ccp )
+void TIM1_PWM_Init( u16 arr, u16 psc, u16 ccp )
 {
 	TIM_OCInitTypeDef TIM_OCInitStructure={0};
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure={0};
@@ -166,7 +165,8 @@ void TIM1_PWM_In( u16 arr, u16 psc, u16 ccp )
  */
 void Hardware(void)
 {
-    TIM1_PWM_In( 1000, 48000-1, 500 ); 
+ 
+    TIM1_PWM_Init( 1000, 48000-1, 500 ); 
     ADC_Function_Init(); 
 	
 	while(1)
@@ -176,12 +176,12 @@ void Hardware(void)
         ADC_ClearFlag(ADC1, ADC_FLAG_JEOC);
         ADC_val[0] = ADC_GetInjectedConversionValue(ADC1, ADC_InjectedChannel_1);
         printf("JADC1_ch2=%d\r\n",ADC_val[0]);
-        Delay_Ms(100);
+       
 
         while(!ADC_GetFlagStatus(ADC2, ADC_FLAG_JEOC )){/*printf("wait\r\n");*/};
         ADC_ClearFlag(ADC2, ADC_FLAG_JEOC);
         ADC_val[1] = ADC_GetInjectedConversionValue(ADC2, ADC_InjectedChannel_1);
         printf("JADC2_ch3=%d\r\n",ADC_val[1]);
-        Delay_Ms(100);
+        
 	}
 }

@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/09/12
+* Version            : V1.0.3
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -14,7 +14,6 @@
 #include "string.h"
 #include "math.h"
 /* Global define */
-#define Buf_Size 32
 
 /* Global Variable */
 __attribute__((aligned(16))) u8 buf[512*10];
@@ -35,6 +34,7 @@ void show_sdcard_info(void)
         case SDIO_STD_CAPACITY_SD_CARD_V2_0:printf("Card Type:SDSC V2.0\r\n");break;
         case SDIO_HIGH_CAPACITY_SD_CARD:printf("Card Type:SDHC V2.0\r\n");break;
         case SDIO_MULTIMEDIA_CARD:printf("Card Type:MMC Card\r\n");break;
+        default:break;
     }
     printf("Card ManufacturerID:%d\r\n",SDCardInfo.SD_cid.ManufacturerID);
     printf("Card RCA:%d\r\n",SDCardInfo.RCA);
@@ -71,7 +71,7 @@ void Hardware(void)
 		 buf[i] = i+80;
     }
     Sector_Nums = ((u32)(SDCardInfo.CardCapacity)/512);
-    for(i=0; i<Sector_Nums; i++)
+    for(i=1; i<Sector_Nums; i++)
     {
         if(SD_WriteDisk(buf,i,1))
         {

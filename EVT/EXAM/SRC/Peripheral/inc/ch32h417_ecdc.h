@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
  * File Name          : ch32h417_ecdc.h
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2026/10/18
  * Description        : This file contains all the functions prototypes for the
  *                      ECDC firmware library.
  *********************************************************************************
@@ -107,9 +107,9 @@ typedef struct
 #define ECDC_FLAG_RAM2RAM_END ((uint32_t)0x00040000)
 
 /* ECDC_Interrupts_Definition */
-#define ECDC_IT_KeyEx_END ((uint8_t)0x00010000)
-#define ECDC_IT_Single_END ((uint8_t)0x00020000)
-#define ECDC_IT_RAM2RAM_END ((uint8_t)0x00040000)
+#define ECDC_IT_KeyEx_END ((uint32_t)0x00010000)
+#define ECDC_IT_Single_END ((uint32_t)0x00020000)
+#define ECDC_IT_RAM2RAM_END ((uint32_t)0x00040000)
 
 void ECDC_DeInit(void);
 void ECDC_Init(ECDC_InitTypeDef *ECDC_InitStruct);

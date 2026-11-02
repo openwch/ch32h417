@@ -323,6 +323,7 @@ void USBHS_IRQHandler(void)
                             }
                             else
                             {
+                                errflag = 0xFF;
                             }
                         }
                         else if(USBHS_SetupReqType & USB_REQ_TYP_VENDOR)
@@ -652,6 +653,10 @@ void USBHS_IRQHandler(void)
                                         break;
                                     }
                                 }
+                                else
+                                {
+                                    errflag = 0xFF;
+                                }
                             }
                             break;
 
@@ -809,6 +814,11 @@ void USBHS_IRQHandler(void)
                             }
                             else if(USBHS_SetupReqCode == HID_SET_REPORT)
                             {
+                                if( Hid_Report_Ptr + len > sizeof( HID_Report_Buffer ) )
+                                {
+                                    len = sizeof( HID_Report_Buffer ) - Hid_Report_Ptr;
+                                    USBHS_SetupReqLen = len;
+                                }
                                 memcpy(&HID_Report_Buffer[Hid_Report_Ptr], USBHS_EP0_Buf, len);
                                 USBHS_SetupReqLen -= len;
                                 Hid_Report_Ptr += len;
@@ -867,7 +877,7 @@ void USBHS_IRQHandler(void)
                     USBHS_EP4_Tx_Buf[i] = ~USBHS_EP4_Rx_Buf[i];
                 }
                 USBHSD->UEP4_TX_LEN = len;
-                USBHSD->UEP4_TX_CTRL = USBHSD->UEP4_TX_CTRL & ~USBHS_UEP_R_RES_MASK | USBHS_UEP_R_RES_ACK;
+                USBHSD->UEP4_TX_CTRL = USBHSD->UEP4_TX_CTRL & ~USBHS_UEP_T_RES_MASK | USBHS_UEP_T_RES_ACK;
 
                 USBHSD->UEP4_RX_CTRL = USBHSD->UEP4_RX_CTRL & ~USBHS_UEP_R_RES_MASK | USBHS_UEP_R_RES_ACK;
                 
@@ -908,6 +918,10 @@ void USBHS_IRQHandler(void)
                         default:
                             break;
                         }
+                    }
+                    else
+                    {
+                        errflag = 0xFF;
                     }
                 }
                 else

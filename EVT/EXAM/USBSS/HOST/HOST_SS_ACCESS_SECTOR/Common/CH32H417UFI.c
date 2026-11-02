@@ -81,7 +81,7 @@ uint8_t USBHostTransact( uint8_t endp_pid, uint8_t tog, uint32_t timeout )
                     }
                     break;
                 case USB_PID_IN:
-                    if( ( r == USB_PID_DATA0 ) && ( r == USB_PID_DATA1 ) )
+                    if( ( r == USB_PID_DATA0 ) || ( r == USB_PID_DATA1 ) )
                     {
                         ;
                     }

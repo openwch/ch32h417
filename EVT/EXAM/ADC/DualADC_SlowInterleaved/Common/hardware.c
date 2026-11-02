@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2026/03/17
+* Version            : V1.0.2
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -63,7 +63,7 @@ void ADC_Function_Init(void)
     ADC_Init(ADC2, &ADC_InitStructure);
     ADC_RegularChannelConfig(ADC2, ADC_Channel_2, 1, ADC_SampleTime_CyclesMode1 );
 
-    ADC_SoftwareStartConvCmd(ADC2, ENABLE);
+    ADC_ExternalTrigConvCmd(ADC2, ENABLE);
     ADC_Cmd(ADC2, ENABLE);
 
     ADC_BufferCmd(ADC2, DISABLE);   //disable buffer
@@ -89,13 +89,12 @@ void Hardware(void)
 	while(1)
 	{
        
-
         while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));
         ADC_val1 = ADC1->RDATAR&0xffff;
         ADC_val2 = (ADC1->RDATAR>>16)&0xffff;
 
         printf( "ADC1 ch2=%04d\r\n", ADC_val1);
         printf( "ADC2 ch2=%04d\r\n", ADC_val2);
-        Delay_Ms(1000);
+      
 	}
 }

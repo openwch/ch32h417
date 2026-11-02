@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : main_v3f.c
  * Author             : WCH
- * Version            : V1.0.0
- * Date               : 2025/03/01
+ * Version            : V1.0.1
+ * Date               : 2026/10/14
  * Description        : Main program body for V3F.
  *********************************************************************************
  * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -51,8 +51,8 @@ int main(void)
 	Delay_Init();
 	USART_Printf_Init(921600);
 	Delay_Ms(1000);
-	printf("SystemClk:%d\r\n", SystemClock);
-	printf("V3F SystemCoreClk:%d\r\n", SystemCoreClock);
+	printf("SystemClk:%u\r\n", SystemClock);
+	printf("V3F SystemCoreClk:%u\r\n", SystemCoreClock);
 	Delay_Ms(500);
 
 	RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR, ENABLE);

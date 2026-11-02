@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.0
-* Date               : 2025/03/01
+* Version            : V1.0.1
+* Date               : 2026/10/14
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -12,8 +12,8 @@
 #include "hardware.h"
 #include "RGB1W.h"
 
-#define RGB    0
-#define DS1820 1
+#define RGB_WS2812    0
+#define DS1820        1
 
 // #define Mode   DS1820
 #define Mode   RGB_WS2812
@@ -101,8 +101,8 @@ void Hardware(void)
         stat = 0x80;//free
         if ( stat != 0xFF ) {//RGB1W completed
             if ( stat < 0x80 ) {//got status in interrupt
-                if ( stat == RGB1W_ERR_OK ) printf("1-wire finished\r\n")/**/;
-                else printf("1-wire error %02x\r\n", stat)/* */;
+                if ( stat == RGB1W_ERR_OK ) printf("1-wire finished\r\n");
+                else printf("1-wire error %02x\r\n", stat);
                 stat = 0x80;//free
             }
             if ( stat == 0x80 && total_bytes && timer_to_run ) {//RAM mode for 1~3072 bytes data

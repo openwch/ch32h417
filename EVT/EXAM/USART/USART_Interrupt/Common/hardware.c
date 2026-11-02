@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT  *******************************
 * File Name          : hardware.c
 * Author             : WCH
-* Version            : V1.0.1
-* Date               : 2025/12/05
+* Version            : V1.0.2
+* Date               : 2026/10/16
 * Description        : This file provides all the hardware firmware functions.
 *********************************************************************************
 * Copyright (c) 2025 Nanjing Qinheng Microelectronics Co., Ltd.
@@ -198,7 +198,10 @@ void USART2_IRQHandler(void)
 {
     if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
     {
-        RxBuffer1[RxCnt1++] = USART_ReceiveData(USART2);
+        if( RxCnt1 < TxSize1 )
+        {
+            RxBuffer1[RxCnt1++] = USART_ReceiveData(USART2);
+        }
 
         if(RxCnt1 == TxSize2)
         {
@@ -219,7 +222,10 @@ void USART3_IRQHandler(void)
 {
     if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
     {
-        RxBuffer2[RxCnt2++] = USART_ReceiveData(USART3);
+        if(RxCnt2 < TxSize2)
+        {
+            RxBuffer2[RxCnt2++] = USART_ReceiveData(USART3);
+        }
 
         if(RxCnt2 == TxSize1)
         {
